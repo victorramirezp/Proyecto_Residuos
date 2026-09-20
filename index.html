@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de Control - Clasificador de Residuos</title>
+  <!-- Chart.js para la gráfica -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * {
@@ -13,9 +14,10 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    /* Fondo principal oscuro (no negro absoluto, sino tono carbón limpio) */
     body {
-      background-color: #cbd5e1;
-      color: #334155;
+      background-color: #0b1120;
+      color: #cbd5e1;
       padding: 20px;
     }
 
@@ -24,12 +26,13 @@
       margin: 0 auto;
     }
 
-    /* Encabezado sin la línea azul izquierda y con fondo gris */
+    /* Encabezado en gris grafito sin líneas azules */
     header {
-      background-color: #e2e8f0;
+      background-color: #1e293b;
+      border: 1px solid #334155;
       padding: 18px 24px;
       border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
       margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
@@ -38,39 +41,41 @@
 
     header h1 {
       font-size: 20px;
-      color: #0f172a;
+      color: #f8fafc;
     }
 
     header p {
       font-size: 13px;
-      color: #475569;
+      color: #94a3b8;
       margin-top: 3px;
     }
 
     .badge-status {
-      background-color: #bfdbfe;
-      color: #1e40af;
-      padding: 6px 12px;
+      background-color: #0f172a;
+      color: #38bdf8;
+      border: 1px solid #0284c7;
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
     }
 
-    /* Bloques de sección en gris */
+    /* Contenedores y secciones en gris grafito */
     .section-block {
-      background: #e2e8f0;
+      background: #1e293b;
       padding: 16px 20px;
       border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
       margin-bottom: 20px;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #334155;
     }
 
     .section-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      color: #334155;
+      color: #94a3b8;
       text-transform: uppercase;
+      letter-spacing: 0.05em;
       margin-bottom: 12px;
     }
 
@@ -81,31 +86,31 @@
     }
 
     .step-card {
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
+      background: #0f172a;
+      border: 1px solid #334155;
       border-radius: 6px;
       padding: 10px;
       text-align: center;
-      transition: background-color 0.2s;
+      transition: all 0.2s ease;
     }
 
     .step-card.active {
-      background-color: #bfdbfe;
-      border-color: #3b82f6;
+      background-color: #1e3a5f;
+      border-color: #38bdf8;
     }
 
     .step-card h4 {
       font-size: 12px;
-      color: #1e293b;
+      color: #f1f5f9;
     }
 
     .step-card p {
       font-size: 10px;
-      color: #64748b;
+      color: #94a3b8;
       margin-top: 4px;
     }
 
-    /* Tarjetas de métricas (KPIs) en gris */
+    /* Métricas (KPIs) */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -114,22 +119,23 @@
     }
 
     .kpi-card {
-      background: #e2e8f0;
+      background: #1e293b;
       padding: 16px;
       border-radius: 8px;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #334155;
     }
 
     .kpi-label {
-      font-size: 12px;
-      color: #475569;
-      font-weight: 600;
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 700;
+      letter-spacing: 0.05em;
     }
 
     .kpi-value {
       font-size: 26px;
       font-weight: 700;
-      color: #0f172a;
+      color: #f8fafc;
       margin: 8px 0;
     }
 
@@ -147,8 +153,8 @@
     }
 
     .bin-card {
-      background: #e2e8f0;
-      border: 1px solid #cbd5e1;
+      background: #1e293b;
+      border: 1px solid #334155;
       border-radius: 8px;
       padding: 16px;
     }
@@ -161,39 +167,39 @@
     }
 
     .bin-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
     }
 
     .bin-count {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
     }
 
     .progress-bar-bg {
-      background: #cbd5e1;
+      background: #0f172a;
       height: 8px;
       border-radius: 4px;
       overflow: hidden;
       margin-top: 8px;
+      border: 1px solid #334155;
     }
 
     .progress-fill {
       height: 100%;
       width: 0%;
-      background: #2563eb;
       transition: width 0.3s ease;
     }
 
     .alert-text {
       font-size: 11px;
-      color: #dc2626;
+      color: #f87171;
       font-weight: 600;
-      margin-top: 6px;
+      margin-top: 8px;
       display: none;
     }
 
-    /* Controles y Gráfica */
+    /* Controles y Panel de Gráfica */
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1.3fr;
@@ -209,43 +215,51 @@
 
     button {
       cursor: pointer;
-      border: 1px solid #94a3b8;
-      background: #f1f5f9;
-      padding: 9px 12px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      padding: 10px 12px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
-      color: #1e293b;
+      color: #f1f5f9;
+      transition: all 0.15s ease;
     }
 
     button:hover {
-      background: #e2e8f0;
+      background: #334155;
       border-color: #64748b;
     }
 
     .btn-primary {
       background: #2563eb;
       color: #ffffff;
-      border-color: #1d4ed8;
+      border-color: #3b82f6;
       width: 100%;
       margin-top: 5px;
     }
 
     .btn-primary:hover {
       background: #1d4ed8;
+      border-color: #2563eb;
     }
 
     .btn-secondary {
       width: 100%;
-      margin-top: 6px;
-      background: #f1f5f9;
+      margin-top: 8px;
+      background: #1e293b;
+      border-color: #334155;
     }
 
-    /* Consola de logs */
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    /* Consola de logs estilo terminal */
     .log-box {
-      background: #0f172a;
+      background: #090d16;
+      border: 1px solid #1e293b;
       color: #94a3b8;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'Consolas', 'Courier New', monospace;
       font-size: 11px;
       padding: 10px;
       border-radius: 6px;
@@ -316,20 +330,20 @@
 
       <div class="kpi-card">
         <div class="kpi-label">TASA DE OPERACIÓN</div>
-        <div id="valRate" class="kpi-value">0.0 <span style="font-size:14px; color:#64748b;">obj/min</span></div>
+        <div id="valRate" class="kpi-value">0.0 <span style="font-size:14px; color:#94a3b8;">obj/min</span></div>
         <div class="kpi-sub">Calculado por tiempo activo</div>
       </div>
 
       <div class="kpi-card">
         <div class="kpi-label">VOLUMEN APROX.</div>
-        <div id="valVol" class="kpi-value">0.00 <span style="font-size:14px; color:#64748b;">dm³</span></div>
+        <div id="valVol" class="kpi-value">0.00 <span style="font-size:14px; color:#94a3b8;">dm³</span></div>
         <div class="kpi-sub">Acumulado del lote</div>
       </div>
 
       <div class="kpi-card">
         <div class="kpi-label">BALANCE DE MATERIA</div>
-        <div id="valBalance" class="kpi-value" style="font-size: 18px; color: #15803d;">E = Salidas (OK)</div>
-        <div id="valFormula" class="kpi-sub font-mono">E(0) = M(0) + P(0) + C(0)</div>
+        <div id="valBalance" class="kpi-value" style="font-size: 18px; color: #4ade80;">E = Salidas (OK)</div>
+        <div id="valFormula" class="kpi-sub" style="font-family: monospace;">E(0) = M(0) + P(0) + C(0)</div>
       </div>
     </div>
 
@@ -338,8 +352,8 @@
       <!-- Metales -->
       <div class="bin-card">
         <div class="bin-header">
-          <span class="bin-name" style="color: #b45309;">Metales (Imán)</span>
-          <span id="txtMetal" class="bin-count">0</span>
+          <span class="bin-name" style="color: #fbbf24;">Metales (Imán)</span>
+          <span id="txtMetal" class="bin-count" style="color: #fbbf24;">0</span>
         </div>
         <div class="progress-bar-bg">
           <div id="barMetal" class="progress-fill" style="background: #f59e0b;"></div>
@@ -350,8 +364,8 @@
       <!-- Plástico -->
       <div class="bin-card">
         <div class="bin-header">
-          <span class="bin-name" style="color: #1d4ed8;">Plástico (Banda)</span>
-          <span id="txtPlastic" class="bin-count">0</span>
+          <span class="bin-name" style="color: #60a5fa;">Plástico (Banda)</span>
+          <span id="txtPlastic" class="bin-count" style="color: #60a5fa;">0</span>
         </div>
         <div class="progress-bar-bg">
           <div id="barPlastic" class="progress-fill" style="background: #3b82f6;"></div>
@@ -362,8 +376,8 @@
       <!-- Papel -->
       <div class="bin-card">
         <div class="bin-header">
-          <span class="bin-name" style="color: #047857;">Papel (Ventilador)</span>
-          <span id="txtPaper" class="bin-count">0</span>
+          <span class="bin-name" style="color: #34d399;">Papel (Ventilador)</span>
+          <span id="txtPaper" class="bin-count" style="color: #34d399;">0</span>
         </div>
         <div class="progress-bar-bg">
           <div id="barPaper" class="progress-fill" style="background: #10b981;"></div>
@@ -378,7 +392,7 @@
       <!-- Panel de Registro -->
       <div class="section-block">
         <div class="section-title">Registro Manual y Pruebas</div>
-        <p style="font-size: 12px; color: #475569;">Ingreso manual de objetos clasificados:</p>
+        <p style="font-size: 12px; color: #94a3b8;">Ingreso manual de objetos clasificados:</p>
         
         <div class="btn-group">
           <button onclick="sumarResiduo('metal')">+ Metal</button>
@@ -420,6 +434,7 @@
     let simulando = false;
     let simInterval = null;
 
+    // Inicializar gráfica Chart.js adaptada al modo oscuro limpio
     const ctx = document.getElementById('chartMateriales').getContext('2d');
     const miGrafica = new Chart(ctx, {
       type: 'bar',
@@ -436,9 +451,14 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
+          x: {
+            ticks: { color: '#94a3b8' },
+            grid: { color: '#334155' }
+          },
           y: {
             beginAtZero: true,
-            ticks: { stepSize: 1 }
+            ticks: { stepSize: 1, color: '#94a3b8' },
+            grid: { color: '#334155' }
           }
         },
         plugins: {
@@ -505,8 +525,9 @@
 
       if (total >= LOTE_OBJETIVO) {
         document.getElementById('statusBadge').innerText = "Lote Finalizado";
-        document.getElementById('statusBadge').style.background = "#bbf7d0";
-        document.getElementById('statusBadge').style.color = "#166534";
+        document.getElementById('statusBadge').style.background = "#064e3b";
+        document.getElementById('statusBadge').style.color = "#4ade80";
+        document.getElementById('statusBadge').style.borderColor = "#059669";
       } else {
         document.getElementById('statusBadge').innerText = "En Operación";
       }
@@ -574,8 +595,9 @@
       conteos = { metal: 0, plastic: 0, paper: 0 };
       document.getElementById('valRate').innerText = "0.0";
       document.getElementById('statusBadge').innerText = "Sistema en Espera";
-      document.getElementById('statusBadge').style.background = "#bfdbfe";
-      document.getElementById('statusBadge').style.color = "#1e40af";
+      document.getElementById('statusBadge').style.background = "#0f172a";
+      document.getElementById('statusBadge').style.color = "#38bdf8";
+      document.getElementById('statusBadge').style.borderColor = "#0284c7";
       document.getElementById('logArea').innerHTML = "<div>[LOG] Sistema reiniciado.</div>";
       actualizarPantalla();
     }
