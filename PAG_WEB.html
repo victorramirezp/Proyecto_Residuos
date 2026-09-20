@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control - Clasificador de Residuos</title>
+  <!-- Chart.js para la gráfica -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: #334155;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Encabezado */
+    header {
+      background-color: #ffffff;
+      padding: 18px 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 5px solid #2563eb;
+    }
+
+    header h1 {
+      font-size: 20px;
+      color: #0f172a;
+    }
+
+    header p {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    .badge-status {
+      background-color: #e0f2fe;
+      color: #0369a1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Flujograma de 5 etapas */
+    .section-block {
+      background: #ffffff;
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .step-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+
+    .step-card.active {
+      background-color: #dbeafe;
+      border-color: #3b82f6;
+    }
+
+    .step-card h4 {
+      font-size: 12px;
+      color: #1e293b;
+    }
+
+    .step-card p {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* Tarjetas de métricas (KPIs) */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 8px 0;
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    /* Depósitos (Zona D) */
+    .bins-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .bin-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .bin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .bin-name {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .bin-count {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #2563eb;
+      transition: width 0.3s ease;
+    }
+
+    .alert-text {
+      font-size: 11px;
+      color: #dc2626;
+      font-weight: 600;
+      margin-top: 6px;
+      display: none;
+    }
+
+    /* Controles y Gráfica */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 20px;
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      padding: 9px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    button:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      margin-top: 6px;
+      background: #f1f5f9;
+    }
+
+    /* Consola de logs */
+    .log-box {
+      background: #0f172a;
+      color: #94a3b8;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 11px;
+      padding: 10px;
+      border-radius: 6px;
+      height: 120px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+
+    .log-box div {
+      margin-bottom: 3px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- ENCABEZADO -->
+    <header>
+      <div>
+        <h1>Dashboard de Control - Prototipo Separador RSU</h1>
+        <p>Introducción a la Ingeniería | Grupo: Sistemas, Mecatrónica e Industrial</p>
+      </div>
+      <div id="statusBadge" class="badge-status">Sistema en Espera</div>
+    </header>
+
+    <!-- FLUJOGRAMA DE 5 ETAPAS (SECUENCIA) -->
+    <div class="section-block">
+      <div class="section-title">Flujograma Secuencial del Proceso (5 Etapas)</div>
+      <div class="flow-steps">
+        <div id="st1" class="step-card">
+          <h4>1. Carga</h4>
+          <p>Tolva y rampas en X</p>
+        </div>
+        <div id="st2" class="step-card">
+          <h4>2. Elevación</h4>
+          <p>Bajada hacia guía</p>
+        </div>
+        <div id="st3" class="step-card">
+          <h4>3. Evaluación</h4>
+          <p>Imán / Aire / Masa</p>
+        </div>
+        <div id="st4" class="step-card">
+          <h4>4. Desvío</h4>
+          <p>Rampas selectoras</p>
+        </div>
+        <div id="st5" class="step-card">
+          <h4>5. Depósito</h4>
+          <p>Registro y conteo</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARJETAS KPIS -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">OBJETOS PROCESADOS</div>
+        <div id="valTotal" class="kpi-value">0 / 20</div>
+        <div class="kpi-sub">Lote de prueba oficial</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">TASA DE OPERACIÓN</div>
+        <div id="valRate" class="kpi-value">0.0 <span style="font-size:14px; color:#64748b;">obj/min</span></div>
+        <div class="kpi-sub">Calculado por tiempo activo</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">VOLUMEN APROX.</div>
+        <div id="valVol" class="kpi-value">0.00 <span style="font-size:14px; color:#64748b;">dm³</span></div>
+        <div class="kpi-sub">Acumulado del lote</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">BALANCE DE MATERIA</div>
+        <div id="valBalance" class="kpi-value" style="font-size: 18px; color: #16a34a;">E = Salidas (OK)</div>
+        <div id="valFormula" class="kpi-sub font-mono">E(0) = M(0) + P(0) + C(0)</div>
+      </div>
+    </div>
+
+    <!-- CONTENEDORES DE SALIDA (ZONA D) -->
+    <div class="bins-grid">
+      <!-- Metales -->
+      <div class="bin-card">
+        <div class="bin-header">
+          <span class="bin-name" style="color: #b45309;">Metales (Imán)</span>
+          <span id="txtMetal" class="bin-count">0</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="barMetal" class="progress-fill" style="background: #f59e0b;"></div>
+        </div>
+        <div id="alertMetal" class="alert-text">⚠️ Depósito al 80% de capacidad</div>
+      </div>
+
+      <!-- Plástico -->
+      <div class="bin-card">
+        <div class="bin-header">
+          <span class="bin-name" style="color: #1d4ed8;">Plástico (Banda)</span>
+          <span id="txtPlastic" class="bin-count">0</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="barPlastic" class="progress-fill" style="background: #3b82f6;"></div>
+        </div>
+        <div id="alertPlastic" class="alert-text">⚠️ Depósito al 80% de capacidad</div>
+      </div>
+
+      <!-- Papel -->
+      <div class="bin-card">
+        <div class="bin-header">
+          <span class="bin-name" style="color: #047857;">Papel (Ventilador)</span>
+          <span id="txtPaper" class="bin-count">0</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="barPaper" class="progress-fill" style="background: #10b981;"></div>
+        </div>
+        <div id="alertPaper" class="alert-text">⚠️ Depósito al 80% de capacidad</div>
+      </div>
+    </div>
+
+    <!-- PANEL INFERIOR: CONTROLES + GRÁFICA -->
+    <div class="main-grid">
+      
+      <!-- Panel de Registro -->
+      <div class="section-block">
+        <div class="section-title">Registro Manual y Pruebas</div>
+        <p style="font-size: 12px; color: #64748b;">Ingreso manual de objetos clasificados:</p>
+        
+        <div class="btn-group">
+          <button onclick="sumarResiduo('metal')">+ Metal</button>
+          <button onclick="sumarResiduo('plastic')">+ Plástico</button>
+          <button onclick="sumarResiduo('paper')">+ Papel</button>
+        </div>
+
+        <button id="btnSim" class="btn-primary" onclick="iniciarSimulacion()">Simular Lote de 20 Piezas</button>
+        <button class="btn-secondary" onclick="reiniciarTodo()">Reiniciar Contadores</button>
+
+        <div id="logArea" class="log-box">
+          <div>[LOG] Sistema listo para registrar datos.</div>
+        </div>
+      </div>
+
+      <!-- Gráfica -->
+      <div class="section-block">
+        <div class="section-title">Distribución de Materiales</div>
+        <div style="height: 220px; position: relative;">
+          <canvas id="chartMateriales"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      Uniagustiniana • Semestre 2026-II • Daniel & Nicolás (Sistemas)
+    </footer>
+
+  </div>
+
+  <!-- LÓGICA DE CONTROL JS -->
+  <script>
+    // Variables de trabajo
+    let conteos = { metal: 0, plastic: 0, paper: 0 };
+    const CAPACIDAD_MAXIMA = 10;
+    const LOTE_OBJETIVO = 20;
+    let tiempoInicio = null;
+    let intervalTasa = null;
+    let simulando = false;
+    let simInterval = null;
+
+    // Inicializar gráfica Chart.js sencilla
+    const ctx = document.getElementById('chartMateriales').getContext('2d');
+    const miGrafica = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Metales', 'Plástico', 'Papel'],
+        datasets: [{
+          label: 'Unidades',
+          data: [0, 0, 0],
+          backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+
+    // Función para animar las 5 etapas
+    function animarFlujo() {
+      const etapas = ['st1', 'st2', 'st3', 'st4', 'st5'];
+      etapas.forEach((id, i) => {
+        setTimeout(() => {
+          etapas.forEach(e => document.getElementById(e).classList.remove('active'));
+          document.getElementById(id).classList.add('active');
+        }, i * 180);
+      });
+      setTimeout(() => {
+        etapas.forEach(e => document.getElementById(e).classList.remove('active'));
+      }, etapas.length * 180 + 200);
+    }
+
+    // Agregar objeto
+    function sumarResiduo(tipo) {
+      if (!tiempoInicio) {
+        tiempoInicio = new Date();
+        intervalTasa = setInterval(calcularTasa, 1000);
+      }
+
+      let total = getTotal();
+      if (total >= LOTE_OBJETIVO) {
+        agregarLog("Lote de 20 completado.");
+        if (simulando) pararSimulacion();
+        return;
+      }
+
+      conteos[tipo]++;
+      animarFlujo();
+      actualizarPantalla();
+      agregarLog("Detectado y almacenado: " + tipo.toUpperCase());
+    }
+
+    function getTotal() {
+      return conteos.metal + conteos.plastic + conteos.paper;
+    }
+
+    function actualizarPantalla() {
+      const total = getTotal();
+
+      // Textos principales
+      document.getElementById('valTotal').innerText = total + " / " + LOTE_OBJETIVO;
+      document.getElementById('txtMetal').innerText = conteos.metal;
+      document.getElementById('txtPlastic').innerText = conteos.plastic;
+      document.getElementById('txtPaper').innerText = conteos.paper;
+
+      // Volumen aproximado (ej: 0.35 L por objeto)
+      document.getElementById('valVol').innerText = (total * 0.35).toFixed(2);
+
+      // Ecuación de balance
+      document.getElementById('valFormula').innerText = 
+        `E(${total}) = M(${conteos.metal}) + P(${conteos.plastic}) + C(${conteos.paper})`;
+
+      // Barras de progreso y alertas
+      revisarCapacidad('barMetal', 'alertMetal', conteos.metal);
+      revisarCapacidad('barPlastic', 'alertPlastic', conteos.plastic);
+      revisarCapacidad('barPaper', 'alertPaper', conteos.paper);
+
+      // Gráfica
+      miGrafica.data.datasets[0].data = [conteos.metal, conteos.plastic, conteos.paper];
+      miGrafica.update();
+
+      // Estado
+      if (total >= LOTE_OBJETIVO) {
+        document.getElementById('statusBadge').innerText = "Lote Finalizado";
+        document.getElementById('statusBadge').style.background = "#dcfce7";
+        document.getElementById('statusBadge').style.color = "#15803d";
+      } else {
+        document.getElementById('statusBadge').innerText = "En Operación";
+      }
+    }
+
+    function revisarCapacidad(barId, alertId, valor) {
+      const pct = Math.min(100, (valor / CAPACIDAD_MAXIMA) * 100);
+      document.getElementById(barId).style.width = pct + "%";
+      
+      if (valor >= 8) {
+        document.getElementById(alertId).style.display = "block";
+      } else {
+        document.getElementById(alertId).style.display = "none";
+      }
+    }
+
+    function calcularTasa() {
+      if (!tiempoInicio) return;
+      const total = getTotal();
+      const minutos = (new Date() - tiempoInicio) / 60000;
+      if (minutos > 0.03) {
+        const tasa = (total / minutos).toFixed(1);
+        document.getElementById('valRate').innerText = tasa;
+      }
+    }
+
+    function agregarLog(msg) {
+      const area = document.getElementById('logArea');
+      const d = new Date();
+      const hora = d.toTimeString().split(' ')[0];
+      const linea = document.createElement('div');
+      linea.innerText = `[${hora}] ${msg}`;
+      area.prepend(linea);
+    }
+
+    function iniciarSimulacion() {
+      if (simulando) {
+        pararSimulacion();
+        return;
+      }
+      simulando = true;
+      document.getElementById('btnSim').innerText = "Pausar Simulación";
+      
+      simInterval = setInterval(() => {
+        if (getTotal() >= LOTE_OBJETIVO) {
+          pararSimulacion();
+          return;
+        }
+        const tipos = ['metal', 'plastic', 'paper'];
+        const aleatorio = tipos[Math.floor(Math.random() * tipos.length)];
+        sumarResiduo(aleatorio);
+      }, 1400);
+    }
+
+    function pararSimulacion() {
+      simulando = false;
+      clearInterval(simInterval);
+      document.getElementById('btnSim').innerText = "Simular Lote de 20 Piezas";
+    }
+
+    function reiniciarTodo() {
+      pararSimulacion();
+      clearInterval(intervalTasa);
+      tiempoInicio = null;
+      conteos = { metal: 0, plastic: 0, paper: 0 };
+      document.getElementById('valRate').innerText = "0.0";
+      document.getElementById('statusBadge').innerText = "Sistema en Espera";
+      document.getElementById('statusBadge').style.background = "#e0f2fe";
+      document.getElementById('statusBadge').style.color = "#0369a1";
+      document.getElementById('logArea').innerHTML = "<div>[LOG] Sistema reiniciado.</div>";
+      actualizarPantalla();
+    }
+  </script>
+
+</body>
+</html>
