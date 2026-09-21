@@ -3,586 +3,264 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telemetría - Clasificador RSU</title>
-  <!-- Chart.js -->
+  <title>Panel de Monitoreo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg-main: #0b0f19;
-      --bg-card: #151d30;
-      --bg-subcard: #0f1626;
-      --border-color: #243049;
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --color-metal: #f59e0b;
-      --color-plastic: #38bdf8;
-      --color-paper: #34d399;
-      --color-primary: #3b82f6;
+      --bg: #090d16;
+      --card: #111827;
+      --sub: #0b1120;
+      --border: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #475569;
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; line-height: 1.4; }
+    .container { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      padding: 16px;
-      line-height: 1.4;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* Encabezado */
     header {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
     }
+    header h1 { font-size: 1.05rem; font-weight: 700; color: #f9fafb; }
+    header p { font-size: 0.78rem; color: var(--muted); }
+    .status { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: #1f2937; color: #d1d5db; border: 1px solid #374151; }
 
-    header h1 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
+    .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (min-width: 768px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+    .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 12px; }
+    .kpi span { font-size: 0.68rem; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+    .kpi h2 { font-size: 1.4rem; font-weight: 700; margin: 2px 0; color: #f3f4f6; }
+    .kpi small { font-size: 0.7rem; color: #6b7280; }
 
-    header p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    .bins { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 768px) { .bins { grid-template-columns: repeat(3, 1fr); } }
+    .bin { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
+    .bin-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .bin-name { font-size: 0.85rem; font-weight: 600; color: #d1d5db; }
+    .bin-val { font-size: 1.3rem; font-weight: 700; color: #f9fafb; }
+    .bar { background: var(--sub); height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px; border: 1px solid var(--border); }
+    .fill { height: 100%; width: 0%; background: #64748b; transition: width 0.2s ease; }
+    .alert { font-size: 0.7rem; color: #f87171; font-weight: 500; margin-top: 5px; display: none; }
 
-    .badge-status {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: rgba(56, 189, 248, 0.1);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.25);
-    }
+    .grid-bottom { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 800px) { .grid-bottom { grid-template-columns: 1fr 1.2fr; } }
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
+    .panel-tag { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
 
-    /* Tarjetas de Métricas */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    @media (min-width: 768px) {
-      .kpi-grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
-    .kpi-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .kpi-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .kpi-value {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin: 4px 0;
-      color: #fff;
-    }
-
-    .kpi-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    /* Depósitos (Zona D) */
-    .bins-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    @media (min-width: 768px) {
-      .bins-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .bin-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .bin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 8px;
-    }
-
-    .bin-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .bin-count {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .progress-bar-bg {
-      background: var(--bg-subcard);
-      height: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 6px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 4px;
-      transition: width 0.3s ease;
-    }
-
-    .alert-text {
-      font-size: 0.72rem;
-      color: #f87171;
-      font-weight: 600;
-      margin-top: 6px;
-      display: none;
-    }
-
-    /* Distribución inferior */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    @media (min-width: 820px) {
-      .main-grid {
-        grid-template-columns: 1fr 1.2fr;
-      }
-    }
-
-    .panel-block {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .panel-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
-    }
-
-    /* Botones de registro manual */
-    .btn-group {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
+    .btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
     button {
-      cursor: pointer;
-      border-radius: 8px;
-      font-weight: 600;
-      border: 1px solid var(--border-color);
-      padding: 10px 8px;
-      font-size: 0.8rem;
-      transition: background 0.15s ease, transform 0.05s ease;
+      cursor: pointer; border-radius: 5px; font-weight: 500; font-size: 0.75rem;
+      border: 1px solid var(--border); background: var(--sub); color: #e5e7eb; padding: 8px 6px;
     }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .btn-metal {
-      background: rgba(245, 158, 11, 0.1);
-      color: #fbbf24;
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-    .btn-plastic {
-      background: rgba(56, 189, 248, 0.1);
-      color: #38bdf8;
-      border-color: rgba(56, 189, 248, 0.3);
-    }
-    .btn-paper {
-      background: rgba(52, 211, 153, 0.1);
-      color: #34d399;
-      border-color: rgba(52, 211, 153, 0.3);
-    }
-
-    .btn-primary {
-      width: 100%;
-      background: var(--color-primary);
-      color: #fff;
-      border: none;
-      padding: 11px;
-      margin-bottom: 8px;
-    }
-    .btn-primary:hover {
-      background: #2563eb;
-    }
-
-    .btn-secondary {
-      width: 100%;
-      background: var(--bg-subcard);
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-      padding: 8px;
-    }
-
-    /* Terminal de logs */
-    .log-box {
-      background: var(--bg-subcard);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 10px;
-      height: 110px;
-      overflow-y: auto;
-      font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.72rem;
-      color: #94a3b8;
-      margin-top: 12px;
-    }
-
-    .log-box div {
-      margin-bottom: 4px;
-    }
-
-    /* Contenedor del gráfico */
-    .chart-container {
-      position: relative;
-      width: 100%;
-      height: 220px;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      padding: 8px 0;
-    }
+    button:hover { background: #1e293b; }
+    .btn-act { width: 100%; background: #334155; border-color: #475569; color: #fff; padding: 9px; margin-bottom: 6px; }
+    .btn-act:hover { background: #475569; }
+    .btn-rst { width: 100%; background: transparent; color: #9ca3af; padding: 6px; border: 1px dashed var(--border); }
+    
+    .logs { background: var(--sub); border: 1px solid var(--border); border-radius: 4px; padding: 8px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 0.7rem; color: #9ca3af; margin-top: 10px; }
+    .chart-box { position: relative; width: 100%; height: 200px; }
+    footer { text-align: center; font-size: 0.7rem; color: #4b5563; padding: 6px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    
-    <!-- ENCABEZADO -->
     <header>
       <div>
-        <h1>Clasificador de Residuos Sólidos</h1>
-        <p>Monitoreo de Prototipo • Uniagustiniana</p>
+        <h1>Clasificador de Residuos</h1>
+        <p>Monitoreo</p>
       </div>
-      <div id="statusBadge" class="badge-status">Sistema en Espera</div>
+      <div id="stBadge" class="status">En Espera</div>
     </header>
 
-    <!-- KPIS PRINCIPALES -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <span class="kpi-label">Procesados</span>
-        <div id="valTotal" class="kpi-value">0 / 20</div>
-        <span class="kpi-sub">Lote de prueba</span>
+    <div class="kpis">
+      <div class="kpi">
+        <span>Procesados</span>
+        <h2 id="kpiTot">0 / 20</h2>
+        <small>Lote de prueba</small>
       </div>
-
-      <div class="kpi-card">
-        <span class="kpi-label">Tasa</span>
-        <div id="valRate" class="kpi-value">0.0</div>
-        <span class="kpi-sub">Objetos / minuto</span>
+      <div class="kpi">
+        <span>Tasa</span>
+        <h2 id="kpiVel">0.0</h2>
+        <small>Objetos / min</small>
       </div>
-
-      <div class="kpi-card">
-        <span class="kpi-label">Volumen</span>
-        <div id="valVol" class="kpi-value">0.00</div>
-        <span class="kpi-sub">dm³ acumulados</span>
+      <div class="kpi">
+        <span>Volumen</span>
+        <h2 id="kpiVol">0.00</h2>
+        <small>dm³ estimado</small>
       </div>
-
-      <div class="kpi-card">
-        <span class="kpi-label">Balance</span>
-        <div id="valBalance" class="kpi-value" style="font-size: 1.25rem; color: #4ade80;">100% OK</div>
-        <span id="valFormula" class="kpi-sub" style="font-family: monospace;">E(0) = M+P+C</span>
+      <div class="kpi">
+        <span>Balance</span>
+        <h2 id="kpiBal" style="font-size: 1.1rem; color: #9ca3af;">Verificado</h2>
+        <small id="kpiEq" style="font-family: monospace;">E = M + P + C</small>
       </div>
     </div>
 
-    <!-- CONTENEDORES DE SALIDA -->
-    <div class="bins-grid">
-      <div class="bin-card">
-        <div class="bin-header">
-          <span class="bin-name" style="color: var(--color-metal);">Metales (Imán)</span>
-          <span id="txtMetal" class="bin-count" style="color: var(--color-metal);">0</span>
+    <div class="bins">
+      <div class="bin">
+        <div class="bin-top">
+          <span class="bin-name">Metales (Imán)</span>
+          <span id="cMet" class="bin-val">0</span>
         </div>
-        <div class="progress-bar-bg">
-          <div id="barMetal" class="progress-fill" style="background: var(--color-metal);"></div>
-        </div>
-        <div id="alertMetal" class="alert-text">⚠️ Depósito al 80% de capacidad</div>
+        <div class="bar"><div id="bMet" class="fill"></div></div>
+        <div id="aMet" class="alert">Alerta: Límite 80%</div>
       </div>
-
-      <div class="bin-card">
-        <div class="bin-header">
-          <span class="bin-name" style="color: var(--color-plastic);">Plástico (Banda)</span>
-          <span id="txtPlastic" class="bin-count" style="color: var(--color-plastic);">0</span>
+      <div class="bin">
+        <div class="bin-top">
+          <span class="bin-name">Plástico (Banda)</span>
+          <span id="cPla" class="bin-val">0</span>
         </div>
-        <div class="progress-bar-bg">
-          <div id="barPlastic" class="progress-fill" style="background: var(--color-plastic);"></div>
-        </div>
-        <div id="alertPlastic" class="alert-text">⚠️ Depósito al 80% de capacidad</div>
+        <div class="bar"><div id="bPla" class="fill"></div></div>
+        <div id="aPla" class="alert">Alerta: Límite 80%</div>
       </div>
-
-      <div class="bin-card">
-        <div class="bin-header">
-          <span class="bin-name" style="color: var(--color-paper);">Papel (Ventilador)</span>
-          <span id="txtPaper" class="bin-count" style="color: var(--color-paper);">0</span>
+      <div class="bin">
+        <div class="bin-top">
+          <span class="bin-name">Papel (Ventilador)</span>
+          <span id="cPap" class="bin-val">0</span>
         </div>
-        <div class="progress-bar-bg">
-          <div id="barPaper" class="progress-fill" style="background: var(--color-paper);"></div>
-        </div>
-        <div id="alertPaper" class="alert-text">⚠️ Depósito al 80% de capacidad</div>
+        <div class="bar"><div id="bPap" class="fill"></div></div>
+        <div id="aPap" class="alert">Alerta: Límite 80%</div>
       </div>
     </div>
 
-    <!-- PANEL INFERIOR: CONTROLES Y GRÁFICO -->
-    <div class="main-grid">
-      
-      <!-- Controles de registro -->
-      <div class="panel-block">
-        <div class="panel-title">Registro y Pruebas</div>
-        
-        <div class="btn-group">
-          <button class="btn-metal" onclick="sumarResiduo('metal')">+ Metal</button>
-          <button class="btn-plastic" onclick="sumarResiduo('plastic')">+ Plástico</button>
-          <button class="btn-paper" onclick="sumarResiduo('paper')">+ Papel</button>
+    <div class="grid-bottom">
+      <div class="panel">
+        <div class="panel-tag">Registro Manual & Simulación</div>
+        <div class="btns">
+          <button onclick="registrar('metal')">+ Metal</button>
+          <button onclick="registrar('plastic')">+ Plástico</button>
+          <button onclick="registrar('paper')">+ Papel</button>
         </div>
-
-        <button id="btnSim" class="btn-primary" onclick="iniciarSimulacion()">Simular Corrida (20 Obj)</button>
-        <button class="btn-secondary" onclick="reiniciarTodo()">Reiniciar Contadores</button>
-
-        <div id="logArea" class="log-box">
-          <div>[00:00:00] Sistema listo.</div>
-        </div>
+        <button id="bRun" class="btn-act" onclick="toggleSim()">Simular Corrida (20 Obj)</button>
+        <button class="btn-rst" onclick="reiniciar()">Reiniciar</button>
+        <div id="logBox" class="logs"><div>[00:00:00] Sistema inicializado.</div></div>
       </div>
 
-      <!-- Gráfica -->
-      <div class="panel-block">
-        <div class="panel-title">Distribución por Material</div>
-        <div class="chart-container">
-          <canvas id="chartMateriales"></canvas>
+      <div class="panel">
+        <div class="panel-tag">Distribución de Material</div>
+        <div class="chart-box">
+          <canvas id="grafica"></canvas>
         </div>
       </div>
-
     </div>
 
-    <footer>
-      Uniagustiniana • Introducción a la Ingeniería • Sistemas
-    </footer>
-
+    <footer>Uniagustiniana • Introducción a la Ingeniería • Sistemas</footer>
   </div>
 
   <script>
-    let conteos = { metal: 0, plastic: 0, paper: 0 };
-    const CAPACIDAD_MAXIMA = 10;
-    const LOTE_OBJETIVO = 20;
-    let tiempoInicio = null;
-    let intervalTasa = null;
-    let simulando = false;
-    let simInterval = null;
+    let data = { metal: 0, plastic: 0, paper: 0 };
+    const CAP_MAX = 10, TOTAL_LOTE = 20;
+    let tStart = null, timer = null, sim = false, simLoop = null;
 
-    // Configuración limpia del gráfico
-    const ctx = document.getElementById('chartMateriales').getContext('2d');
-    const miGrafica = new Chart(ctx, {
+    // Configuración sobria en grises
+    const ctx = document.getElementById('grafica').getContext('2d');
+    const chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['Metales', 'Plástico', 'Papel'],
         datasets: [{
           data: [0, 0, 0],
-          backgroundColor: ['#f59e0b', '#38bdf8', '#34d399'],
-          borderRadius: 6,
-          borderSkipped: false
+          backgroundColor: '#475569',
+          hoverBackgroundColor: '#64748b',
+          borderRadius: 3
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false,
         scales: {
-          x: {
-            ticks: { color: '#94a3b8', font: { size: 11 } },
-            grid: { display: false }
-          },
-          y: {
-            beginAtZero: true,
-            ticks: { stepSize: 1, color: '#94a3b8', font: { size: 11 } },
-            grid: { color: '#243049' }
-          }
+          x: { ticks: { color: '#9ca3af', font: { size: 10 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { stepSize: 1, color: '#9ca3af', font: { size: 10 } }, grid: { color: '#1f2937' } }
         },
-        plugins: {
-          legend: { display: false }
-        }
+        plugins: { legend: { display: false } }
       }
     });
 
-    function sumarResiduo(tipo) {
-      if (!tiempoInicio) {
-        tiempoInicio = new Date();
-        intervalTasa = setInterval(calcularTasa, 1000);
-      }
+    function getTot() { return data.metal + data.plastic + data.paper; }
 
-      let total = getTotal();
-      if (total >= LOTE_OBJETIVO) {
-        agregarLog("Lote de 20 completado.");
-        if (simulando) pararSimulacion();
-        return;
-      }
-
-      conteos[tipo]++;
-      actualizarPantalla();
-      agregarLog("Almacenado: " + tipo.toUpperCase());
+    function registrar(tipo) {
+      if (!tStart) { tStart = new Date(); timer = setInterval(calcularCadencia, 1000); }
+      if (getTot() >= TOTAL_LOTE) { addLog("Lote de 20 completado."); if (sim) toggleSim(); return; }
+      data[tipo]++;
+      actualizar();
+      addLog("Registrado: " + tipo);
     }
 
-    function getTotal() {
-      return conteos.metal + conteos.plastic + conteos.paper;
-    }
+    function actualizar() {
+      const tot = getTot();
+      document.getElementById('kpiTot').innerText = tot + " / " + TOTAL_LOTE;
+      document.getElementById('cMet').innerText = data.metal;
+      document.getElementById('cPla').innerText = data.plastic;
+      document.getElementById('cPap').innerText = data.paper;
+      document.getElementById('kpiVol').innerText = (tot * 0.35).toFixed(2);
+      document.getElementById('kpiEq').innerText = `E(${tot}) = ${data.metal} + ${data.plastic} + ${data.paper}`;
 
-    function actualizarPantalla() {
-      const total = getTotal();
+      evaluar('bMet', 'aMet', data.metal);
+      evaluar('bPla', 'aPla', data.plastic);
+      evaluar('bPap', 'aPap', data.paper);
 
-      document.getElementById('valTotal').innerText = total + " / " + LOTE_OBJETIVO;
-      document.getElementById('txtMetal').innerText = conteos.metal;
-      document.getElementById('txtPlastic').innerText = conteos.plastic;
-      document.getElementById('txtPaper').innerText = conteos.paper;
+      chart.data.datasets[0].data = [data.metal, data.plastic, data.paper];
+      chart.update();
 
-      document.getElementById('valVol').innerText = (total * 0.35).toFixed(2);
-      document.getElementById('valFormula').innerText = 
-        `E(${total}) = M(${conteos.metal}) + P(${conteos.plastic}) + C(${conteos.paper})`;
-
-      revisarCapacidad('barMetal', 'alertMetal', conteos.metal);
-      revisarCapacidad('barPlastic', 'alertPlastic', conteos.plastic);
-      revisarCapacidad('barPaper', 'alertPaper', conteos.paper);
-
-      miGrafica.data.datasets[0].data = [conteos.metal, conteos.plastic, conteos.paper];
-      miGrafica.update();
-
-      const badge = document.getElementById('statusBadge');
-      if (total >= LOTE_OBJETIVO) {
-        badge.innerText = "Lote Finalizado";
-        badge.style.color = "#4ade80";
-        badge.style.background = "rgba(74, 222, 128, 0.1)";
-        badge.style.borderColor = "rgba(74, 222, 128, 0.3)";
+      const b = document.getElementById('stBadge');
+      if (tot >= TOTAL_LOTE) {
+        b.innerText = "Finalizado"; b.style.color = "#e5e7eb"; b.style.background = "#374151";
       } else {
-        badge.innerText = "En Operación";
-        badge.style.color = "#38bdf8";
-        badge.style.background = "rgba(56, 189, 248, 0.1)";
-        badge.style.borderColor = "rgba(56, 189, 248, 0.25)";
+        b.innerText = "Activo"; b.style.color = "#93c5fd"; b.style.background = "#1e293b";
       }
     }
 
-    function revisarCapacidad(barId, alertId, valor) {
-      const pct = Math.min(100, (valor / CAPACIDAD_MAXIMA) * 100);
-      document.getElementById(barId).style.width = pct + "%";
-      
-      if (valor >= 8) {
-        document.getElementById(alertId).style.display = "block";
+    function evaluar(barId, alertId, val) {
+      document.getElementById(barId).style.width = Math.min(100, (val / CAP_MAX) * 100) + "%";
+      document.getElementById(alertId).style.display = (val >= 8) ? "block" : "none";
+    }
+
+    function calcularCadencia() {
+      if (!tStart) return;
+      const min = (new Date() - tStart) / 60000;
+      if (min > 0.03) document.getElementById('kpiVel').innerText = (getTot() / min).toFixed(1);
+    }
+
+    function addLog(txt) {
+      const b = document.getElementById('logBox');
+      const h = new Date().toTimeString().split(' ')[0];
+      const d = document.createElement('div');
+      d.innerText = `[${h}] ${txt}`;
+      b.prepend(d);
+    }
+
+    function toggleSim() {
+      sim = !sim;
+      const btn = document.getElementById('bRun');
+      if (sim) {
+        btn.innerText = "Pausar";
+        simLoop = setInterval(() => {
+          if (getTot() >= TOTAL_LOTE) { toggleSim(); return; }
+          const keys = ['metal', 'plastic', 'paper'];
+          registrar(keys[Math.floor(Math.random() * keys.length)]);
+        }, 1200);
       } else {
-        document.getElementById(alertId).style.display = "none";
+        btn.innerText = "Simular Corrida (20 Obj)";
+        clearInterval(simLoop);
       }
     }
 
-    function calcularTasa() {
-      if (!tiempoInicio) return;
-      const total = getTotal();
-      const minutos = (new Date() - tiempoInicio) / 60000;
-      if (minutos > 0.03) {
-        const tasa = (total / minutos).toFixed(1);
-        document.getElementById('valRate').innerText = tasa;
-      }
-    }
-
-    function agregarLog(msg) {
-      const area = document.getElementById('logArea');
-      const d = new Date();
-      const hora = d.toTimeString().split(' ')[0];
-      const linea = document.createElement('div');
-      linea.innerText = `[${hora}] ${msg}`;
-      area.prepend(linea);
-    }
-
-    function iniciarSimulacion() {
-      if (simulando) {
-        pararSimulacion();
-        return;
-      }
-      simulando = true;
-      document.getElementById('btnSim').innerText = "Pausar";
-      
-      simInterval = setInterval(() => {
-        if (getTotal() >= LOTE_OBJETIVO) {
-          pararSimulacion();
-          return;
-        }
-        const tipos = ['metal', 'plastic', 'paper'];
-        const aleatorio = tipos[Math.floor(Math.random() * tipos.length)];
-        sumarResiduo(aleatorio);
-      }, 1300);
-    }
-
-    function pararSimulacion() {
-      simulando = false;
-      clearInterval(simInterval);
-      document.getElementById('btnSim').innerText = "Simular Corrida (20 Obj)";
-    }
-
-    function reiniciarTodo() {
-      pararSimulacion();
-      clearInterval(intervalTasa);
-      tiempoInicio = null;
-      conteos = { metal: 0, plastic: 0, paper: 0 };
-      document.getElementById('valRate').innerText = "0.0";
-      
-      const badge = document.getElementById('statusBadge');
-      badge.innerText = "Sistema en Espera";
-      badge.style.color = "#38bdf8";
-      badge.style.background = "rgba(56, 189, 248, 0.1)";
-      badge.style.borderColor = "rgba(56, 189, 248, 0.25)";
-      
-      document.getElementById('logArea').innerHTML = "<div>[00:00:00] Sistema reiniciado.</div>";
-      actualizarPantalla();
+    function reiniciar() {
+      if (sim) toggleSim();
+      clearInterval(timer);
+      tStart = null;
+      data = { metal: 0, plastic: 0, paper: 0 };
+      document.getElementById('kpiVel').innerText = "0.0";
+      document.getElementById('stBadge').innerText = "En Espera";
+      document.getElementById('stBadge').style.color = "#d1d5db";
+      document.getElementById('stBadge').style.background = "#1f2937";
+      document.getElementById('logBox').innerHTML = "<div>[00:00:00] Sistema inicializado.</div>";
+      actualizar();
     }
   </script>
-
 </body>
 </html>
