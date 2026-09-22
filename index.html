@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Monitoreo</title>
+  <title>Proyecto Integrador - Clasificador RSU</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -21,17 +21,59 @@
       --color-paper: #ffffff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 16px; line-height: 1.4; }
-    .container { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; line-height: 1.5; }
+    .container { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 
+    /* Encabezado principal */
     header {
       background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 18px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;
     }
     header h1 { font-size: 1.05rem; font-weight: 700; color: #f9fafb; }
     header p { font-size: 0.78rem; color: var(--muted); }
-    .status { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: #1f2937; color: #d1d5db; border: 1px solid #374151; }
+    .badge-uni { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: #1f2937; color: #d1d5db; border: 1px solid #374151; }
 
+    /* Barra de Navegación por Pestañas */
+    nav.tabs {
+      display: flex; gap: 6px; border-bottom: 1px solid var(--border); padding-bottom: 6px; overflow-x: auto;
+    }
+    .tab-btn {
+      cursor: pointer; background: transparent; border: 1px solid transparent; color: var(--muted);
+      padding: 8px 14px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; white-space: nowrap; transition: 0.15s ease;
+    }
+    .tab-btn:hover { background: var(--sub); color: #fff; }
+    .tab-btn.active { background: var(--card); color: #fff; border-color: var(--border); }
+
+    /* Contenido de pestañas */
+    .tab-pane { display: none; flex-direction: column; gap: 14px; }
+    .tab-pane.active { display: flex; }
+
+    /* Estructura común de bloques */
+    .block { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+    .block h2 { font-size: 1rem; font-weight: 700; color: #f3f4f6; margin-bottom: 10px; }
+    .block p { font-size: 0.82rem; color: var(--muted); margin-bottom: 12px; }
+
+    /* Pestaña 1: Información */
+    .grid-info { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 768px) { .grid-info { grid-template-columns: repeat(3, 1fr); } }
+    .role-card { background: var(--sub); border: 1px solid var(--border); border-radius: 6px; padding: 12px; }
+    .role-card h3 { font-size: 0.82rem; font-weight: 700; color: #f9fafb; margin-bottom: 4px; }
+    .role-card small { font-size: 0.72rem; color: var(--muted); display: block; margin-bottom: 6px; }
+    .role-card p { font-size: 0.76rem; color: #cbd5e1; margin-bottom: 0; }
+
+    /* Pestaña 2: Planos */
+    .flow-vertical { display: flex; flex-direction: column; gap: 8px; max-width: 650px; margin: 0 auto; }
+    .flow-step { background: var(--sub); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+    .flow-step h4 { font-size: 0.82rem; color: #f3f4f6; }
+    .flow-step span { font-size: 0.72rem; color: var(--muted); }
+
+    /* Pestaña 3: Bitácora */
+    .log-gallery { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 768px) { .log-gallery { grid-template-columns: repeat(3, 1fr); } }
+    .log-item { background: var(--sub); border: 1px dashed var(--border); border-radius: 6px; padding: 24px 14px; text-align: center; }
+    .log-item span { font-size: 0.75rem; color: var(--muted); display: block; }
+
+    /* Pestaña 4: Dashboard y Simulación */
     .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     @media (min-width: 768px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
     .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 12px; }
@@ -51,20 +93,16 @@
 
     .grid-bottom { display: grid; grid-template-columns: 1fr; gap: 14px; }
     @media (min-width: 800px) { .grid-bottom { grid-template-columns: 1fr 1.2fr; } }
-    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
-    .panel-tag { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
-
     .btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-    button {
+    button.action-btn {
       cursor: pointer; border-radius: 5px; font-weight: 500; font-size: 0.75rem;
       border: 1px solid var(--border); background: var(--sub); color: #e5e7eb; padding: 8px 6px;
     }
-    button:hover { background: #1e293b; }
-    .btn-act { width: 100%; background: #334155; border-color: #475569; color: #fff; padding: 9px; margin-bottom: 6px; }
+    button.action-btn:hover { background: #1e293b; }
+    .btn-act { width: 100%; background: #334155; border: 1px solid #475569; color: #fff; padding: 9px; margin-bottom: 6px; border-radius: 5px; cursor: pointer; }
     .btn-act:hover { background: #475569; }
-    .btn-rst { width: 100%; background: transparent; color: #9ca3af; padding: 6px; border: 1px dashed var(--border); }
-    
-    .logs { background: var(--sub); border: 1px solid var(--border); border-radius: 4px; padding: 8px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 0.7rem; color: #9ca3af; margin-top: 10px; }
+    .btn-rst { width: 100%; background: transparent; color: #9ca3af; padding: 6px; border: 1px dashed var(--border); border-radius: 5px; cursor: pointer; }
+    .terminal { background: var(--sub); border: 1px solid var(--border); border-radius: 4px; padding: 8px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 0.7rem; color: #9ca3af; margin-top: 10px; }
     .chart-box { position: relative; width: 100%; height: 200px; }
     footer { text-align: center; font-size: 0.7rem; color: #4b5563; padding: 6px; }
   </style>
@@ -72,97 +110,199 @@
 <body>
 
   <div class="container">
+    
+    <!-- ENCABEZADO -->
     <header>
       <div>
-        <h1>Clasificador de Residuos</h1>
-        <p>Monitoreo</p>
+        <h1>Sistema Clasificador de Residuos RSU</h1>
+        <p>Facultad de Ingeniería • Introducción a la Ingeniería</p>
       </div>
-      <div id="stBadge" class="status">En Espera</div>
+      <div class="badge-uni">Uniagustiniana 2026-II</div>
     </header>
 
-    <!-- KPIS REESTRUCTURADOS -->
-    <div class="kpis">
-      <div class="kpi">
-        <span>Lote Oficial</span>
-        <h2 id="kpiTot">0 / 20</h2>
-        <small>Objetos ingresados</small>
-      </div>
-      <div class="kpi">
-        <span>Aprovechamiento</span>
-        <h2 id="kpiAprov">0%</h2>
-        <small>Clasificación efectiva</small>
-      </div>
-      <div class="kpi">
-        <span>Balance de Materia</span>
-        <h2 id="kpiBal" style="font-size: 1.15rem; color: #4ade80;">Equilibrado</h2>
-        <small id="kpiEq" style="font-family: monospace;">E = M + P + C</small>
-      </div>
-    </div>
+    <!-- PESTAÑAS DE NAVEGACIÓN -->
+    <nav class="tabs">
+      <button class="tab-btn active" onclick="cambiarPestana('tab-info')">1. Descripción General</button>
+      <button class="tab-btn" onclick="cambiarPestana('tab-planos')">2. Planos & Flujo</button>
+      <button class="tab-btn" onclick="cambiarPestana('tab-bitacora')">3. Proceso & Bitácora</button>
+      <button class="tab-btn" onclick="cambiarPestana('tab-dashboard')">4. Monitoreo & Simulación</button>
+    </nav>
 
-    <!-- DEPÓSITOS (ZONA D) CON LOS COLORES INDICADOS -->
-    <div class="bins">
-      <!-- Metales: Gris / Plata -->
-      <div class="bin">
-        <div class="bin-top">
-          <span class="bin-name" style="color: var(--color-metal);">Metales (Imán)</span>
-          <span id="cMet" class="bin-val" style="color: var(--color-metal);">0</span>
-        </div>
-        <div class="bar"><div id="bMet" class="fill" style="background: var(--color-metal);"></div></div>
-        <div id="aMet" class="alert">Alerta: Límite 80%</div>
-      </div>
-
-      <!-- Plástico: Azul -->
-      <div class="bin">
-        <div class="bin-top">
-          <span class="bin-name" style="color: var(--color-plastic);">Plástico (Banda)</span>
-          <span id="cPla" class="bin-val" style="color: var(--color-plastic);">0</span>
-        </div>
-        <div class="bar"><div id="bPla" class="fill" style="background: var(--color-plastic);"></div></div>
-        <div id="aPla" class="alert">Alerta: Límite 80%</div>
-      </div>
-
-      <!-- Papel: Blanco -->
-      <div class="bin">
-        <div class="bin-top">
-          <span class="bin-name" style="color: var(--color-paper);">Papel (Ventilador)</span>
-          <span id="cPap" class="bin-val" style="color: var(--color-paper);">0</span>
-        </div>
-        <div class="bar"><div id="bPap" class="fill" style="background: var(--color-paper);"></div></div>
-        <div id="aPap" class="alert">Alerta: Límite 80%</div>
-      </div>
-    </div>
-
-    <!-- PANEL INFERIOR -->
-    <div class="grid-bottom">
-      <div class="panel">
-        <div class="panel-tag">Registro Manual & Simulación</div>
-        <div class="btns">
-          <button onclick="registrar('metal')">+ Metal</button>
-          <button onclick="registrar('plastic')">+ Plástico</button>
-          <button onclick="registrar('paper')">+ Papel</button>
-        </div>
-        <button id="bRun" class="btn-act" onclick="toggleSim()">Simular Corrida (20 Obj)</button>
-        <button class="btn-rst" onclick="reiniciar()">Reiniciar</button>
-        <div id="logBox" class="logs"><div>[00:00:00] Sistema inicializado para lote de 20 unidades.</div></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-tag">Distribución de Material</div>
-        <div class="chart-box">
-          <canvas id="grafica"></canvas>
+    <!-- PESTAÑA 1: INFORMACIÓN DEL PROYECTO -->
+    <section id="tab-info" class="tab-pane active">
+      <div class="block">
+        <h2>Problemática y Enfoque Técnico</h2>
+        <p>
+          Respondiendo a la problemática de clasificación de residuos sólidos urbanos (RSU) y en concordancia con el Decreto 484 de 2024 del Distrito Capital, el prototipo automatiza la separación de materiales aprovechables mediante fusión mecánica, rampas de gravedad y flujo continuo de selección[cite: 1, 2].
+        </p>
+        <p>
+          <strong>Objetivo General:</strong> Diseñar y construir un sistema a escala para la separación de residuos sólidos mediante mecanismos pasivos y guiados, reduciendo riesgos ergonómicos y tiempos de segregación[cite: 1, 2].
+        </p>
+        <div style="background: var(--sub); border: 1px solid var(--border); padding: 10px 14px; border-radius: 6px; font-size: 0.78rem;">
+          <strong>Presupuesto Oficial (BOM):</strong> $20.000 COP por estudiante | <strong>Total asignado:</strong> $120.000 COP[cite: 1, 2].
         </div>
       </div>
-    </div>
 
-    <footer>Uniagustiniana • Introducción a la Ingeniería • Sistemas</footer>
+      <div class="block">
+        <h2>Distribución Multidisciplinar</h2>
+        <div class="grid-info">
+          <div class="role-card">
+            <h3>Ingeniería de Sistemas</h3>
+            <small>Daniel & Nicolás</small>
+            <p>Mapeo de datos, lógica secuencial, plataforma web y telemetría de conteo en tiempo real[cite: 1, 2].</p>
+          </div>
+          <div class="role-card">
+            <h3>Ingeniería Mecatrónica</h3>
+            <small>Marian & Kaleth</small>
+            <p>Diseño estructural, mecanismos de selección por imán/ventilador y ensamble dimensional[cite: 2, 3].</p>
+          </div>
+          <div class="role-card">
+            <h3>Ingeniería Industrial</h3>
+            <small>Yoseth & Saimon</small>
+            <p>Estudio de layout, tiempos de ciclo, balance de masa y control del presupuesto BOM[cite: 1, 2].</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA 2: PLANOS & FLUJOGRAMA -->
+    <section id="tab-planos" class="tab-pane">
+      <div class="block">
+        <h2>Layout Técnico (75 cm × 50 cm)</h2>
+        <p>Delimitación física en pliego 1:1 dividida en 4 zonas operativas: Carga (A), Alimentación (B), Discriminación (C) y Depósitos clasificados (D).</p>
+        <div style="background: var(--sub); border: 1px dashed var(--border); padding: 20px; border-radius: 6px; text-align: center; font-size: 0.8rem; color: var(--muted);">
+          <span>📐 Plano técnico acotado: Separación lateral magnética (Metales), soplador neumático (Papel) y banda transportadora central (Plástico)[cite: 2, 3].</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2>Flujograma Secuencial (5 Etapas)</h2>
+        <div class="flow-vertical">
+          <div class="flow-step"><h4>Etapa 1: Carga (Zona A)</h4><span>Ingreso de residuos por tolva y rampas cruzadas en X[cite: 1, 3]</span></div>
+          <div class="flow-step"><h4>Etapa 2: Alimentación</h4><span>Descenso guiado hacia la cota de clasificación[cite: 1, 3]</span></div>
+          <div class="flow-step"><h4>Etapa 3: Evaluación</h4><span>Discriminación por atracción magnética, fuerza de aire y densidad[cite: 1, 3]</span></div>
+          <div class="flow-step"><h4>Etapa 4: Desvío</h4><span>Rampas específicas y banda hacia canales asignados[cite: 1, 3]</span></div>
+          <div class="flow-step"><h4>Etapa 5: Depósito & Registro</h4><span>Caída en contenedor y actualización del balance de masa[cite: 1]</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA 3: PROCESO & BITÁCORA -->
+    <section id="tab-bitacora" class="tab-pane">
+      <div class="block">
+        <h2>Registro Fotográfico y Cronológico</h2>
+        <p>Espacio asignado para la documentación gradual del ensamble y pruebas de funcionamiento físico de la maqueta[cite: 1].</p>
+        
+        <div class="log-gallery">
+          <div class="log-item">
+            <strong style="font-size: 0.85rem; color: #fff;">Fase 1: Trazado 2D</strong>
+            <span>Boceto en pliego (30 de Septiembre)[cite: 1]</span>
+          </div>
+          <div class="log-item">
+            <strong style="font-size: 0.85rem; color: #fff;">Fase 2: Estructura & Ensamble</strong>
+            <span>Chasis y rampas (En desarrollo)[cite: 1]</span>
+          </div>
+          <div class="log-item">
+            <strong style="font-size: 0.85rem; color: #fff;">Fase 3: Pruebas con Lote</strong>
+            <span>Ensayo de 20 piezas (Noviembre)[cite: 1]</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA 4: MONITOREO & SIMULACIÓN -->
+    <section id="tab-dashboard" class="tab-pane">
+      
+      <!-- KPIS -->
+      <div class="kpis">
+        <div class="kpi">
+          <span>Lote Oficial</span>
+          <h2 id="kpiTot">0 / 20</h2>
+          <small>Objetos ingresados[cite: 1]</small>
+        </div>
+        <div class="kpi">
+          <span>Aprovechamiento</span>
+          <h2 id="kpiAprov">0%</h2>
+          <small>Clasificación efectiva</small>
+        </div>
+        <div class="kpi">
+          <span>Balance de Materia</span>
+          <h2 id="kpiBal" style="font-size: 1.15rem; color: #4ade80;">Equilibrado</h2>
+          <small id="kpiEq" style="font-family: monospace;">E = M + P + C[cite: 1]</small>
+        </div>
+      </div>
+
+      <!-- DEPÓSITOS (ZONA D) -->
+      <div class="bins">
+        <div class="bin">
+          <div class="bin-top">
+            <span class="bin-name" style="color: var(--color-metal);">Metales (Imán)</span>
+            <span id="cMet" class="bin-val" style="color: var(--color-metal);">0</span>
+          </div>
+          <div class="bar"><div id="bMet" class="fill" style="background: var(--color-metal);"></div></div>
+          <div id="aMet" class="alert">Alerta: Límite 80%</div>
+        </div>
+
+        <div class="bin">
+          <div class="bin-top">
+            <span class="bin-name" style="color: var(--color-plastic);">Plástico (Banda)</span>
+            <span id="cPla" class="bin-val" style="color: var(--color-plastic);">0</span>
+          </div>
+          <div class="bar"><div id="bPla" class="fill" style="background: var(--color-plastic);"></div></div>
+          <div id="aPla" class="alert">Alerta: Límite 80%</div>
+        </div>
+
+        <div class="bin">
+          <div class="bin-top">
+            <span class="bin-name" style="color: var(--color-paper);">Papel (Ventilador)</span>
+            <span id="cPap" class="bin-val" style="color: var(--color-paper);">0</span>
+          </div>
+          <div class="bar"><div id="bPap" class="fill" style="background: var(--color-paper);"></div></div>
+          <div id="aPap" class="alert">Alerta: Límite 80%</div>
+        </div>
+      </div>
+
+      <!-- CONTROLES Y GRÁFICA -->
+      <div class="grid-bottom">
+        <div class="block" style="padding: 14px;">
+          <h3 style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 10px;">Captura de Lote</h3>
+          <div class="btns">
+            <button class="action-btn" onclick="registrar('metal')">+ Metal</button>
+            <button class="action-btn" onclick="registrar('plastic')">+ Plástico</button>
+            <button class="action-btn" onclick="registrar('paper')">+ Papel</button>
+          </div>
+          <button id="bRun" class="btn-act" onclick="toggleSim()">Simular Corrida (20 Obj)</button>
+          <button class="btn-rst" onclick="reiniciar()">Reiniciar</button>
+          <div id="logBox" class="terminal"><div>[00:00:00] Sistema inicializado para lote de 20 unidades.</div></div>
+        </div>
+
+        <div class="block" style="padding: 14px;">
+          <h3 style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 10px;">Distribución de Salidas</h3>
+          <div class="chart-box">
+            <canvas id="grafica"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <footer>Uniagustiniana • Introducción a la Ingeniería • Ingeniería de Sistemas[cite: 1, 2]</footer>
   </div>
 
   <script>
+    // Navegación por pestañas
+    function cambiarPestana(idTab) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(idTab).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Datos del monitoreo
     let data = { metal: 0, plastic: 0, paper: 0 };
     const CAP_MAX = 10, TOTAL_LOTE = 20;
     let sim = false, simLoop = null;
 
-    // Gráfica con los colores acordados (Gris, Azul, Blanco)
     const ctx = document.getElementById('grafica').getContext('2d');
     const chart = new Chart(ctx, {
       type: 'bar',
@@ -200,10 +340,8 @@
       document.getElementById('cPla').innerText = data.plastic;
       document.getElementById('cPap').innerText = data.paper;
       
-      // Cálculo de aprovechamiento sobre el lote
       const pct = Math.round((tot / TOTAL_LOTE) * 100);
       document.getElementById('kpiAprov').innerText = pct + "%";
-      
       document.getElementById('kpiEq').innerText = `E(${tot}) = ${data.metal} + ${data.plastic} + ${data.paper}`;
 
       evaluar('bMet', 'aMet', data.metal);
@@ -212,13 +350,6 @@
 
       chart.data.datasets[0].data = [data.metal, data.plastic, data.paper];
       chart.update();
-
-      const b = document.getElementById('stBadge');
-      if (tot >= TOTAL_LOTE) {
-        b.innerText = "Lote Finalizado"; b.style.color = "#e5e7eb"; b.style.background = "#374151";
-      } else {
-        b.innerText = "En Corrida"; b.style.color = "#93c5fd"; b.style.background = "#1e293b";
-      }
     }
 
     function evaluar(barId, alertId, val) {
@@ -253,9 +384,6 @@
     function reiniciar() {
       if (sim) toggleSim();
       data = { metal: 0, plastic: 0, paper: 0 };
-      document.getElementById('stBadge').innerText = "En Espera";
-      document.getElementById('stBadge').style.color = "#d1d5db";
-      document.getElementById('stBadge').style.background = "#1f2937";
       document.getElementById('logBox').innerHTML = "<div>[00:00:00] Sistema inicializado para lote de 20 unidades.</div>";
       actualizar();
     }
