@@ -16,7 +16,9 @@
       --border: #1f2937;
       --text: #e5e7eb;
       --muted: #9ca3af;
-      --accent: #475569;
+      --color-metal: #94a3b8;
+      --color-plastic: #38bdf8;
+      --color-paper: #ffffff;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 16px; line-height: 1.4; }
@@ -31,7 +33,7 @@
     .status { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: #1f2937; color: #d1d5db; border: 1px solid #374151; }
 
     .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    @media (min-width: 768px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+    @media (min-width: 768px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
     .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 12px; }
     .kpi span { font-size: 0.68rem; font-weight: 600; color: var(--muted); text-transform: uppercase; }
     .kpi h2 { font-size: 1.4rem; font-weight: 700; margin: 2px 0; color: #f3f4f6; }
@@ -41,10 +43,10 @@
     @media (min-width: 768px) { .bins { grid-template-columns: repeat(3, 1fr); } }
     .bin { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
     .bin-top { display: flex; justify-content: space-between; align-items: baseline; }
-    .bin-name { font-size: 0.85rem; font-weight: 600; color: #d1d5db; }
-    .bin-val { font-size: 1.3rem; font-weight: 700; color: #f9fafb; }
+    .bin-name { font-size: 0.85rem; font-weight: 600; }
+    .bin-val { font-size: 1.3rem; font-weight: 700; }
     .bar { background: var(--sub); height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px; border: 1px solid var(--border); }
-    .fill { height: 100%; width: 0%; background: #64748b; transition: width 0.2s ease; }
+    .fill { height: 100%; width: 0%; transition: width 0.2s ease; }
     .alert { font-size: 0.7rem; color: #f87171; font-weight: 500; margin-top: 5px; display: none; }
 
     .grid-bottom { display: grid; grid-template-columns: 1fr; gap: 14px; }
@@ -78,56 +80,59 @@
       <div id="stBadge" class="status">En Espera</div>
     </header>
 
+    <!-- KPIS REESTRUCTURADOS -->
     <div class="kpis">
       <div class="kpi">
-        <span>Procesados</span>
+        <span>Lote Oficial</span>
         <h2 id="kpiTot">0 / 20</h2>
-        <small>Lote de prueba</small>
+        <small>Objetos ingresados</small>
       </div>
       <div class="kpi">
-        <span>Tasa</span>
-        <h2 id="kpiVel">0.0</h2>
-        <small>Objetos / min</small>
+        <span>Aprovechamiento</span>
+        <h2 id="kpiAprov">0%</h2>
+        <small>Clasificación efectiva</small>
       </div>
       <div class="kpi">
-        <span>Volumen</span>
-        <h2 id="kpiVol">0.00</h2>
-        <small>dm³ estimado</small>
-      </div>
-      <div class="kpi">
-        <span>Balance</span>
-        <h2 id="kpiBal" style="font-size: 1.1rem; color: #9ca3af;">Verificado</h2>
+        <span>Balance de Materia</span>
+        <h2 id="kpiBal" style="font-size: 1.15rem; color: #4ade80;">Equilibrado</h2>
         <small id="kpiEq" style="font-family: monospace;">E = M + P + C</small>
       </div>
     </div>
 
+    <!-- DEPÓSITOS (ZONA D) CON LOS COLORES INDICADOS -->
     <div class="bins">
+      <!-- Metales: Gris / Plata -->
       <div class="bin">
         <div class="bin-top">
-          <span class="bin-name">Metales (Imán)</span>
-          <span id="cMet" class="bin-val">0</span>
+          <span class="bin-name" style="color: var(--color-metal);">Metales (Imán)</span>
+          <span id="cMet" class="bin-val" style="color: var(--color-metal);">0</span>
         </div>
-        <div class="bar"><div id="bMet" class="fill"></div></div>
+        <div class="bar"><div id="bMet" class="fill" style="background: var(--color-metal);"></div></div>
         <div id="aMet" class="alert">Alerta: Límite 80%</div>
       </div>
+
+      <!-- Plástico: Azul -->
       <div class="bin">
         <div class="bin-top">
-          <span class="bin-name">Plástico (Banda)</span>
-          <span id="cPla" class="bin-val">0</span>
+          <span class="bin-name" style="color: var(--color-plastic);">Plástico (Banda)</span>
+          <span id="cPla" class="bin-val" style="color: var(--color-plastic);">0</span>
         </div>
-        <div class="bar"><div id="bPla" class="fill"></div></div>
+        <div class="bar"><div id="bPla" class="fill" style="background: var(--color-plastic);"></div></div>
         <div id="aPla" class="alert">Alerta: Límite 80%</div>
       </div>
+
+      <!-- Papel: Blanco -->
       <div class="bin">
         <div class="bin-top">
-          <span class="bin-name">Papel (Ventilador)</span>
-          <span id="cPap" class="bin-val">0</span>
+          <span class="bin-name" style="color: var(--color-paper);">Papel (Ventilador)</span>
+          <span id="cPap" class="bin-val" style="color: var(--color-paper);">0</span>
         </div>
-        <div class="bar"><div id="bPap" class="fill"></div></div>
+        <div class="bar"><div id="bPap" class="fill" style="background: var(--color-paper);"></div></div>
         <div id="aPap" class="alert">Alerta: Límite 80%</div>
       </div>
     </div>
 
+    <!-- PANEL INFERIOR -->
     <div class="grid-bottom">
       <div class="panel">
         <div class="panel-tag">Registro Manual & Simulación</div>
@@ -138,7 +143,7 @@
         </div>
         <button id="bRun" class="btn-act" onclick="toggleSim()">Simular Corrida (20 Obj)</button>
         <button class="btn-rst" onclick="reiniciar()">Reiniciar</button>
-        <div id="logBox" class="logs"><div>[00:00:00] Sistema inicializado.</div></div>
+        <div id="logBox" class="logs"><div>[00:00:00] Sistema inicializado para lote de 20 unidades.</div></div>
       </div>
 
       <div class="panel">
@@ -155,9 +160,9 @@
   <script>
     let data = { metal: 0, plastic: 0, paper: 0 };
     const CAP_MAX = 10, TOTAL_LOTE = 20;
-    let tStart = null, timer = null, sim = false, simLoop = null;
+    let sim = false, simLoop = null;
 
-    // Configuración sobria en grises
+    // Gráfica con los colores acordados (Gris, Azul, Blanco)
     const ctx = document.getElementById('grafica').getContext('2d');
     const chart = new Chart(ctx, {
       type: 'bar',
@@ -165,8 +170,7 @@
         labels: ['Metales', 'Plástico', 'Papel'],
         datasets: [{
           data: [0, 0, 0],
-          backgroundColor: '#475569',
-          hoverBackgroundColor: '#64748b',
+          backgroundColor: ['#94a3b8', '#38bdf8', '#ffffff'],
           borderRadius: 3
         }]
       },
@@ -183,11 +187,10 @@
     function getTot() { return data.metal + data.plastic + data.paper; }
 
     function registrar(tipo) {
-      if (!tStart) { tStart = new Date(); timer = setInterval(calcularCadencia, 1000); }
       if (getTot() >= TOTAL_LOTE) { addLog("Lote de 20 completado."); if (sim) toggleSim(); return; }
       data[tipo]++;
       actualizar();
-      addLog("Registrado: " + tipo);
+      addLog("Registrado: " + tipo.toUpperCase());
     }
 
     function actualizar() {
@@ -196,7 +199,11 @@
       document.getElementById('cMet').innerText = data.metal;
       document.getElementById('cPla').innerText = data.plastic;
       document.getElementById('cPap').innerText = data.paper;
-      document.getElementById('kpiVol').innerText = (tot * 0.35).toFixed(2);
+      
+      // Cálculo de aprovechamiento sobre el lote
+      const pct = Math.round((tot / TOTAL_LOTE) * 100);
+      document.getElementById('kpiAprov').innerText = pct + "%";
+      
       document.getElementById('kpiEq').innerText = `E(${tot}) = ${data.metal} + ${data.plastic} + ${data.paper}`;
 
       evaluar('bMet', 'aMet', data.metal);
@@ -208,21 +215,15 @@
 
       const b = document.getElementById('stBadge');
       if (tot >= TOTAL_LOTE) {
-        b.innerText = "Finalizado"; b.style.color = "#e5e7eb"; b.style.background = "#374151";
+        b.innerText = "Lote Finalizado"; b.style.color = "#e5e7eb"; b.style.background = "#374151";
       } else {
-        b.innerText = "Activo"; b.style.color = "#93c5fd"; b.style.background = "#1e293b";
+        b.innerText = "En Corrida"; b.style.color = "#93c5fd"; b.style.background = "#1e293b";
       }
     }
 
     function evaluar(barId, alertId, val) {
       document.getElementById(barId).style.width = Math.min(100, (val / CAP_MAX) * 100) + "%";
       document.getElementById(alertId).style.display = (val >= 8) ? "block" : "none";
-    }
-
-    function calcularCadencia() {
-      if (!tStart) return;
-      const min = (new Date() - tStart) / 60000;
-      if (min > 0.03) document.getElementById('kpiVel').innerText = (getTot() / min).toFixed(1);
     }
 
     function addLog(txt) {
@@ -242,7 +243,7 @@
           if (getTot() >= TOTAL_LOTE) { toggleSim(); return; }
           const keys = ['metal', 'plastic', 'paper'];
           registrar(keys[Math.floor(Math.random() * keys.length)]);
-        }, 1200);
+        }, 1100);
       } else {
         btn.innerText = "Simular Corrida (20 Obj)";
         clearInterval(simLoop);
@@ -251,14 +252,11 @@
 
     function reiniciar() {
       if (sim) toggleSim();
-      clearInterval(timer);
-      tStart = null;
       data = { metal: 0, plastic: 0, paper: 0 };
-      document.getElementById('kpiVel').innerText = "0.0";
       document.getElementById('stBadge').innerText = "En Espera";
       document.getElementById('stBadge').style.color = "#d1d5db";
       document.getElementById('stBadge').style.background = "#1f2937";
-      document.getElementById('logBox').innerHTML = "<div>[00:00:00] Sistema inicializado.</div>";
+      document.getElementById('logBox').innerHTML = "<div>[00:00:00] Sistema inicializado para lote de 20 unidades.</div>";
       actualizar();
     }
   </script>
