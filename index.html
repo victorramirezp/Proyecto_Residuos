@@ -9,100 +9,63 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    /* ========================================================
+       COLORES PRINCIPALES DE LA PÁGINA (CÁMBIALOS AQUÍ)
+       ======================================================== */
     :root {
-      --bg-dark: #0c1220;
-      --nav-bg: #131b2e;
-      --card-bg: #172036;
-      --card-sub: #0f172a;
-      --border: #24304f;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --metal: #94a3b8;
-      --plastic: #38bdf8;
-      --paper: #ffffff;
+      --bg-dark: #262622;    /* Fondo general de toda la pantalla */
+      --nav-bg: #2B2B27;     /* Fondo de la barra de navegación */
+      
+      --card-bg: #30302C;    /* 👈 1. AQUÍ: Fondo de los cuadros grandes principales */
+      --card-sub: #1A1515;   /* 👈 2. AQUÍ: Fondo de los "cuadritos de los cuadritos" */
+      --border: #000000;     /* 👈 3. AQUÍ: Borde de todos los cuadros */
+      
+      --text: #e2e8f0;       /* Color de texto principal */
+      --muted: #4A4949;      /* Color de texto secundario/gris */
+      --metal: #94a3b8;      /* Color para categoría Metales */
+      --plastic: #38bdf8;    /* Color para categoría Plástico */
+      --paper: #ffffff;      /* Color para categoría Papel */
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
     body { background-color: var(--bg-dark); color: var(--text); padding-bottom: 40px; overflow-x: hidden; }
 
-    /* HEADER INSTITUCIONAL */
-    .top-bar-uni {
-      background: linear-gradient(180deg, #131b2e 0%, #0c1220 100%);
+    /* NAVEGACIÓN SUPERIOR */
+    header {
+      background: var(--nav-bg);
       border-bottom: 1px solid var(--border);
-      padding: 14px 20px 10px 20px;
-    }
-    .top-bar-content {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
+      padding: 12px 16px;
     }
 
-    /* Cápsula izquierda */
-    .pill-box {
-      background: #ffffff;
-      color: #1e293b;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.73rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      white-space: nowrap;
-    }
-    .pill-box strong { color: #0f172a; }
-    .pill-box a {
-      color: #0284c7;
-      text-decoration: none;
-      margin: 0 4px;
-      cursor: pointer;
-    }
-    .pill-box a:hover { text-decoration: underline; }
-
-    /* Círculo blanco puro sin texto */
-    .logo-center {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .escudo-circulo {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    /* MENÚ HORIZONTAL SIN BARRAS NI SCROLL INNECESARIO */
     nav.nav-menu {
       max-width: 1100px;
       margin: 0 auto;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 20px;
-      padding: 14px 10px 4px 10px;
+      gap: 24px;
       overflow: visible;
     }
+
     .menu-link {
       background: transparent;
       border: none;
       color: #cbd5e1;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
-      padding: 6px 4px;
+      padding: 8px 4px;
       position: relative;
       white-space: nowrap;
       transition: color 0.15s ease;
     }
+
     .menu-link:hover { color: #ffffff; }
-    .menu-link.active {
-      color: #38bdf8;
-    }
+    .menu-link.active { color: #38bdf8; }
     .menu-link.active::after {
       content: '';
       position: absolute;
-      bottom: -4px;
+      bottom: -2px;
       left: 0;
       width: 100%;
       height: 2px;
@@ -192,24 +155,8 @@
 </head>
 <body>
 
-  <!-- HEADER INSTITUCIONAL LIMPIO -->
-  <header class="top-bar-uni">
-    <div class="top-bar-content">
-      <!-- Cápsula Izquierda -->
-      <div class="pill-box">
-        <strong>Proyecto:</strong>
-        <a onclick="navegar('view-info')">Introducción</a> |
-        <a onclick="navegar('view-planos')">Diseño 2D</a> |
-        <a onclick="navegar('view-dashboard')">Telemetría</a>
-      </div>
-
-      <!-- Círculo Blanco Puro -->
-      <div class="logo-center">
-        <div class="escudo-circulo"></div>
-      </div>
-    </div>
-
-    <!-- Menú Horizontal Sin Controles Raros -->
+  <!-- NAVEGACIÓN PRINCIPAL -->
+  <header>
     <nav class="nav-menu">
       <button class="menu-link active" onclick="navegar('view-info', this)">La Propuesta</button>
       <button class="menu-link" onclick="navegar('view-planos', this)">Planos & Flujograma</button>
@@ -224,30 +171,36 @@
     <section id="view-info" class="view-pane active">
       <div class="card">
         <h2>Clasificador Mecánico de Residuos Urbanos (RSU)</h2>
-        <p>Prototipo a escala funcional diseñado bajo los lineamientos del Decreto Distrital 484 de 2024 para la segregación optimizada en Bogotá.</p>
-        <p><strong>Objetivo General:</strong> Automatizar el flujo de separación de residuos sólidos mediante métodos pasivos (gravedad, atracción electromagnética y empuje neumático), disminuyendo el contacto manual directo y los tiempos de segregación.</p>
+        <p>Prototipo a escala funcional diseñado bajo los lineamientos del Decreto Distrital 484 de 2024 para la segregación optimizada en Bogotá[cite: 1, 2].</p>
+        <p><strong>Objetivo General:</strong> Automatizar el flujo de separación de residuos sólidos mediante métodos pasivos (gravedad, atracción electromagnética y empuje neumático), disminuyendo el contacto manual directo y los tiempos de segregación[cite: 1, 2].</p>
         <div style="background: var(--card-sub); border: 1px solid var(--border); padding: 10px 14px; border-radius: 6px; font-size: 0.78rem;">
-          <strong>Presupuesto Oficial:</strong> $20.000 COP por estudiante | <strong>Total de la maqueta (BOM):</strong> $120.000 COP
+          <strong>Presupuesto Oficial:</strong> $20.000 COP por estudiante | <strong>Total de la maqueta (BOM):</strong> $120.000 COP[cite: 1, 2]
         </div>
       </div>
 
+      <!-- EQUIPO CON ORDEN ACTUALIZADO: MECATRÓNICA -> SISTEMAS -> INDUSTRIAL -->
       <div class="card">
         <h2>Equipo de Trabajo Interdisciplinar</h2>
         <div class="roles-grid">
-          <div class="role-item">
-            <h3>Ingeniería de Sistemas</h3>
-            <small>Daniel & Nicolás</small>
-            <p>Arquitectura de software, flujograma lógico de 5 etapas, portal institucional y telemetría.</p>
-          </div>
+          <!-- 1. MECATRÓNICA -->
           <div class="role-item">
             <h3>Ingeniería Mecatrónica</h3>
             <small>Marian & Kaleth</small>
-            <p>Estructura general, montaje de tolva en X, ensamble mecánico del imán y soplador.</p>
+            <p>Estructura general, montaje de tolva en X, ensamble mecánico del imán y soplador[cite: 2, 3].</p>
           </div>
+
+          <!-- 2. SISTEMAS -->
+          <div class="role-item">
+            <h3>Ingeniería de Sistemas</h3>
+            <small>Daniel & Nicolás</small>
+            <p>Arquitectura de software, flujograma lógico de 5 etapas, portal institucional y telemetría[cite: 1, 2].</p>
+          </div>
+
+          <!-- 3. INDUSTRIAL -->
           <div class="role-item">
             <h3>Ingeniería Industrial</h3>
             <small>Yoseth & Saimon</small>
-            <p>Distribución en planta (layout 75x50 cm), balance cuantitativo de masa y costeo BOM.</p>
+            <p>Distribución en planta (layout 75×50 cm), balance cuantitativo de masa y costeo BOM[cite: 1, 2].</p>
           </div>
         </div>
       </div>
@@ -257,20 +210,20 @@
     <section id="view-planos" class="view-pane">
       <div class="card">
         <h2>Layout Técnico (75 cm × 50 cm)</h2>
-        <p>Proyección acotada a escala real en pliego 1:1 dividida en cuatro cotas operativas: Carga (A), Alimentación (B), Discriminación (C) y Depósitos finales (D).</p>
+        <p>Proyección acotada a escala real en pliego 1:1 dividida en cuatro cotas operativas: Carga (A), Alimentación (B), Discriminación (C) y Depósitos finales (D)[cite: 1].</p>
         <div style="background: var(--card-sub); border: 1px dashed var(--border); padding: 22px; border-radius: 8px; text-align: center; font-size: 0.8rem; color: var(--muted);">
-          📐 Esquema técnico: Tolva superior en X -> Separación magnética lateral (Metales) -> Cámara con soplador neumático (Papel) -> Banda transportadora longitudinal (Plástico).
+          📐 Esquema técnico: Tolva superior en X -> Separación magnética lateral (Metales) -> Cámara con soplador neumático (Papel) -> Banda transportadora longitudinal (Plástico)[cite: 2, 3].
         </div>
       </div>
 
       <div class="card">
         <h2>Flujograma Secuencial (5 Etapas)</h2>
         <div class="flow-vertical">
-          <div class="flow-box"><h4>Etapa 1: Carga (Zona A)</h4><span>Tolva y descenso por rampas en X</span></div>
-          <div class="flow-box"><h4>Etapa 2: Alimentación (Zona B)</h4><span>Alineación por gravedad hacia canal central</span></div>
-          <div class="flow-box"><h4>Etapa 3: Evaluación (Zona C)</h4><span>Atracción por imán, empuje por ventilador y densidad</span></div>
-          <div class="flow-box"><h4>Etapa 4: Desvío Mecánico</h4><span>Banda transportadora y conductos selectores</span></div>
-          <div class="flow-box"><h4>Etapa 5: Depósito Final (Zona D)</h4><span>Almacenamiento por categoría y balance de masa</span></div>
+          <div class="flow-box"><h4>Etapa 1: Carga (Zona A)</h4><span>Tolva y descenso por rampas en X[cite: 1, 3]</span></div>
+          <div class="flow-box"><h4>Etapa 2: Alimentación (Zona B)</h4><span>Alineación por gravedad hacia canal central[cite: 1, 3]</span></div>
+          <div class="flow-box"><h4>Etapa 3: Evaluación (Zona C)</h4><span>Atracción por imán, empuje por ventilador y densidad[cite: 1, 3]</span></div>
+          <div class="flow-box"><h4>Etapa 4: Desvío Mecánico</h4><span>Banda transportadora y conductos selectores[cite: 1, 3]</span></div>
+          <div class="flow-box"><h4>Etapa 5: Depósito Final (Zona D)</h4><span>Almacenamiento por categoría y balance de masa[cite: 1]</span></div>
         </div>
       </div>
     </section>
@@ -279,20 +232,20 @@
     <section id="view-bitacora" class="view-pane">
       <div class="card">
         <h2>Seguimiento Cronológico de Construcción</h2>
-        <p>Espacio asignado para la bitácora fotográfica de los hitos constructivos del prototipo.</p>
+        <p>Espacio asignado para la bitácora fotográfica de los hitos constructivos del prototipo[cite: 1].</p>
         
         <div class="roles-grid">
           <div class="role-item" style="text-align: center; padding: 24px 10px;">
             <strong style="color: #fff; font-size: 0.85rem;">Hito 1: Trazado 2D</strong>
-            <p style="margin-top: 6px;">Entrega del plano en pliego y delimitación física (30 de Septiembre).</p>
+            <p style="margin-top: 6px;">Entrega del plano en pliego y delimitación física (30 de Septiembre)[cite: 1].</p>
           </div>
           <div class="role-item" style="text-align: center; padding: 24px 10px;">
             <strong style="color: #fff; font-size: 0.85rem;">Hito 2: Estructura y Rampas</strong>
-            <p style="margin-top: 6px;">Ensamble del chasis, caída en X y montaje de banda.</p>
+            <p style="margin-top: 6px;">Ensamble del chasis, caída en X y montaje de banda[cite: 1, 3].</p>
           </div>
           <div class="role-item" style="text-align: center; padding: 24px 10px;">
             <strong style="color: #fff; font-size: 0.85rem;">Hito 3: Validación del Lote</strong>
-            <p style="margin-top: 6px;">Prueba final con el lote cerrado de 20 residuos.</p>
+            <p style="margin-top: 6px;">Prueba final con el lote cerrado de 20 residuos[cite: 1].</p>
           </div>
         </div>
       </div>
@@ -304,7 +257,7 @@
         <div class="kpi">
           <span>Lote Oficial</span>
           <h2 id="kpiTot">0 / 20</h2>
-          <small>Objetos ingresados</small>
+          <small>Objetos ingresados[cite: 1]</small>
         </div>
         <div class="kpi">
           <span>Aprovechamiento</span>
@@ -314,7 +267,7 @@
         <div class="kpi">
           <span>Balance de Materia</span>
           <h2 id="kpiBal" style="font-size: 1.15rem; color: #4ade80;">Equilibrado</h2>
-          <small id="kpiEq" style="font-family: monospace;">E = M + P + C</small>
+          <small id="kpiEq" style="font-family: monospace;">E = M + P + C[cite: 1]</small>
         </div>
       </div>
 
@@ -322,7 +275,7 @@
       <div class="bins">
         <div class="bin">
           <div class="bin-top">
-            <span class="bin-name" style="color: var(--metal);">Metales (Imán)</span>
+            <span class="bin-name" style="color: var(--metal);">Metales (Imán)[cite: 2, 3]</span>
             <span id="cMet" class="bin-val" style="color: var(--metal);">0</span>
           </div>
           <div class="bar"><div id="bMet" class="fill" style="background: var(--metal);"></div></div>
@@ -331,7 +284,7 @@
 
         <div class="bin">
           <div class="bin-top">
-            <span class="bin-name" style="color: var(--plastic);">Plástico (Banda)</span>
+            <span class="bin-name" style="color: var(--plastic);">Plástico (Banda)[cite: 2, 3]</span>
             <span id="cPla" class="bin-val" style="color: var(--plastic);">0</span>
           </div>
           <div class="bar"><div id="bPla" class="fill" style="background: var(--plastic);"></div></div>
@@ -340,7 +293,7 @@
 
         <div class="bin">
           <div class="bin-top">
-            <span class="bin-name" style="color: var(--paper);">Papel (Ventilador)</span>
+            <span class="bin-name" style="color: var(--paper);">Papel (Ventilador)[cite: 2, 3]</span>
             <span id="cPap" class="bin-val" style="color: var(--paper);">0</span>
           </div>
           <div class="bar"><div id="bPap" class="fill" style="background: var(--paper);"></div></div>
@@ -371,7 +324,7 @@
       </div>
     </section>
 
-    <footer>Universitaria Agustiniana • Facultad de Ingeniería • Introducción a la Ingeniería</footer>
+    <footer>Universitaria Agustiniana • Facultad de Ingeniería • Introducción a la Ingeniería[cite: 1, 2]</footer>
   </div>
 
   <script>
@@ -380,14 +333,7 @@
       document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
       
       document.getElementById(vistaId).classList.add('active');
-      
-      if (btnElement) {
-        btnElement.classList.add('active');
-      } else {
-        const indexMap = { 'view-info': 0, 'view-planos': 1, 'view-bitacora': 2, 'view-dashboard': 3 };
-        const links = document.querySelectorAll('.menu-link');
-        if (links[indexMap[vistaId]]) links[indexMap[vistaId]].classList.add('active');
-      }
+      if (btnElement) btnElement.classList.add('active');
     }
 
     let data = { metal: 0, plastic: 0, paper: 0 };
