@@ -6,151 +6,415 @@
   <title>Uniagustiniana | Clasificador de Residuos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* ========================================================
-       COLORES PRINCIPALES DE LA PÁGINA (CÁMBIALOS AQUÍ)
-       ======================================================== */
     :root {
-      --bg-dark: #262622;    /* Fondo general de toda la pantalla */
-      --nav-bg: #2B2B27;     /* Fondo de la barra de navegación */
-      
-      --card-bg: #30302C;    /* 👈 1. AQUÍ: Fondo de los cuadros grandes principales */
-      --card-sub: #1A1515;   /* 👈 2. AQUÍ: Fondo de los "cuadritos de los cuadritos" */
-      --border: #000000;     /* 👈 3. AQUÍ: Borde de todos los cuadros */
-      
-      --text: #e2e8f0;       /* Color de texto principal */
-      --muted: #F0E7E6;      /* Color de texto secundario/gris */
-      --metal: #94a3b8;      /* Color para categoría Metales */
-      --plastic: #38bdf8;    /* Color para categoría Plástico */
-      --paper: #ffffff;      /* Color para categoría Papel */
+      --bg: #1a1a18;
+      --surface: #242420;
+      --line: #33332d;
+      --line-subtle: #292924;
+      --text: #f0ede6;
+      --text-muted: #a8a59d;
+      --text-sub: #6e6c65;
+      --metal: #a8a59d;
+      --plastic: #cbd5e1;
+      --paper: #ffffff;
+      --mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-    body { background-color: var(--bg-dark); color: var(--text); padding-bottom: 40px; overflow-x: hidden; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; overflow-x: hidden; }
 
     /* NAVEGACIÓN SUPERIOR */
     header {
-      background: var(--nav-bg);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     nav.nav-menu {
-      max-width: 1100px;
+      max-width: 1060px;
       margin: 0 auto;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       flex-wrap: wrap;
-      gap: 24px;
-      overflow: visible;
+      gap: 8px;
+      padding: 0 16px;
     }
 
     .menu-link {
       background: transparent;
       border: none;
-      color: #1F211C;
-      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-size: 0.84rem;
       font-weight: 600;
       cursor: pointer;
-      padding: 8px 4px;
+      padding: 14px 12px;
       position: relative;
       white-space: nowrap;
       transition: color 0.15s ease;
     }
 
     .menu-link:hover { color: #ffffff; }
-    .menu-link.active { color: #FFFFFF; }
+    .menu-link.active { color: #ffffff; }
     .menu-link.active::after {
       content: '';
       position: absolute;
-      bottom: -2px;
+      bottom: 0;
       left: 0;
       width: 100%;
       height: 2px;
-      background-color: #06090A;
-      border-radius: 2px;
+      background-color: #ffffff;
     }
 
     /* CONTENEDOR PRINCIPAL */
     .main-container {
-      max-width: 1000px;
-      margin: 24px auto 0 auto;
-      padding: 0 16px;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 24px 16px;
     }
 
-    .view-pane { display: none; flex-direction: column; gap: 16px; }
+    .view-pane { display: none; flex-direction: column; gap: 28px; }
     .view-pane.active { display: flex; }
 
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
+    .section-header {
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
     }
-    .card h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #ffffff; }
-    .card p { font-size: 0.84rem; color: var(--muted); margin-bottom: 12px; }
 
-    .roles-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 768px) { .roles-grid { grid-template-columns: repeat(3, 1fr); } }
-    .role-item {
-      background: var(--card-sub);
-      border: 1px solid var(--border);
-      padding: 14px;
-      border-radius: 8px;
+    .section-header h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #ffffff;
     }
-    .role-item h3 { font-size: 0.85rem; color: #fff; font-weight: 700; }
-    .role-item small { font-size: 0.72rem; color: #4D565C; display: block; margin-bottom: 6px; }
-    .role-item p { font-size: 0.76rem; color: var(--muted); margin: 0; }
 
-    /* PLANOS / FLUJO */
-    .flow-vertical { display: flex; flex-direction: column; gap: 8px; max-width: 600px; margin: 0 auto; }
-    .flow-box {
-      background: var(--card-sub);
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 6px;
+    .section-header span {
+      font-size: 0.72rem;
+      font-family: var(--mono);
+      color: var(--text-muted);
+    }
+
+    .content-block {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .content-block strong { color: var(--text); }
+
+    /* TABLA INTERDISCIPLINAR */
+    .roles-table {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (min-width: 768px) {
+      .roles-table { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .role-row {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (min-width: 768px) {
+      .role-row {
+        border-bottom: none;
+        border-right: 1px solid var(--line);
+      }
+      .role-row:last-child { border-right: none; }
+    }
+
+    .role-discipline {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .role-names {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin: 4px 0 10px 0;
+    }
+
+    .role-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* FILA DE KPIS */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (min-width: 768px) {
+      .kpi-row { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .kpi-col {
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (min-width: 768px) {
+      .kpi-col {
+        border-bottom: none;
+        border-right: 1px solid var(--line);
+      }
+      .kpi-col:last-child { border-right: none; }
+    }
+
+    .kpi-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi-num {
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: #ffffff;
+      margin: 4px 0 2px 0;
+    }
+
+    .kpi-foot {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      font-family: var(--mono);
+    }
+
+    /* FILA DE DEPÓSITOS */
+    .bins-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (min-width: 768px) {
+      .bins-row { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .bin-col {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (min-width: 768px) {
+      .bin-col {
+        border-bottom: none;
+        border-right: 1px solid var(--line);
+      }
+      .bin-col:last-child { border-right: none; }
+    }
+
+    .bin-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .bin-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .bin-count {
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: #ffffff;
+    }
+
+    .bar-track {
+      background: var(--surface);
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .bar-val {
+      height: 100%;
+      width: 0%;
+      background: #ffffff;
+      transition: width 0.2s ease;
+    }
+
+    .bin-alert {
+      font-size: 0.68rem;
+      font-family: var(--mono);
+      color: #f87171;
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* ACCIONES Y TELEMETRÍA */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 820px) {
+      .action-grid { grid-template-columns: 1fr 1.2fr; }
+    }
+
+    .ctrl-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    button.raw-btn {
+      cursor: pointer;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 10px 4px;
+      transition: background 0.1s ease;
+    }
+
+    button.raw-btn:hover { background: #2f2f2a; }
+
+    button.run-btn {
+      cursor: pointer;
+      background: #33332d;
+      border: 1px solid var(--line);
+      color: #ffffff;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 11px;
+      transition: background 0.1s ease;
+    }
+
+    button.run-btn:hover { background: #3d3d36; }
+
+    button.rst-btn {
+      cursor: pointer;
+      background: transparent;
+      border: 1px dashed var(--line);
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 7px;
+    }
+
+    button.rst-btn:hover { color: #ffffff; border-color: var(--text-muted); }
+
+    .console-out {
+      background: #141412;
+      border: 1px solid var(--line);
+      padding: 10px;
+      height: 110px;
+      overflow-y: auto;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* LISTA PLANOS Y BITÁCORA */
+    .planos-list {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .plano-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: 0.82rem;
     }
-    .flow-box h4 { font-size: 0.8rem; color: #fff; }
-    .flow-box span { font-size: 0.72rem; color: var(--muted); }
 
-    /* DASHBOARD */
-    .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    @media (min-width: 768px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
-    .kpi { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-    .kpi span { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; }
-    .kpi h2 { font-size: 1.5rem; font-weight: 700; margin: 4px 0; color: #ffffff; }
-    .kpi small { font-size: 0.72rem; color: #64748b; }
+    .plano-item:last-child { border-bottom: none; }
+    .plano-item span { color: #ffffff; font-weight: 500; }
+    .plano-item small { color: var(--text-muted); font-family: var(--mono); }
 
-    .bins { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 768px) { .bins { grid-template-columns: repeat(3, 1fr); } }
-    .bin { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-    .bin-top { display: flex; justify-content: space-between; align-items: baseline; }
-    .bin-name { font-size: 0.85rem; font-weight: 600; }
-    .bin-val { font-size: 1.4rem; font-weight: 700; }
-    .bar { background: var(--card-sub); height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px; border: 1px solid var(--border); }
-    .fill { height: 100%; width: 0%; transition: width 0.2s ease; }
-    .alert { font-size: 0.7rem; color: #f87171; font-weight: 600; margin-top: 6px; display: none; }
-
-    .grid-bottom { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    @media (min-width: 800px) { .grid-bottom { grid-template-columns: 1fr 1.2fr; } }
-    .btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-    button.btn-input {
-      cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 0.75rem;
-      border: 1px solid var(--border); background: var(--card-sub); color: #fff; padding: 9px 6px;
+    .bitacora-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
-    button.btn-input:hover { background: #1e293b; }
-    .btn-main { width: 100%; background: #334155; border: 1px solid #475569; color: #fff; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-bottom: 6px; font-size: 0.8rem; }
-    .btn-main:hover { background: #475569; }
-    .btn-sub { width: 100%; background: transparent; color: var(--muted); padding: 7px; border: 1px dashed var(--border); border-radius: 6px; cursor: pointer; font-size: 0.75rem; }
-    .terminal { background: var(--card-sub); border: 1px solid var(--border); border-radius: 6px; padding: 10px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 0.7rem; color: var(--muted); margin-top: 10px; }
-    .chart-box { position: relative; width: 100%; height: 210px; }
 
-    footer { text-align: center; font-size: 0.75rem; color: #475569; margin-top: 30px; }
+    @media (min-width: 768px) {
+      .bitacora-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .bitacora-step {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    @media (min-width: 768px) {
+      .bitacora-step {
+        border-bottom: none;
+        border-right: 1px solid var(--line);
+      }
+      .bitacora-step:last-child { border-right: none; }
+    }
+
+    .bitacora-step span {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .bitacora-step h3 {
+      font-size: 0.88rem;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .bitacora-step p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      margin-top: 40px;
+      padding: 16px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-sub);
+    }
   </style>
 </head>
 <body>
@@ -169,162 +433,199 @@
 
     <!-- 1. LA PROPUESTA -->
     <section id="view-info" class="view-pane active">
-      <div class="card">
+      <div class="section-header">
         <h2>Clasificador Mecánico de Residuos Urbanos (RSU)</h2>
-        <p>Prototipo a escala funcional diseñado bajo los lineamientos del Decreto Distrital 484 de 2024 para la segregación optimizada en Bogotá[cite: 1, 2].</p>
-        <p><strong>Objetivo General:</strong> Automatizar el flujo de separación de residuos sólidos mediante métodos pasivos (gravedad, atracción electromagnética y empuje neumático), disminuyendo el contacto manual directo y los tiempos de segregación[cite: 1, 2].</p>
-        <div style="background: var(--card-sub); border: 1px solid var(--border); padding: 10px 14px; border-radius: 6px; font-size: 0.78rem;">
-          <strong>Presupuesto Oficial:</strong> $20.000 COP por estudiante | <strong>Total de la maqueta (BOM):</strong> $120.000 COP[cite: 1, 2]
-        </div>
+        <span>DOC: PRJ-2026-II</span>
       </div>
 
-      <!-- EQUIPO CON ORDEN ACTUALIZADO: MECATRÓNICA -> SISTEMAS -> INDUSTRIAL -->
-      <div class="card">
+      <div class="content-block">
+        <p>Prototipo a escala funcional diseñado bajo los lineamientos del Decreto Distrital 484 de 2024 para la segregación optimizada en Bogotá.</p>
+        <p style="margin-top: 8px;"><strong>Objetivo General:</strong> Automatizar el flujo de separación de residuos sólidos mediante métodos pasivos (gravedad, atracción electromagnética y empuje neumático), disminuyendo el contacto manual directo y los tiempos de segregación.</p>
+        <p style="margin-top: 8px;"><strong>Presupuesto Oficial (BOM):</strong> $20.000 COP por estudiante | <strong>Total de la maqueta:</strong> $120.000 COP</p>
+      </div>
+
+      <div class="section-header" style="margin-top: 8px;">
         <h2>Equipo de Trabajo Interdisciplinar</h2>
-        <div class="roles-grid">
-          <!-- 1. MECATRÓNICA -->
-          <div class="role-item">
-            <h3>Ingeniería Mecatrónica</h3>
-            <small>Marian & Kaleth</small>
-            <p>Estructura general, montaje de tolva en X, ensamble mecánico del imán y soplador[cite: 2, 3].</p>
-          </div>
+        <span>ORDEN: MEC -> SIS -> IND</span>
+      </div>
 
-          <!-- 2. SISTEMAS -->
-          <div class="role-item">
-            <h3>Ingeniería de Sistemas</h3>
-            <small>Daniel & Nicolás</small>
-            <p>Arquitectura de software, flujograma lógico de 5 etapas, portal institucional y telemetría[cite: 1, 2].</p>
-          </div>
+      <div class="roles-table">
+        <!-- 1. MECATRÓNICA -->
+        <div class="role-row">
+          <div class="role-discipline">Ingeniería Mecatrónica</div>
+          <div class="role-names">Marian & Kaleth</div>
+          <div class="role-desc">Estructura general, montaje de tolva en X, ensamble mecánico del imán y soplador.</div>
+        </div>
 
-          <!-- 3. INDUSTRIAL -->
-          <div class="role-item">
-            <h3>Ingeniería Industrial</h3>
-            <small>Yoseth & Saimon</small>
-            <p>Distribución en planta (layout 75×50 cm), balance cuantitativo de masa y costeo BOM[cite: 1, 2].</p>
-          </div>
+        <!-- 2. SISTEMAS -->
+        <div class="role-row">
+          <div class="role-discipline">Ingeniería de Sistemas</div>
+          <div class="role-names">Daniel & Nicolás</div>
+          <div class="role-desc">Arquitectura de software, flujograma lógico de 5 etapas, portal institucional y telemetría.</div>
+        </div>
+
+        <!-- 3. INDUSTRIAL -->
+        <div class="role-row">
+          <div class="role-discipline">Ingeniería Industrial</div>
+          <div class="role-names">Yoseth & Saimon</div>
+          <div class="role-desc">Distribución en planta (layout 75×50 cm), balance cuantitativo de masa y costeo BOM.</div>
         </div>
       </div>
     </section>
 
     <!-- 2. PLANOS & FLUJOGRAMA -->
     <section id="view-planos" class="view-pane">
-      <div class="card">
+      <div class="section-header">
         <h2>Layout Técnico (75 cm × 50 cm)</h2>
-        <p>Proyección acotada a escala real en pliego 1:1 dividida en cuatro cotas operativas: Carga (A), Alimentación (B), Discriminación (C) y Depósitos finales (D)[cite: 1].</p>
-        <div style="background: var(--card-sub); border: 1px dashed var(--border); padding: 22px; border-radius: 8px; text-align: center; font-size: 0.8rem; color: var(--muted);">
-          📐 Esquema técnico: Tolva superior en X -> Separación magnética lateral (Metales) -> Cámara con soplador neumático (Papel) -> Banda transportadora longitudinal (Plástico)[cite: 2, 3].
-        </div>
+        <span>DIM: 750 mm × 500 mm</span>
       </div>
 
-      <div class="card">
-        <h2>Flujograma Secuencial (5 Etapas)</h2>
-        <div class="flow-vertical">
-          <div class="flow-box"><h4>Etapa 1: Carga (Zona A)</h4><span>Tolva y descenso por rampas en X[cite: 1, 3]</span></div>
-          <div class="flow-box"><h4>Etapa 2: Alimentación (Zona B)</h4><span>Alineación por gravedad hacia canal central[cite: 1, 3]</span></div>
-          <div class="flow-box"><h4>Etapa 3: Evaluación (Zona C)</h4><span>Atracción por imán, empuje por ventilador y densidad[cite: 1, 3]</span></div>
-          <div class="flow-box"><h4>Etapa 4: Desvío Mecánico</h4><span>Banda transportadora y conductos selectores[cite: 1, 3]</span></div>
-          <div class="flow-box"><h4>Etapa 5: Depósito Final (Zona D)</h4><span>Almacenamiento por categoría y balance de masa[cite: 1]</span></div>
+      <div class="content-block">
+        <p>Proyección acotada a escala real en pliego 1:1 dividida en cuatro cotas operativas: Carga (A), Alimentación (B), Discriminación (C) y Depósitos finales (D).</p>
+        <p style="margin-top: 4px; font-family: var(--mono); font-size: 0.78rem;">Tolva superior en X -> Separación magnética lateral (Metales) -> Cámara con soplador neumático (Papel) -> Banda transportadora longitudinal (Plástico).</p>
+      </div>
+
+      <div class="section-header" style="margin-top: 8px;">
+        <h2>Flujograma Secuencial</h2>
+        <span>SECUENCIA DE 5 ETAPAS</span>
+      </div>
+
+      <div class="planos-list">
+        <div class="plano-item">
+          <span>Etapa 1: Carga (Zona A)</span>
+          <small>Tolva y descenso por rampas en X</small>
+        </div>
+        <div class="plano-item">
+          <span>Etapa 2: Alimentación (Zona B)</span>
+          <small>Alineación por gravedad hacia canal central</small>
+        </div>
+        <div class="plano-item">
+          <span>Etapa 3: Evaluación (Zona C)</span>
+          <small>Atracción por imán, empuje por ventilador y densidad</small>
+        </div>
+        <div class="plano-item">
+          <span>Etapa 4: Desvío Mecánico</span>
+          <small>Banda transportadora y conductos selectores</small>
+        </div>
+        <div class="plano-item">
+          <span>Etapa 5: Depósito Final (Zona D)</span>
+          <small>Almacenamiento por categoría y balance de masa</small>
         </div>
       </div>
     </section>
 
     <!-- 3. BITÁCORA DEL PROTOTIPO -->
     <section id="view-bitacora" class="view-pane">
-      <div class="card">
+      <div class="section-header">
         <h2>Seguimiento Cronológico de Construcción</h2>
-        <p>Espacio asignado para la bitácora fotográfica de los hitos constructivos del prototipo[cite: 1].</p>
-        
-        <div class="roles-grid">
-          <div class="role-item" style="text-align: center; padding: 24px 10px;">
-            <strong style="color: #fff; font-size: 0.85rem;">Hito 1: Trazado 2D</strong>
-            <p style="margin-top: 6px;">Entrega del plano en pliego y delimitación física (30 de Septiembre)[cite: 1].</p>
-          </div>
-          <div class="role-item" style="text-align: center; padding: 24px 10px;">
-            <strong style="color: #fff; font-size: 0.85rem;">Hito 2: Estructura y Rampas</strong>
-            <p style="margin-top: 6px;">Ensamble del chasis, caída en X y montaje de banda[cite: 1, 3].</p>
-          </div>
-          <div class="role-item" style="text-align: center; padding: 24px 10px;">
-            <strong style="color: #fff; font-size: 0.85rem;">Hito 3: Validación del Lote</strong>
-            <p style="margin-top: 6px;">Prueba final con el lote cerrado de 20 residuos[cite: 1].</p>
-          </div>
+        <span>HITOS OPERATIVOS</span>
+      </div>
+
+      <div class="bitacora-grid">
+        <div class="bitacora-step">
+          <span>HITO 01</span>
+          <h3>Trazado 2D</h3>
+          <p>Entrega del plano en pliego y delimitación física a escala 1:1.</p>
+        </div>
+        <div class="bitacora-step">
+          <span>HITO 02</span>
+          <h3>Estructura y Rampas</h3>
+          <p>Ensamble del chasis, caída en X y montaje de banda transportadora.</p>
+        </div>
+        <div class="bitacora-step">
+          <span>HITO 03</span>
+          <h3>Validación del Lote</h3>
+          <p>Prueba final con el lote cerrado de 20 residuos y verificación de balances.</p>
         </div>
       </div>
     </section>
 
     <!-- 4. MONITOREO EN VIVO -->
     <section id="view-dashboard" class="view-pane">
-      <div class="kpis">
-        <div class="kpi">
-          <span>Lote Oficial</span>
-          <h2 id="kpiTot">0 / 20</h2>
-          <small>Objetos ingresados[cite: 1]</small>
+      <div class="section-header">
+        <h2>Panel de Telemetría</h2>
+        <span id="stBadge">SISTEMA EN ESPERA</span>
+      </div>
+
+      <!-- KPIS -->
+      <div class="kpi-row">
+        <div class="kpi-col">
+          <div class="kpi-label">Lote Oficial</div>
+          <div id="kpiTot" class="kpi-num">0 / 20</div>
+          <div class="kpi-foot">OBJETOS INGRESADOS</div>
         </div>
-        <div class="kpi">
-          <span>Aprovechamiento</span>
-          <h2 id="kpiAprov">0%</h2>
-          <small>Clasificación efectiva</small>
+        <div class="kpi-col">
+          <div class="kpi-label">Aprovechamiento</div>
+          <div id="kpiAprov" class="kpi-num">0%</div>
+          <div class="kpi-foot">CLASIFICACIÓN EFECTIVA</div>
         </div>
-        <div class="kpi">
-          <span>Balance de Materia</span>
-          <h2 id="kpiBal" style="font-size: 1.15rem; color: #4ade80;">Equilibrado</h2>
-          <small id="kpiEq" style="font-family: monospace;">E = M + P + C[cite: 1]</small>
+        <div class="kpi-col">
+          <div class="kpi-label">Balance de Materia</div>
+          <div id="kpiBal" class="kpi-num" style="font-size: 1.3rem;">E = M + P + C</div>
+          <div id="kpiEq" class="kpi-foot">E(0) = 0 + 0 + 0</div>
         </div>
       </div>
 
-      <!-- Depósitos de salida -->
-      <div class="bins">
-        <div class="bin">
+      <!-- DEPÓSITOS -->
+      <div class="bins-row">
+        <div class="bin-col">
           <div class="bin-top">
-            <span class="bin-name" style="color: var(--metal);">Metales (Imán)[cite: 2, 3]</span>
-            <span id="cMet" class="bin-val" style="color: var(--metal);">0</span>
+            <span class="bin-title">Metales (Imán)</span>
+            <span id="cMet" class="bin-count">0</span>
           </div>
-          <div class="bar"><div id="bMet" class="fill" style="background: var(--metal);"></div></div>
-          <div id="aMet" class="alert">Alerta: Límite 80%</div>
+          <div class="bar-track"><div id="bMet" class="bar-val"></div></div>
+          <div id="aMet" class="bin-alert">[ALERTA] Capacidad &gt;= 80%</div>
         </div>
 
-        <div class="bin">
+        <div class="bin-col">
           <div class="bin-top">
-            <span class="bin-name" style="color: var(--plastic);">Plástico (Banda)[cite: 2, 3]</span>
-            <span id="cPla" class="bin-val" style="color: var(--plastic);">0</span>
+            <span class="bin-title">Plástico (Banda)</span>
+            <span id="cPla" class="bin-count">0</span>
           </div>
-          <div class="bar"><div id="bPla" class="fill" style="background: var(--plastic);"></div></div>
-          <div id="aPla" class="alert">Alerta: Límite 80%</div>
+          <div class="bar-track"><div id="bPla" class="bar-val"></div></div>
+          <div id="aPla" class="bin-alert">[ALERTA] Capacidad &gt;= 80%</div>
         </div>
 
-        <div class="bin">
+        <div class="bin-col">
           <div class="bin-top">
-            <span class="bin-name" style="color: var(--paper);">Papel (Ventilador)[cite: 2, 3]</span>
-            <span id="cPap" class="bin-val" style="color: var(--paper);">0</span>
+            <span class="bin-title">Papel (Ventilador)</span>
+            <span id="cPap" class="bin-count">0</span>
           </div>
-          <div class="bar"><div id="bPap" class="fill" style="background: var(--paper);"></div></div>
-          <div id="aPap" class="alert">Alerta: Límite 80%</div>
+          <div class="bar-track"><div id="bPap" class="bar-val"></div></div>
+          <div id="aPap" class="bin-alert">[ALERTA] Capacidad &gt;= 80%</div>
         </div>
       </div>
 
-      <!-- Controles y Gráfica -->
-      <div class="grid-bottom">
-        <div class="card" style="padding: 16px;">
-          <h3 style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 10px;">Captura Manual</h3>
-          <div class="btns">
-            <button class="btn-input" onclick="registrar('metal')">+ Metal</button>
-            <button class="btn-input" onclick="registrar('plastic')">+ Plástico</button>
-            <button class="btn-input" onclick="registrar('paper')">+ Papel</button>
+      <!-- ACCIONES Y GRÁFICA -->
+      <div class="action-grid">
+        <div class="ctrl-col">
+          <div class="section-header" style="border: none; padding: 0;">
+            <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase;">Captura Manual</span>
           </div>
-          <button id="bRun" class="btn-main" onclick="toggleSim()">Simular Corrida (20 Obj)</button>
-          <button class="btn-sub" onclick="reiniciar()">Reiniciar</button>
-          <div id="logBox" class="terminal"><div>[00:00:00] Telemetría lista para lote oficial de 20 unidades.</div></div>
+          <div class="btn-row">
+            <button class="raw-btn" onclick="registrar('metal')">+ METAL</button>
+            <button class="raw-btn" onclick="registrar('plastic')">+ PLÁSTICO</button>
+            <button class="raw-btn" onclick="registrar('paper')">+ PAPEL</button>
+          </div>
+          <button id="bRun" class="run-btn" onclick="toggleSim()">SIMULAR CORRIDA (20 OBJ)</button>
+          <button class="rst-btn" onclick="reiniciar()">REINICIAR</button>
+          <div id="logBox" class="console-out">
+            <div>[00:00:00] Telemetría lista para lote oficial de 20 unidades.</div>
+          </div>
         </div>
 
-        <div class="card" style="padding: 16px;">
-          <h3 style="font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 10px;">Distribución por Salida</h3>
-          <div class="chart-box">
+        <div>
+          <div class="section-header" style="border: none; padding: 0; margin-bottom: 8px;">
+            <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase;">Distribución por Salida</span>
+          </div>
+          <div style="height: 190px; position: relative;">
             <canvas id="grafica"></canvas>
           </div>
         </div>
       </div>
     </section>
 
-    <footer>Universitaria Agustiniana • Facultad de Ingeniería • Introducción a la Ingeniería[cite: 1, 2]</footer>
+    <footer>Universitaria Agustiniana • Facultad de Ingeniería • Introducción a la Ingeniería</footer>
   </div>
 
   <script>
@@ -347,15 +648,16 @@
         labels: ['Metales', 'Plástico', 'Papel'],
         datasets: [{
           data: [0, 0, 0],
-          backgroundColor: ['#94a3b8', '#38bdf8', '#ffffff'],
-          borderRadius: 4
+          backgroundColor: ['#a8a59d', '#cbd5e1', '#ffffff'],
+          borderRadius: 2
         }]
       },
       options: {
-        responsive: true, maintainAspectRatio: false,
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
-          x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { stepSize: 1, color: '#94a3b8', font: { size: 10 } }, grid: { color: '#24304f' } }
+          x: { ticks: { color: '#a8a59d', font: { family: 'JetBrains Mono', size: 10 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { stepSize: 1, color: '#a8a59d', font: { family: 'JetBrains Mono', size: 10 } }, grid: { color: '#33332d' } }
         },
         plugins: { legend: { display: false } }
       }
@@ -387,6 +689,15 @@
 
       chart.data.datasets[0].data = [data.metal, data.plastic, data.paper];
       chart.update();
+
+      const st = document.getElementById('stBadge');
+      if (tot >= TOTAL_LOTE) {
+        st.innerText = "LOTE FINALIZADO";
+        st.style.color = "#ffffff";
+      } else if (tot > 0) {
+        st.innerText = "EN EJECUCIÓN";
+        st.style.color = "#f0ede6";
+      }
     }
 
     function evaluar(barId, alertId, val) {
@@ -421,6 +732,8 @@
     function reiniciar() {
       if (sim) toggleSim();
       data = { metal: 0, plastic: 0, paper: 0 };
+      document.getElementById('stBadge').innerText = "SISTEMA EN ESPERA";
+      document.getElementById('stBadge').style.color = "inherit";
       document.getElementById('logBox').innerHTML = "<div>[00:00:00] Telemetría lista para lote oficial de 20 unidades.</div>";
       actualizar();
     }
