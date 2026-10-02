@@ -4,9 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Uniagustiniana | Clasificador de Residuos</title>
+  
+  <!-- ========================================================
+       1. FUENTES DE GOOGLE: Aquí puedes cambiar la tipografía
+       ======================================================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -20,10 +25,13 @@
       --metal: #a8a59d;
       --plastic: #cbd5e1;
       --paper: #ffffff;
-      --mono: 'JetBrains Mono', monospace;
+      
+      /* TIPOGRAFÍAS DEL SISTEMA */
+      --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; overflow-x: hidden; }
 
     /* NAVEGACIÓN SUPERIOR */
@@ -98,7 +106,7 @@
 
     .section-header span {
       font-size: 0.72rem;
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       color: var(--text-muted);
     }
 
@@ -143,7 +151,7 @@
     }
 
     .role-names {
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       font-size: 0.74rem;
       color: var(--text-muted);
       margin: 4px 0 10px 0;
@@ -191,7 +199,7 @@
     .kpi-num {
       font-size: 2rem;
       font-weight: 700;
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       color: #ffffff;
       margin: 4px 0 2px 0;
     }
@@ -199,7 +207,7 @@
     .kpi-foot {
       font-size: 0.7rem;
       color: var(--text-sub);
-      font-family: var(--mono);
+      font-family: var(--font-mono);
     }
 
     /* FILA DE DEPÓSITOS */
@@ -243,7 +251,7 @@
     .bin-count {
       font-size: 1.4rem;
       font-weight: 700;
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       color: #ffffff;
     }
 
@@ -263,7 +271,7 @@
 
     .bin-alert {
       font-size: 0.68rem;
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       color: #f87171;
       margin-top: 8px;
       display: none;
@@ -297,7 +305,7 @@
       background: var(--surface);
       border: 1px solid var(--line);
       color: var(--text);
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       font-size: 0.75rem;
       padding: 10px 4px;
       transition: background 0.1s ease;
@@ -310,7 +318,7 @@
       background: #33332d;
       border: 1px solid var(--line);
       color: #ffffff;
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       font-size: 0.78rem;
       font-weight: 600;
       padding: 11px;
@@ -324,7 +332,7 @@
       background: transparent;
       border: 1px dashed var(--line);
       color: var(--text-muted);
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       font-size: 0.72rem;
       padding: 7px;
     }
@@ -337,13 +345,13 @@
       padding: 10px;
       height: 110px;
       overflow-y: auto;
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       font-size: 0.68rem;
       color: var(--text-muted);
       line-height: 1.4;
     }
 
-    /* LISTA PLANOS Y BITÁCORA */
+    /* LISTA PLANOS */
     .planos-list {
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
@@ -360,50 +368,73 @@
 
     .plano-item:last-child { border-bottom: none; }
     .plano-item span { color: #ffffff; font-weight: 500; }
-    .plano-item small { color: var(--text-muted); font-family: var(--mono); }
+    .plano-item small { color: var(--text-muted); font-family: var(--font-mono); }
 
-    .bitacora-grid {
+    /* ========================================================
+       GALERÍA DE CUADROS DE EXPOSICIÓN (ESTILO POWERPOINT)
+       ======================================================== */
+    .galeria-frames {
       display: grid;
-      grid-template-columns: 1fr;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 8px;
     }
 
-    @media (min-width: 768px) {
-      .bitacora-grid { grid-template-columns: repeat(3, 1fr); }
+    .frame-item {
+      background: #141412;
+      border: 10px solid #22221e; /* Marco exterior tipo cuadro */
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      aspect-ratio: 3 / 4; /* Proporción vertical tipo lienzo/cuadro */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
-    .bitacora-step {
-      padding: 20px 16px;
-      border-bottom: 1px solid var(--line);
+    .frame-item:hover {
+      transform: translateY(-3px);
+      border-color: #2e2e28;
     }
 
-    @media (min-width: 768px) {
-      .bitacora-step {
-        border-bottom: none;
-        border-right: 1px solid var(--line);
-      }
-      .bitacora-step:last-child { border-right: none; }
+    .frame-canvas {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 1px dashed var(--line);
+      background: #171715;
+      padding: 12px;
+      text-align: center;
     }
 
-    .bitacora-step span {
-      font-family: var(--mono);
-      font-size: 0.7rem;
+    .frame-id {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #383832;
+      margin-bottom: 6px;
+    }
+
+    .frame-status {
+      font-size: 0.72rem;
       color: var(--text-sub);
-      display: block;
-      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .bitacora-step h3 {
-      font-size: 0.88rem;
-      color: #ffffff;
-      margin-bottom: 8px;
-    }
-
-    .bitacora-step p {
-      font-size: 0.78rem;
+    .frame-caption {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
       color: var(--text-muted);
-      line-height: 1.5;
+      border-top: 1px solid var(--line-subtle);
+      padding-top: 8px;
     }
 
     footer {
@@ -411,7 +442,7 @@
       margin-top: 40px;
       padding: 16px;
       text-align: center;
-      font-family: var(--mono);
+      font-family: var(--font-mono);
       font-size: 0.72rem;
       color: var(--text-sub);
     }
@@ -431,14 +462,14 @@
 
   <div class="main-container">
 
-    <!-- 1. LA PROPUESTA -->
+    <!-- 1. SOBRE NOSOTROS -->
     <section id="view-info" class="view-pane active">
       <div class="section-header">
-        <h2>Clasificador Mecánico de Residuos(RSU)</h2>
+        <h2>Clasificador Mecánico de Residuos (RSU)</h2>
       </div>
 
       <div class="content-block">
-        <p>Somos un grupo de estudiantes de ingenieria de la universidad Agustiniana, como proyecto para la materia de Introducción a la ingenieria realizamos un prototipo de una maquina clasificadora de residuos.</p>
+        <p>Somos un grupo de estudiantes de ingeniería de la Universidad Agustiniana. Como proyecto para la materia de Introducción a la Ingeniería, realizamos un prototipo de una máquina clasificadora de residuos.</p>
         <p style="margin-top: 8px;"><strong>Objetivo General:</strong> Automatizar el flujo de separación de residuos sólidos mediante métodos pasivos (gravedad, atracción electromagnética y empuje neumático), disminuyendo el contacto manual directo.</p>
         <p style="margin-top: 8px;"><strong>Presupuesto:</strong> $20.000 COP por estudiante | <strong>Total de la maqueta:</strong> $120.000 COP</p>
       </div>
@@ -480,7 +511,7 @@
 
       <div class="content-block">
         <p>En este apartado encontramos una serie de 3 planos en diferentes vistas o perspectivas del proyecto y en adición un modelo 3D en Blender.</p>
-        <p style="margin-top: 4px; font-family: var(--mono); font-size: 0.78rem;">Tolva superior en X -> Separación magnética lateral (Metales) -> Cámara con soplador neumático (Papel) -> Banda transportadora longitudinal (Plástico).</p>
+        <p style="margin-top: 4px; font-family: var(--font-mono); font-size: 0.78rem;">Tolva superior en X -> Separación magnética lateral (Metales) -> Cámara con soplador neumático (Papel) -> Banda transportadora longitudinal (Plástico).</p>
       </div>
 
       <div class="section-header" style="margin-top: 8px;">
@@ -512,36 +543,89 @@
       </div>
     </section>
 
-    <!-- 3. BITÁCORA DEL PROTOTIPO -->
+    <!-- 3. EVIDENCIA DEL PROTOTIPO (GALERÍA ESTILO CUADROS POWERPOINT) -->
     <section id="view-bitacora" class="view-pane">
       <div class="section-header">
-        <h2>EVIDENCIAS</h2>
-        <span>GALERIA</span>
+        <h2>EVIDENCIAS DEL PROCESO</h2>
+        <span>GALERÍA DE REGISTRO</span>
       </div>
 
-      <div class="bitacora-grid">
-        <div class="bitacora-step">
-          <span>01</span>
+      <div class="galeria-frames">
+        <!-- Cuadro 01 -->
+        <div class="frame-item">
+          <div class="frame-canvas">
+            <div class="frame-id">01</div>
+            <div class="frame-status">Sin registro fotográfico</div>
+          </div>
+          <div class="frame-caption">
+            <span>FASE: PLANOS 2D</span>
+            <span>HITO 1</span>
+          </div>
         </div>
-        <div class="bitacora-step">
-          <span>02</span>
+
+        <!-- Cuadro 02 -->
+        <div class="frame-item">
+          <div class="frame-canvas">
+            <div class="frame-id">02</div>
+            <div class="frame-status">Sin registro fotográfico</div>
+          </div>
+          <div class="frame-caption">
+            <span>CORTE Y TOLVA</span>
+            <span>HITO 2</span>
+          </div>
         </div>
-        <div class="bitacora-step">
-          <span>03</span>
+
+        <!-- Cuadro 03 -->
+        <div class="frame-item">
+          <div class="frame-canvas">
+            <div class="frame-id">03</div>
+            <div class="frame-status">Sin registro fotográfico</div>
+          </div>
+          <div class="frame-caption">
+            <span>MONTAJE BANDA</span>
+            <span>HITO 3</span>
+          </div>
         </div>
-        <div class="bitacora-step">
-          <span>04</span>
+
+        <!-- Cuadro 04 -->
+        <div class="frame-item">
+          <div class="frame-canvas">
+            <div class="frame-id">04</div>
+            <div class="frame-status">Sin registro fotográfico</div>
+          </div>
+          <div class="frame-caption">
+            <span>SISTEMA IMÁN</span>
+            <span>HITO 4</span>
+          </div>
         </div>
-        <div class="bitacora-step">
-          <span>05</span>
+
+        <!-- Cuadro 05 -->
+        <div class="frame-item">
+          <div class="frame-canvas">
+            <div class="frame-id">05</div>
+            <div class="frame-status">Sin registro fotográfico</div>
+          </div>
+          <div class="frame-caption">
+            <span>SOPLADOR PAPEL</span>
+            <span>HITO 5</span>
+          </div>
         </div>
-        <div class="bitacora-step">
-          <span>06</span>
+
+        <!-- Cuadro 06 -->
+        <div class="frame-item">
+          <div class="frame-canvas">
+            <div class="frame-id">06</div>
+            <div class="frame-status">Sin registro fotográfico</div>
+          </div>
+          <div class="frame-caption">
+            <span>PRUEBA LOTE 20</span>
+            <span>HITO 6</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. MONITOREO EN VIVO -->
+    <!-- 4. DASHBOARD DE SIMULACIÓN -->
     <section id="view-dashboard" class="view-pane">
       <div class="section-header">
         <h2>Panel de Telemetría</h2>
