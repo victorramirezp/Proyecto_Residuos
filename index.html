@@ -4,92 +4,106 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Uniagustiniana | Clasificador de Residuos</title>
-  
-  <!-- ========================================================
-       1. FUENTES DE GOOGLE: Aquí puedes cambiar la tipografía
-       ======================================================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    /* ========================================================
+       APPLE DESIGN SYSTEM (KOWALSKI SPEC // LIQUID GLASS)
+       ======================================================== */
     :root {
-      --bg: #1a1a18;
-      --surface: #242420;
-      --line: #33332d;
-      --line-subtle: #292924;
-      --text: #f0ede6;
-      --text-muted: #a8a59d;
-      --text-sub: #6e6c65;
-      --metal: #a8a59d;
-      --plastic: #cbd5e1;
+      --bg: #0d0f12;
+      --glass-surface: rgba(26, 29, 36, 0.65);
+      --glass-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-border-subtle: rgba(255, 255, 255, 0.04);
+      --line: rgba(255, 255, 255, 0.08);
+      
+      --text: #f5f5f7;
+      --text-muted: #a1a1a6;
+      --text-sub: #6e6e73;
+      
+      --metal: #a1a1a6;
+      --plastic: #d1d5db;
       --paper: #ffffff;
       
-      /* TIPOGRAFÍAS DEL SISTEMA */
-      --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --font-main: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; overflow-x: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-font-smoothing: antialiased; }
+    body { 
+      background-color: var(--bg); 
+      color: var(--text); 
+      padding-bottom: 60px; 
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(45, 52, 64, 0.25) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(30, 35, 45, 0.2) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
 
-    /* NAVEGACIÓN SUPERIOR */
+    /* HEADER: CÁPSULA LIQUID GLASS FLOTANTE */
     header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--line);
       position: sticky;
-      top: 0;
+      top: 12px;
       z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
     }
 
     nav.nav-menu {
-      max-width: 1060px;
-      margin: 0 auto;
+      background: var(--glass-surface);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-highlight), 0 8px 32px rgba(0, 0, 0, 0.4);
+      border-radius: 9999px;
       display: flex;
-      justify-content: flex-start;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 0 16px;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 6px;
+      max-width: 100%;
+      overflow-x: auto;
     }
 
     .menu-link {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.84rem;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 500;
       cursor: pointer;
-      padding: 14px 12px;
+      padding: 8px 16px;
+      border-radius: 9999px;
       position: relative;
       white-space: nowrap;
-      transition: color 0.15s ease;
+      transition: color 0.15s ease, transform 0.1s ease, background 0.15s ease;
     }
 
     .menu-link:hover { color: #ffffff; }
-    .menu-link.active { color: #ffffff; }
-    .menu-link.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #ffffff;
+    .menu-link:active { transform: scale(0.96); }
+
+    .menu-link.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     /* CONTENEDOR PRINCIPAL */
     .main-container {
-      max-width: 1060px;
-      margin: 0 auto;
-      padding: 24px 16px;
+      max-width: 1040px;
+      margin: 36px auto 0 auto;
+      padding: 0 16px;
     }
 
-    .view-pane { display: none; flex-direction: column; gap: 28px; }
+    .view-pane { display: none; flex-direction: column; gap: 32px; }
     .view-pane.active { display: flex; }
 
     .section-header {
-      padding-bottom: 8px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--line);
       display: flex;
       justify-content: space-between;
@@ -98,8 +112,8 @@
 
     .section-header h2 {
       font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       text-transform: uppercase;
       color: #ffffff;
     }
@@ -107,23 +121,27 @@
     .section-header span {
       font-size: 0.72rem;
       font-family: var(--font-mono);
-      color: var(--text-muted);
+      color: var(--text-sub);
     }
 
     .content-block {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.65;
     }
-
     .content-block strong { color: var(--text); }
 
-    /* TABLA INTERDISCIPLINAR */
+    /* TABLA INTERDISCIPLINAR TIPO VIDRIO PLANO */
     .roles-table {
       display: grid;
       grid-template-columns: 1fr;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-highlight);
+      border-radius: 14px;
+      overflow: hidden;
     }
 
     @media (min-width: 768px) {
@@ -131,7 +149,7 @@
     }
 
     .role-row {
-      padding: 16px;
+      padding: 20px;
       border-bottom: 1px solid var(--line);
     }
 
@@ -145,14 +163,14 @@
 
     .role-discipline {
       font-size: 0.82rem;
-      font-weight: 700;
+      font-weight: 600;
       color: #ffffff;
-      text-transform: uppercase;
+      letter-spacing: -0.01em;
     }
 
     .role-names {
       font-family: var(--font-mono);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       margin: 4px 0 10px 0;
     }
@@ -160,15 +178,20 @@
     .role-desc {
       font-size: 0.78rem;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* FILA DE KPIS */
+    /* FILA DE KPIS TABULARES */
     .kpi-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-highlight);
+      border-radius: 14px;
+      overflow: hidden;
     }
 
     @media (min-width: 768px) {
@@ -176,7 +199,7 @@
     }
 
     .kpi-col {
-      padding: 18px 16px;
+      padding: 20px;
       border-bottom: 1px solid var(--line);
     }
 
@@ -190,18 +213,19 @@
 
     .kpi-label {
       font-size: 0.68rem;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     .kpi-num {
-      font-size: 2rem;
+      font-size: 2.1rem;
       font-weight: 700;
       font-family: var(--font-mono);
       color: #ffffff;
       margin: 4px 0 2px 0;
+      letter-spacing: -0.03em;
     }
 
     .kpi-foot {
@@ -214,8 +238,13 @@
     .bins-row {
       display: grid;
       grid-template-columns: 1fr;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-highlight);
+      border-radius: 14px;
+      overflow: hidden;
     }
 
     @media (min-width: 768px) {
@@ -223,7 +252,7 @@
     }
 
     .bin-col {
-      padding: 16px;
+      padding: 20px;
       border-bottom: 1px solid var(--line);
     }
 
@@ -239,12 +268,12 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .bin-title {
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 500;
       color: #ffffff;
     }
 
@@ -256,7 +285,7 @@
     }
 
     .bar-track {
-      background: var(--surface);
+      background: rgba(255, 255, 255, 0.08);
       height: 4px;
       border-radius: 2px;
       overflow: hidden;
@@ -266,7 +295,7 @@
       height: 100%;
       width: 0%;
       background: #ffffff;
-      transition: width 0.2s ease;
+      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .bin-alert {
@@ -297,35 +326,41 @@
     .btn-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      gap: 8px;
     }
 
     button.raw-btn {
       cursor: pointer;
-      background: var(--surface);
-      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-highlight);
       color: var(--text);
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       padding: 10px 4px;
-      transition: background 0.1s ease;
+      border-radius: 8px;
+      transition: background 0.15s ease, transform 0.1s ease;
     }
 
-    button.raw-btn:hover { background: #2f2f2a; }
+    button.raw-btn:hover { background: rgba(255, 255, 255, 0.1); }
+    button.raw-btn:active { transform: scale(0.97); }
 
     button.run-btn {
       cursor: pointer;
-      background: #33332d;
-      border: 1px solid var(--line);
-      color: #ffffff;
+      background: #ffffff;
+      border: none;
+      color: #0d0f12;
       font-family: var(--font-mono);
       font-size: 0.78rem;
       font-weight: 600;
-      padding: 11px;
-      transition: background 0.1s ease;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+      transition: opacity 0.15s ease, transform 0.1s ease;
     }
 
-    button.run-btn:hover { background: #3d3d36; }
+    button.run-btn:hover { opacity: 0.92; }
+    button.run-btn:active { transform: scale(0.97); }
 
     button.rst-btn {
       cursor: pointer;
@@ -334,21 +369,25 @@
       color: var(--text-muted);
       font-family: var(--font-mono);
       font-size: 0.72rem;
-      padding: 7px;
+      padding: 8px;
+      border-radius: 8px;
+      transition: color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
     }
 
-    button.rst-btn:hover { color: #ffffff; border-color: var(--text-muted); }
+    button.rst-btn:hover { color: #ffffff; border-color: rgba(255, 255, 255, 0.25); }
+    button.rst-btn:active { transform: scale(0.97); }
 
     .console-out {
-      background: #141412;
-      border: 1px solid var(--line);
-      padding: 10px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 12px;
       height: 110px;
       overflow-y: auto;
       font-family: var(--font-mono);
       font-size: 0.68rem;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     /* LISTA PLANOS */
@@ -359,7 +398,7 @@
 
     .plano-item {
       padding: 14px 0;
-      border-bottom: 1px solid var(--line-subtle);
+      border-bottom: 1px solid var(--glass-border-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -371,31 +410,40 @@
     .plano-item small { color: var(--text-muted); font-family: var(--font-mono); }
 
     /* ========================================================
-       GALERÍA DE CUADROS DE EXPOSICIÓN (ESTILO POWERPOINT)
+       GALERÍA CUADROS (8 CUADROS SIMÉTRICOS 4x2 // APPLE LIQUID)
        ======================================================== */
     .galeria-frames {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
       margin-top: 8px;
     }
 
+    @media (min-width: 850px) {
+      .galeria-frames {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
     .frame-item {
-      background: #141412;
-      border: 10px solid #22221e; /* Marco exterior tipo cuadro */
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-      aspect-ratio: 3 / 4; /* Proporción vertical tipo lienzo/cuadro */
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-highlight), 0 8px 24px rgba(0, 0, 0, 0.35);
+      border-radius: 14px;
+      aspect-ratio: 3 / 4;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 16px;
+      padding: 14px;
       position: relative;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
     }
 
     .frame-item:hover {
-      transform: translateY(-3px);
-      border-color: #2e2e28;
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.18);
     }
 
     .frame-canvas {
@@ -404,8 +452,9 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border: 1px dashed var(--line);
-      background: #171715;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
       padding: 12px;
       text-align: center;
     }
@@ -414,33 +463,33 @@
       font-family: var(--font-mono);
       font-size: 1.4rem;
       font-weight: 700;
-      color: #383832;
+      color: rgba(255, 255, 255, 0.2);
       margin-bottom: 6px;
     }
 
     .frame-status {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-sub);
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
     .frame-caption {
-      margin-top: 12px;
+      margin-top: 10px;
       display: flex;
       justify-content: space-between;
       align-items: baseline;
       font-family: var(--font-mono);
       font-size: 0.68rem;
       color: var(--text-muted);
-      border-top: 1px solid var(--line-subtle);
+      border-top: 1px solid var(--glass-border-subtle);
       padding-top: 8px;
     }
 
     footer {
       border-top: 1px solid var(--line);
-      margin-top: 40px;
-      padding: 16px;
+      margin-top: 50px;
+      padding: 20px;
       text-align: center;
       font-family: var(--font-mono);
       font-size: 0.72rem;
@@ -450,7 +499,7 @@
 </head>
 <body>
 
-  <!-- NAVEGACIÓN PRINCIPAL -->
+  <!-- NAVEGACIÓN FLOTANTE LIQUID GLASS -->
   <header>
     <nav class="nav-menu">
       <button class="menu-link active" onclick="navegar('view-info', this)">Sobre Nosotros</button>
@@ -466,10 +515,11 @@
     <section id="view-info" class="view-pane active">
       <div class="section-header">
         <h2>Clasificador Mecánico de Residuos (RSU)</h2>
+        <span>PROYECTO INTEGRADOR</span>
       </div>
 
       <div class="content-block">
-        <p>Somos un grupo de estudiantes de ingeniería de la Universidad Agustiniana. Como proyecto para la materia de Introducción a la Ingeniería, realizamos un prototipo de una máquina clasificadora de residuos.</p>
+        <p>Somos un grupo de estudiantes de ingenieria de la universidad Agustiniana, como proyecto para la materia de Introducción a la ingenieria realizamos un prototipo de una maquina clasificadora de residuos.</p>
         <p style="margin-top: 8px;"><strong>Objetivo General:</strong> Automatizar el flujo de separación de residuos sólidos mediante métodos pasivos (gravedad, atracción electromagnética y empuje neumático), disminuyendo el contacto manual directo.</p>
         <p style="margin-top: 8px;"><strong>Presupuesto:</strong> $20.000 COP por estudiante | <strong>Total de la maqueta:</strong> $120.000 COP</p>
       </div>
@@ -502,21 +552,22 @@
         </div>
       </div>
 
-    <!-- CONCIENTIZACIÓN -->
-      <div class="section-header" style="margin-top: 16px;">
+      <!-- CONCIENTIZACIÓN -->
+      <div class="section-header" style="margin-top: 8px;">
         <h2>Concientización</h2>
         <span>IMPACTO SOCIAL</span>
       </div>
 
-      <div class="content-block" style="margin-top: 10px;">
+      <div class="content-block">
         <p>La ayuda que puede generar el proyecto aparte de los impactos positivos en los que se refleja algo positivo son la ayuda a la eficiencia del trabajo de los trabajadores en la separación en la planta. A parte de eso ayudara a las zonas donde llegan los residuos que suelen ser mas problemáticos al separar y ayudara buscarle mas oportunidades de uso. Este trabajo ayudara tambien a que las personas se acerquen al mundo de los residuos y sabiendo que se puede clasificar después de llegar a la basura puede hace que las personas tengan iniciativa a separar bien los residuos y basura que producen en sus casas.</p>
       </div>
-   </section>
-    
+    </section>
+
     <!-- 2. PLANOS & FLUJOGRAMA -->
     <section id="view-planos" class="view-pane">
       <div class="section-header">
         <h2>PLANOS 2D Y 3D</h2>
+        <span>MODELADO TÉCNICO</span>
       </div>
 
       <div class="content-block">
@@ -553,7 +604,7 @@
       </div>
     </section>
 
-   <!-- 3. EVIDENCIA DEL PROTOTIPO (8 CUADROS SIMÉTRICOS 4x2) -->
+    <!-- 3. EVIDENCIAS DEL PROTOTIPO (CUADRÍCULA SIMÉTRICA 4x2) -->
     <section id="view-bitacora" class="view-pane">
       <div class="section-header">
         <h2>EVIDENCIAS DEL PROCESO</h2>
@@ -658,6 +709,7 @@
         </div>
       </div>
     </section>
+
     <!-- 4. DASHBOARD DE SIMULACIÓN -->
     <section id="view-dashboard" class="view-pane">
       <div class="section-header">
@@ -718,7 +770,7 @@
       <div class="action-grid">
         <div class="ctrl-col">
           <div class="section-header" style="border: none; padding: 0;">
-            <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase;">Captura Manual</span>
+            <span style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase;">Captura Manual</span>
           </div>
           <div class="btn-row">
             <button class="raw-btn" onclick="registrar('metal')">+ METAL</button>
@@ -734,7 +786,7 @@
 
         <div>
           <div class="section-header" style="border: none; padding: 0; margin-bottom: 8px;">
-            <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase;">Distribución por Salida</span>
+            <span style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase;">Distribución por Salida</span>
           </div>
           <div style="height: 190px; position: relative;">
             <canvas id="grafica"></canvas>
@@ -766,16 +818,16 @@
         labels: ['Metales', 'Plástico', 'Papel'],
         datasets: [{
           data: [0, 0, 0],
-          backgroundColor: ['#a8a59d', '#cbd5e1', '#ffffff'],
-          borderRadius: 2
+          backgroundColor: ['#a1a1a6', '#d1d5db', '#ffffff'],
+          borderRadius: 4
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: { ticks: { color: '#a8a59d', font: { family: 'JetBrains Mono', size: 10 } }, grid: { display: false } },
-          y: { beginAtZero: true, ticks: { stepSize: 1, color: '#a8a59d', font: { family: 'JetBrains Mono', size: 10 } }, grid: { color: '#33332d' } }
+          x: { ticks: { color: '#a1a1a6', font: { family: 'JetBrains Mono', size: 10 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { stepSize: 1, color: '#a1a1a6', font: { family: 'JetBrains Mono', size: 10 } }, grid: { color: 'rgba(255, 255, 255, 0.05)' } }
         },
         plugins: { legend: { display: false } }
       }
@@ -814,7 +866,7 @@
         st.style.color = "#ffffff";
       } else if (tot > 0) {
         st.innerText = "EN EJECUCIÓN";
-        st.style.color = "#f0ede6";
+        st.style.color = "#f5f5f7";
       }
     }
 
