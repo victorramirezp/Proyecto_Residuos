@@ -1712,21 +1712,79 @@
 
       /* CONTENEDOR PRINCIPAL Y PADDING ERGONÓMICO */
       .main-container {
-        margin-top: 18px;
-        padding: 0 16px;
+        margin-top: 0;
+        padding: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* MARGEN SUPERIOR SEGURO (96px) PARA EVITAR SOLAPAMIENTO CON LA BARRA DE NAVEGACIÓN FLOTANTE */
+      .view-pane,
+      .view-section {
+        padding-top: 96px;
+        padding-left: 16px;
+        padding-right: 16px;
+        max-width: 100%;
         width: 100%;
         box-sizing: border-box;
+        scroll-margin-top: 96px;
+        gap: 24px;
+      }
+
+      /* ENCABEZADOS DE SECCIÓN RESPONSIVOS */
+      .section-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .section-header h2 {
+        font-size: clamp(1.15rem, 4.4vw, 1.45rem);
+        line-height: 1.25;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+      }
+
+      /* DASHBOARD DE SIMULACIÓN EN MÓVIL (AJUSTE TIPOGRÁFICO Y CONTENEDOR 100%) */
+      #view-dashboard {
+        max-width: 100%;
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 96px;
+        box-sizing: border-box;
+      }
+
+      #view-dashboard h2,
+      #view-dashboard .section-header h2 {
+        font-size: clamp(1.2rem, 4.8vw, 1.55rem);
+        line-height: 1.25;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+        white-space: normal;
       }
 
       /* TARJETAS DE INTEGRANTES */
       .team-grid {
         grid-template-columns: 1fr;
         gap: 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .team-card {
         padding: 16px;
         border-radius: 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .team-discipline {
@@ -1737,6 +1795,7 @@
         padding: 3px 6px;
         margin-bottom: 12px;
         text-align: center;
+        box-sizing: border-box;
       }
 
       .team-card-body {
@@ -1744,6 +1803,7 @@
         align-items: center;
         gap: 14px;
         width: 100%;
+        box-sizing: border-box;
       }
 
       .team-avatar {
@@ -1754,6 +1814,7 @@
         font-size: 1.8rem;
         border-radius: 12px;
         flex-shrink: 0;
+        box-sizing: border-box;
       }
 
       .team-details {
@@ -1762,6 +1823,7 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
+        box-sizing: border-box;
       }
 
       .team-name {
@@ -1782,15 +1844,23 @@
         gap: 16px;
         margin-top: 14px;
         margin-bottom: 20px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .plano-card {
         border-radius: 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
       }
 
       .plano-info {
         padding: 14px 16px;
         gap: 6px;
+        box-sizing: border-box;
       }
 
       .plano-tag {
@@ -1804,16 +1874,29 @@
         line-height: 1.5;
       }
 
+      #view-evidencias {
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
       .galeria-frames {
         grid-template-columns: 1fr;
         gap: 14px;
         margin-top: 14px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .frame-item {
         border-radius: 14px;
         padding: 12px;
         gap: 8px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
       }
 
       .frame-id {
@@ -1829,31 +1912,75 @@
         font-size: 0.72rem;
       }
 
-      /* DASHBOARD INDUSTRIAL SCADA EN MÓVIL */
+      /* DASHBOARD INDUSTRIAL SCADA EN MÓVIL (SIN DESBORDE HORIZONTAL) */
       .scada-layout {
         grid-template-columns: 1fr;
         gap: 16px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .scada-col {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+      }
+
+      .scada-panel {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 16px 14px;
+      }
+
+      .scada-panel-header {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        flex-wrap: wrap;
+        gap: 8px;
       }
 
       .scada-kpi-banner {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
         padding: 14px 16px;
       }
 
+      .scada-kpi-num-wrap {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
       .scada-kpi-progress-col {
         max-width: 100%;
         width: 100%;
+        box-sizing: border-box;
       }
 
       .telemetry-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .telemetry-cell {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
         padding: 10px 8px;
       }
 
@@ -1870,11 +1997,19 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         margin-bottom: 12px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .ingest-btn {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
         min-height: 50px;
         padding: 10px 6px;
+        box-sizing: border-box;
+        overflow: hidden;
       }
 
       .ingest-btn-label {
@@ -1887,11 +2022,15 @@
         flex-direction: column;
         gap: 10px;
         width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .scada-run-btn,
       .scada-reset-btn {
         width: 100%;
+        max-width: 100%;
+        min-width: 0;
         min-height: 48px;
         height: 48px;
         padding: 12px 16px;
@@ -1906,18 +2045,52 @@
         box-sizing: border-box;
       }
 
+      /* CONSOLA DE LOGS */
+      .scada-terminal-wrap {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .scada-terminal-body {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      .log-line {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      .log-line span:last-child {
+        min-width: 0;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
       /* 3 SILOS EN UNA SOLA FILA EQUITATIVA (FLEX: 1 CADA UNO) */
       .scada-silos-grid {
         display: flex;
         flex-direction: row;
-        gap: 10px;
+        gap: 8px;
         width: 100%;
+        max-width: 100%;
         margin-bottom: 16px;
+        box-sizing: border-box;
       }
 
       .silo-card {
         flex: 1 1 0;
         min-width: 0;
+        max-width: 100%;
         padding: 12px 8px;
         box-sizing: border-box;
       }
@@ -1945,13 +2118,27 @@
 
       .silo-tube {
         width: 100%;
+        max-width: 100%;
         height: 130px;
         margin-bottom: 8px;
+        box-sizing: border-box;
+      }
+
+      .scada-chart-wrap {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      canvas#grafica {
+        max-width: 100% !important;
       }
 
       /* BOTÓN DOCUMENTO PDF TÉCNICO */
       a.doc-pdf-btn {
         width: 100%;
+        max-width: 100%;
         box-sizing: border-box;
         padding: 14px 18px;
         min-height: 48px;
@@ -1960,6 +2147,14 @@
         text-align: center;
         white-space: normal;
         gap: 10px;
+      }
+
+      footer {
+        padding: 24px 16px;
+        margin-top: 36px;
+        max-width: 100%;
+        box-sizing: border-box;
+        word-break: break-word;
       }
     }
 
@@ -1996,18 +2191,25 @@
         letter-spacing: 0.02em;
       }
 
-      .main-container {
-        padding: 0 16px;
+      .view-pane,
+      .view-section {
+        padding-top: 92px;
+        padding-left: 16px;
+        padding-right: 16px;
       }
 
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
+      #view-dashboard {
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 92px;
       }
 
-      .section-header h2 {
-        font-size: 0.90rem;
+      #view-dashboard h2,
+      #view-dashboard .section-header h2 {
+        font-size: clamp(1.2rem, 4.8vw, 1.55rem);
+        line-height: 1.25;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
       }
 
       /* Integrantes en smartphones */
@@ -2064,19 +2266,19 @@
       }
 
       .scada-silos-grid {
-        gap: 8px;
+        gap: 6px;
       }
 
       .silo-card {
-        padding: 10px 6px;
+        padding: 10px 5px;
       }
 
       .silo-title {
-        font-size: 0.62rem;
+        font-size: 0.60rem;
       }
 
       .silo-pct {
-        font-size: 0.70rem;
+        font-size: 0.68rem;
       }
 
       .silo-tube {
