@@ -3,70 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Uniagustiniana | Clasificador de Residuos</title>
+  <meta property="og:title" content="Clasificador Mecánico de Residuos (RSU)">
+  <meta property="og:description" content="Prototipo automatizado de separación de residuos sólidos mediante gravedad, atracción electromagnética y empuje neumático.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/><polyline points='3.29 7 12 12 20.71 7'/><line x1='12' y1='22' x2='12' y2='12'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* ========================================================
-       1. VARIABLES GLOBALES DE DISEÑO & SISTEMA LIQUID GLASS
-       ======================================================== */
     :root {
       --bg: #08090d;
       --glass-surface: rgba(18, 22, 30, 0.72);
       --glass-surface-hover: rgba(25, 30, 42, 0.82);
       --glass-surface-dark: rgba(6, 7, 10, 0.65);
-
-      /* SHADOW-AS-BORDER SYSTEM (EMIL KOWALSKI CRAFT) */
       --shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.08);
       --shadow-border-hover: 0 0 0 1px rgba(255, 255, 255, 0.16);
       --shadow-border-subtle: 0 0 0 1px rgba(255, 255, 255, 0.05);
-
-      /* ESPECULARES Y RIM LIGHTS */
       --shadow-rim: inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
       --shadow-rim-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
       --shadow-rim-subtle: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
-
-      /* SOMBRAS DE ELEVACIÓN POR CAPAS */
       --shadow-card: 0 4px 14px -2px rgba(0, 0, 0, 0.35), 0 14px 32px -4px rgba(0, 0, 0, 0.5);
       --shadow-card-hover: 0 8px 20px -2px rgba(0, 0, 0, 0.4), 0 22px 42px -4px rgba(0, 0, 0, 0.6);
       --shadow-pill: 0 8px 24px -2px rgba(0, 0, 0, 0.4), 0 16px 40px -6px rgba(0, 0, 0, 0.55);
-
       --line: rgba(255, 255, 255, 0.07);
       --line-subtle: rgba(255, 255, 255, 0.04);
-
-      /* JERARQUÍA TIPOGRÁFICA Y COLORES DE TEXTO */
       --text: #f5f5f7;
       --text-muted: #a1a1a6;
       --text-sub: #787880;
-
-      /* PALETA SEMÁNTICA DE MATERIALES */
       --color-metal: #f59e0b;
       --color-metal-bg: rgba(245, 158, 11, 0.10);
       --color-metal-glow: rgba(245, 158, 11, 0.28);
       --color-metal-border: rgba(245, 158, 11, 0.35);
-
       --color-plastic: #10b981;
       --color-plastic-bg: rgba(16, 185, 129, 0.10);
       --color-plastic-glow: rgba(16, 185, 129, 0.28);
       --color-plastic-border: rgba(16, 185, 129, 0.35);
-
       --color-paper: #38bdf8;
       --color-paper-bg: rgba(56, 189, 248, 0.10);
       --color-paper-glow: rgba(56, 189, 248, 0.28);
       --color-paper-border: rgba(56, 189, 248, 0.35);
-
-      /* ACENTOS DE INGENIERÍA */
       --accent-mec: #38bdf8;
       --accent-sis: #a855f7;
       --accent-ind: #10b981;
-
-      /* FUENTES */
       --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-
-      /* CURVAS Y FÍSICA DE ANIMACIÓN */
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
       --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
@@ -74,9 +59,6 @@
       --duration-hover: 220ms;
     }
 
-    /* ========================================================
-       2. RESET & ESTILOS BASE
-       ======================================================== */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -119,13 +101,13 @@
       padding: 0 16px;
     }
 
-    .view-pane, .view-section {
+    .view-pane {
       display: none;
       flex-direction: column;
       gap: 32px;
     }
 
-    .view-pane.active, .view-section.active {
+    .view-pane.active {
       display: flex;
     }
 
@@ -165,9 +147,6 @@
       font-weight: 600;
     }
 
-    /* ========================================================
-       3. NAVEGACIÓN FLOTANTE LIQUID GLASS
-       ======================================================== */
     header {
       position: sticky;
       top: 14px;
@@ -190,7 +169,6 @@
       background: var(--glass-surface);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: none;
       box-shadow: var(--shadow-border), var(--shadow-rim), var(--shadow-pill);
       border-radius: 9999px;
       display: flex;
@@ -240,11 +218,6 @@
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    /* ========================================================
-       4. COMPONENTES & VISTAS
-       ======================================================== */
-
-    /* EQUIPO INTERDISCIPLINAR (6 TARJETAS HORIZONTALES) */
     .team-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -270,7 +243,6 @@
       background: var(--glass-surface);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: none;
       box-shadow: var(--shadow-border), var(--shadow-rim), var(--shadow-card);
       border-radius: 14px;
       padding: 16px 18px;
@@ -344,10 +316,12 @@
       background: linear-gradient(90deg, transparent, #38bdf8, transparent);
       box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
     }
+
     .team-card.team-sis::before {
       background: linear-gradient(90deg, transparent, #a855f7, transparent);
       box-shadow: 0 0 12px rgba(168, 85, 247, 0.45);
     }
+
     .team-card.team-ind::before {
       background: linear-gradient(90deg, transparent, #10b981, transparent);
       box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
@@ -391,10 +365,12 @@
       box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.35);
       background: rgba(56, 189, 248, 0.04);
     }
+
     .team-card.team-sis .team-avatar {
       box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.35);
       background: rgba(168, 85, 247, 0.04);
     }
+
     .team-card.team-ind .team-avatar {
       box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.35);
       background: rgba(16, 185, 129, 0.04);
@@ -435,7 +411,6 @@
       margin: 0;
     }
 
-    /* BOTÓN DOCUMENTO TÉCNICO (PDF) */
     .doc-cta-wrap {
       display: flex;
       justify-content: center;
@@ -462,7 +437,6 @@
       white-space: nowrap;
       user-select: none;
       -webkit-user-select: none;
-      border: none;
       box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 12px 32px -8px rgba(0, 0, 0, 0.7), 0 0 24px rgba(239, 68, 68, 0.12);
       transition: transform var(--duration-press) var(--ease-out), background-color var(--duration-press) ease, box-shadow var(--duration-press) ease;
       position: relative;
@@ -498,12 +472,10 @@
       transform: translate(2px, -2px);
     }
 
-    /* SECCIÓN CONCIENTIZACIÓN */
     .concientizacion-card {
       background: var(--glass-surface);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: none;
       box-shadow: var(--shadow-border), var(--shadow-rim), var(--shadow-card);
       border-radius: 14px;
       padding: 24px;
@@ -528,7 +500,6 @@
       font-weight: 600;
     }
 
-    /* PLANOS TÉCNICOS */
     .planos-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -547,7 +518,6 @@
       background: var(--glass-surface);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: none;
       box-shadow: var(--shadow-border), var(--shadow-rim), var(--shadow-card);
       border-radius: 14px;
       overflow: hidden;
@@ -613,7 +583,6 @@
       line-height: 1.55;
     }
 
-    /* EVIDENCIAS DEL PROTOTIPO */
     #view-evidencias {
       max-width: 1080px;
       margin: 0 auto;
@@ -645,7 +614,6 @@
       background: var(--glass-surface);
       backdrop-filter: blur(24px) saturate(160%);
       -webkit-backdrop-filter: blur(24px) saturate(160%);
-      border: none;
       box-shadow: var(--shadow-border), var(--shadow-rim), var(--shadow-card);
       border-radius: 14px;
       padding: 12px;
@@ -786,7 +754,6 @@
       padding-top: 8px;
     }
 
-    /* VISOR MODAL LIGHTBOX */
     .evidence-modal {
       position: fixed;
       top: 0;
@@ -847,7 +814,6 @@
       background: rgba(18, 22, 30, 0.88);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: none;
       box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 24px 60px -12px rgba(0, 0, 0, 0.7);
       border-radius: 20px;
       width: min(920px, 94vw);
@@ -966,9 +932,6 @@
       color: var(--text-muted);
     }
 
-    /* ========================================================
-       5. SIMULACIÓN & CONSOLA INDUSTRIAL SCADA
-       ======================================================== */
     .scada-badge {
       display: inline-flex;
       align-items: center;
@@ -1006,7 +969,6 @@
       50% { opacity: 0.45; transform: scale(0.85); filter: brightness(0.8); }
     }
 
-    /* GRID ASIMÉTRICO DE 2 COLUMNAS PRINCIPALES */
     .scada-layout {
       display: grid;
       grid-template-columns: 1fr;
@@ -1031,7 +993,6 @@
       background: rgba(14, 18, 26, 0.82);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: none;
       box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 16px 36px -10px rgba(0, 0, 0, 0.6);
       border-radius: 14px;
       padding: 18px 20px;
@@ -1067,7 +1028,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* INGESTA MANUAL */
     .ingest-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1127,7 +1087,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* BOTONES DE CONTROL DE CORRIDA INDUSTRIAL */
     .scada-ctrl-actions {
       display: grid;
       grid-template-columns: 1.7fr 1fr;
@@ -1186,7 +1145,6 @@
       transform: scale(0.97);
     }
 
-    /* CONSOLA DE LOGS INDUSTRIAL */
     .scada-terminal-wrap {
       background: #06080c;
       border-radius: 10px;
@@ -1239,7 +1197,6 @@
     .log-tag.tag-paper { color: var(--color-paper); }
     .log-tag.tag-warn { color: #f87171; }
 
-    /* APROVECHAMIENTO GLOBAL */
     .scada-kpi-banner {
       display: flex;
       justify-content: space-between;
@@ -1313,7 +1270,6 @@
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
 
-    /* 3 SILOS / DEPÓSITOS VERTICALES */
     .scada-silos-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1348,10 +1304,12 @@
       background: linear-gradient(90deg, transparent, var(--color-metal), transparent);
       box-shadow: 0 0 10px var(--color-metal-glow);
     }
+
     .silo-plastic::before {
       background: linear-gradient(90deg, transparent, var(--color-plastic), transparent);
       box-shadow: 0 0 10px var(--color-plastic-glow);
     }
+
     .silo-paper::before {
       background: linear-gradient(90deg, transparent, var(--color-paper), transparent);
       box-shadow: 0 0 10px var(--color-paper-glow);
@@ -1380,6 +1338,7 @@
       font-family: var(--font-mono);
       letter-spacing: 0.04em;
     }
+
     .silo-metal .silo-pct { color: var(--color-metal); }
     .silo-plastic .silo-pct { color: var(--color-plastic); }
     .silo-paper .silo-pct { color: var(--color-paper); }
@@ -1443,10 +1402,12 @@
       background: linear-gradient(180deg, var(--color-metal) 0%, rgba(245, 158, 11, 0.35) 100%);
       box-shadow: 0 0 16px var(--color-metal-glow);
     }
+
     .silo-plastic .silo-fill {
       background: linear-gradient(180deg, var(--color-plastic) 0%, rgba(16, 185, 129, 0.35) 100%);
       box-shadow: 0 0 16px var(--color-plastic-glow);
     }
+
     .silo-paper .silo-fill {
       background: linear-gradient(180deg, var(--color-paper) 0%, rgba(56, 189, 248, 0.35) 100%);
       box-shadow: 0 0 16px var(--color-paper-glow);
@@ -1496,9 +1457,6 @@
       color: var(--text-sub);
     }
 
-    /* ========================================================
-       6. SISTEMA RESPONSIVE CONSOLIDADO
-       ======================================================== */
     @media (max-width: 768px) {
       header {
         position: sticky;
@@ -1522,7 +1480,6 @@
         scroll-snap-type: x mandatory;
         scroll-padding: 0 8px;
         scrollbar-width: none;
-        -ms-overflow-style: none;
         -webkit-overflow-scrolling: touch;
         padding: 6px 8px;
         border-radius: 9999px;
@@ -1542,8 +1499,8 @@
         justify-content: center;
         min-height: 44px;
         height: 44px;
-        padding: 10px 18px;
-        font-size: 0.84rem;
+        padding: 10px clamp(14px, 3vw, 18px);
+        font-size: clamp(0.82rem, 2.4vw, 0.84rem);
         font-weight: 600;
         letter-spacing: 0.03em;
         border-radius: 9999px;
@@ -1558,10 +1515,8 @@
         box-sizing: border-box;
       }
 
-      /* PADDING SUPERIOR SEGURO (96px) PARA EVITAR SOLAPAMIENTO */
-      .view-pane,
-      .view-section {
-        padding-top: 96px;
+      .view-pane {
+        padding-top: clamp(92px, 14vw, 96px);
         padding-left: 16px;
         padding-right: 16px;
         max-width: 100%;
@@ -1588,16 +1543,6 @@
         max-width: 100%;
       }
 
-      /* DASHBOARD EN MÓVIL */
-      #view-dashboard {
-        max-width: 100%;
-        width: 100%;
-        padding-left: 16px;
-        padding-right: 16px;
-        padding-top: 96px;
-        box-sizing: border-box;
-      }
-
       #view-dashboard h2,
       #view-dashboard .section-header h2 {
         font-size: clamp(1.2rem, 4.8vw, 1.55rem);
@@ -1608,7 +1553,6 @@
         white-space: normal;
       }
 
-      /* TARJETAS DE INTEGRANTES */
       .team-grid {
         grid-template-columns: 1fr;
         gap: 14px;
@@ -1618,39 +1562,39 @@
       }
 
       .team-card {
-        padding: 16px;
+        padding: clamp(14px, 3.5vw, 16px);
         border-radius: 14px;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
       }
 
-      .team-discipline {
-        width: 105px;
-        min-width: 105px;
-        max-width: 105px;
-        font-size: 0.6rem;
-        padding: 3px 6px;
-        margin-bottom: 12px;
-        text-align: center;
-        box-sizing: border-box;
-      }
-
       .team-card-body {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: clamp(12px, 3vw, 14px);
         width: 100%;
         box-sizing: border-box;
       }
 
+      .team-discipline {
+        width: clamp(95px, 26vw, 105px);
+        min-width: clamp(95px, 26vw, 105px);
+        max-width: clamp(95px, 26vw, 105px);
+        font-size: clamp(0.56rem, 1.6vw, 0.6rem);
+        padding: 3px clamp(4px, 1.2vw, 6px);
+        margin-bottom: clamp(10px, 2.5vw, 12px);
+        text-align: center;
+        box-sizing: border-box;
+      }
+
       .team-avatar {
-        width: 105px;
-        min-width: 105px;
-        max-width: 105px;
-        height: 120px;
-        font-size: 1.8rem;
-        border-radius: 12px;
+        width: clamp(95px, 26vw, 105px);
+        min-width: clamp(95px, 26vw, 105px);
+        max-width: clamp(95px, 26vw, 105px);
+        height: clamp(110px, 30vw, 120px);
+        font-size: clamp(1.6rem, 4.5vw, 1.8rem);
+        border-radius: clamp(10px, 2.8vw, 12px);
         flex-shrink: 0;
         box-sizing: border-box;
       }
@@ -1665,20 +1609,19 @@
       }
 
       .team-name {
-        font-size: 1.02rem;
+        font-size: clamp(0.96rem, 2.8vw, 1.02rem);
         font-weight: 600;
         line-height: 1.25;
       }
 
       .team-desc {
-        font-size: 0.82rem;
+        font-size: clamp(0.78rem, 2.2vw, 0.82rem);
         line-height: 1.5;
         color: var(--text-muted);
       }
 
-      /* PLANOS TÉCNICOS */
       .planos-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 16px;
         margin-top: 14px;
         margin-bottom: 20px;
@@ -1712,7 +1655,6 @@
         line-height: 1.5;
       }
 
-      /* EVIDENCIAS */
       #view-evidencias {
         max-width: 100%;
         width: 100%;
@@ -1720,7 +1662,7 @@
       }
 
       .galeria-frames {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 14px;
         margin-top: 14px;
         width: 100%;
@@ -1739,7 +1681,7 @@
       }
 
       .frame-id {
-        font-size: 1.5rem;
+        font-size: clamp(1.4rem, 4vw, 1.5rem);
       }
 
       .frame-status {
@@ -1751,7 +1693,6 @@
         font-size: 0.72rem;
       }
 
-      /* DASHBOARD SCADA */
       .scada-layout {
         grid-template-columns: 1fr;
         gap: 16px;
@@ -1890,7 +1831,7 @@
       .scada-silos-grid {
         display: flex;
         flex-direction: row;
-        gap: 8px;
+        gap: clamp(6px, 1.8vw, 8px);
         width: 100%;
         max-width: 100%;
         margin-bottom: 16px;
@@ -1901,7 +1842,7 @@
         flex: 1 1 0;
         min-width: 0;
         max-width: 100%;
-        padding: 12px 8px;
+        padding: 12px clamp(4px, 1.5vw, 8px);
         box-sizing: border-box;
       }
 
@@ -1914,14 +1855,14 @@
       }
 
       .silo-title {
-        font-size: 0.66rem;
+        font-size: clamp(0.6rem, 1.8vw, 0.66rem);
         font-weight: 600;
         letter-spacing: 0.03em;
         white-space: nowrap;
       }
 
       .silo-pct {
-        font-size: 0.74rem;
+        font-size: clamp(0.68rem, 2vw, 0.74rem);
         font-weight: 700;
         white-space: nowrap;
       }
@@ -1929,7 +1870,7 @@
       .silo-tube {
         width: 100%;
         max-width: 100%;
-        height: 130px;
+        height: clamp(120px, 28vw, 130px);
         margin-bottom: 8px;
         box-sizing: border-box;
       }
@@ -1966,119 +1907,9 @@
         word-break: break-word;
       }
     }
-
-    @media (min-width: 540px) and (max-width: 768px) {
-      .planos-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-      }
-      .galeria-frames {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      header {
-        top: 6px;
-        padding: 0 8px;
-      }
-
-      nav.nav-menu {
-        padding: 5px 6px;
-        gap: 5px;
-        scroll-padding: 0 6px;
-      }
-
-      .menu-link {
-        min-height: 42px;
-        height: 42px;
-        padding: 10px 16px;
-        font-size: 0.82rem;
-        letter-spacing: 0.02em;
-      }
-
-      .view-pane,
-      .view-section {
-        padding-top: 92px;
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      #view-dashboard {
-        padding-left: 16px;
-        padding-right: 16px;
-        padding-top: 92px;
-      }
-
-      #view-dashboard h2,
-      #view-dashboard .section-header h2 {
-        font-size: clamp(1.2rem, 4.8vw, 1.55rem);
-        line-height: 1.25;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-      }
-
-      .team-card {
-        padding: 14px;
-      }
-
-      .team-card-body {
-        gap: 12px;
-      }
-
-      .team-discipline {
-        width: 95px;
-        min-width: 95px;
-        max-width: 95px;
-        font-size: 0.56rem;
-        padding: 3px 4px;
-        margin-bottom: 10px;
-      }
-
-      .team-avatar {
-        width: 95px;
-        min-width: 95px;
-        max-width: 95px;
-        height: 110px;
-        font-size: 1.6rem;
-        border-radius: 10px;
-      }
-
-      .team-name {
-        font-size: 0.96rem;
-      }
-
-      .team-desc {
-        font-size: 0.78rem;
-        line-height: 1.45;
-      }
-
-      .scada-silos-grid {
-        gap: 6px;
-      }
-
-      .silo-card {
-        padding: 10px 5px;
-      }
-
-      .silo-title {
-        font-size: 0.60rem;
-      }
-
-      .silo-pct {
-        font-size: 0.68rem;
-      }
-
-      .silo-tube {
-        height: 120px;
-      }
-    }
   </style>
 </head>
 <body>
-
-  <!-- NAVEGACIÓN FLOTANTE LIQUID GLASS -->
   <header id="mainHeader">
     <nav class="nav-menu">
       <button class="menu-link active" onclick="navegar('view-info', this)">PROYECTO</button>
@@ -2090,8 +1921,6 @@
   </header>
 
   <div class="main-container">
-
-    <!-- 1. PROYECTO -->
     <section id="view-info" class="view-pane active">
       <div class="section-header">
         <h2>Clasificador Mecánico de Residuos (RSU)</h2>
@@ -2110,7 +1939,6 @@
       </div>
 
       <div class="team-grid">
-        <!-- 1. MECATRÓNICA: Marian -->
         <div class="team-card team-mec">
           <span class="team-discipline discipline-mec">ING. MECATRÓNICA</span>
           <div class="team-card-body">
@@ -2124,7 +1952,6 @@
           </div>
         </div>
 
-        <!-- 2. MECATRÓNICA: Kaleth -->
         <div class="team-card team-mec">
           <span class="team-discipline discipline-mec">ING. MECATRÓNICA</span>
           <div class="team-card-body">
@@ -2138,7 +1965,6 @@
           </div>
         </div>
 
-        <!-- 3. SISTEMAS: Daniel -->
         <div class="team-card team-sis">
           <span class="team-discipline discipline-sis">ING. DE SISTEMAS</span>
           <div class="team-card-body">
@@ -2152,7 +1978,6 @@
           </div>
         </div>
 
-        <!-- 4. SISTEMAS: Nicolás -->
         <div class="team-card team-sis">
           <span class="team-discipline discipline-sis">ING. DE SISTEMAS</span>
           <div class="team-card-body">
@@ -2166,7 +1991,6 @@
           </div>
         </div>
 
-        <!-- 5. INDUSTRIAL: Yoseth -->
         <div class="team-card team-ind">
           <span class="team-discipline discipline-ind">ING. INDUSTRIAL</span>
           <div class="team-card-body">
@@ -2180,7 +2004,6 @@
           </div>
         </div>
 
-        <!-- 6. INDUSTRIAL: Victor -->
         <div class="team-card team-ind">
           <span class="team-discipline discipline-ind">ING. INDUSTRIAL</span>
           <div class="team-card-body">
@@ -2195,7 +2018,6 @@
         </div>
       </div>
 
-      <!-- BOTÓN DEL DOCUMENTO TÉCNICO (PDF // DESTACADO & LIMPIO) -->
       <div class="doc-cta-wrap">
         <a href="informe-proyecto.pdf" target="_blank" rel="noopener noreferrer" class="doc-pdf-btn">
           <svg class="doc-pdf-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2213,7 +2035,6 @@
       </div>
     </section>
 
-    <!-- 2. IMPACTO SOCIAL Y CONCIENTIZACIÓN -->
     <section id="view-impacto" class="view-pane">
       <div class="section-header">
         <h2>Concientización e Impacto Social</h2>
@@ -2229,7 +2050,6 @@
       </div>
     </section>
 
-    <!-- 3. PLANOS 2D Y 3D -->
     <section id="view-planos" class="view-pane">
       <div class="section-header">
         <h2>PLANOS 2D Y 3D</h2>
@@ -2240,9 +2060,7 @@
         <p>En este apartado encontramos una serie de 3 planos en diferentes vistas o perspectivas del proyecto y en adición un modelo 3D en Blender.</p>
       </div>
 
-      <!-- CUADRÍCULA DE PLANOS TÉCNICOS (4 PLANOS // LIQUID GLASS) -->
       <div class="planos-grid">
-        <!-- PLANO 1 -->
         <article class="plano-card">
           <div class="plano-img-wrap">
             <img src="img/plano-frontal.png" alt="Plano 01 // Vista Frontal / Modelo 3D" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
@@ -2253,7 +2071,6 @@
           </div>
         </article>
 
-        <!-- PLANO 2 -->
         <article class="plano-card">
           <div class="plano-img-wrap">
             <img src="img/plano-superior.png" alt="Plano 02 // Vista Superior (Planta)" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
@@ -2264,7 +2081,6 @@
           </div>
         </article>
 
-        <!-- PLANO 3 -->
         <article class="plano-card">
           <div class="plano-img-wrap">
             <img src="img/plano-izquierda.png" alt="Plano 03 // Vista Lateral Izquierda" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
@@ -2275,7 +2091,6 @@
           </div>
         </article>
 
-        <!-- PLANO 4 -->
         <article class="plano-card">
           <div class="plano-img-wrap">
             <img src="img/plano-derecha.png" alt="Plano 04 // Vista Lateral Derecha" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
@@ -2288,7 +2103,6 @@
       </div>
     </section>
 
-    <!-- 4. EVIDENCIAS DEL PROTOTIPO (CUADRÍCULA 3x3 SIMÉTRICA // 9 CUADROS 16:9) -->
     <section id="view-evidencias" class="view-pane">
       <div class="section-header">
         <h2>EVIDENCIAS DEL PROCESO</h2>
@@ -2296,7 +2110,6 @@
       </div>
 
       <div class="galeria-frames">
-        <!-- Cuadro 01 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2314,7 +2127,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 02 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2332,7 +2144,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 03 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2350,7 +2161,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 04 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2368,7 +2178,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 05 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2386,7 +2195,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 06 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2404,7 +2212,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 07 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2422,7 +2229,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 08 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2440,7 +2246,6 @@
           </div>
         </div>
 
-        <!-- Cuadro 09 -->
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
             <div class="frame-icon">
@@ -2460,7 +2265,6 @@
       </div>
     </section>
 
-    <!-- 5. DASHBOARD DE SIMULACIÓN // ESTACIÓN SCADA ASIMÉTRICA -->
     <section id="view-dashboard" class="view-pane">
       <div class="section-header">
         <h2>DASHBOARD DE SIMULACIÓN</h2>
@@ -2468,10 +2272,7 @@
       </div>
 
       <div class="scada-layout">
-        <!-- COLUMNA IZQUIERDA: PANEL OPERATIVO Y CONTROL -->
         <div class="scada-col scada-left">
-          
-          <!-- 1. Panel de Ingesta y Control de Lote -->
           <div class="scada-panel">
             <div class="scada-panel-header">
               <span class="scada-panel-title">
@@ -2510,7 +2311,6 @@
             </div>
           </div>
 
-          <!-- 2. Registro de Eventos -->
           <div class="scada-panel" style="flex: 1; display: flex; flex-direction: column;">
             <div class="scada-panel-header">
               <span class="scada-panel-title">
@@ -2532,13 +2332,9 @@
               </div>
             </div>
           </div>
-
         </div>
 
-        <!-- COLUMNA DERECHA: BALANCE DE MASA Y NIVELES FÍSICOS -->
         <div class="scada-col scada-right">
-
-          <!-- 1. Métrica de Aprovechamiento Global y Balance -->
           <div class="scada-panel">
             <div class="scada-kpi-banner">
               <div class="scada-kpi-left">
@@ -2556,10 +2352,7 @@
               </div>
             </div>
 
-            <!-- 2. 3 Medidores Verticales de Nivel Físico (Silos) -->
             <div class="scada-silos-grid">
-              
-              <!-- Silo Metales -->
               <div class="silo-card silo-metal">
                 <div class="silo-header">
                   <span class="silo-title">SILO 01 // METAL</span>
@@ -2581,7 +2374,6 @@
                 </div>
               </div>
 
-              <!-- Silo Plástico -->
               <div class="silo-card silo-plastic">
                 <div class="silo-header">
                   <span class="silo-title">SILO 02 // PLÁSTICO</span>
@@ -2603,7 +2395,6 @@
                 </div>
               </div>
 
-              <!-- Silo Papel -->
               <div class="silo-card silo-paper">
                 <div class="silo-header">
                   <span class="silo-title">SILO 03 // PAPEL</span>
@@ -2624,10 +2415,8 @@
                   <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
                 </div>
               </div>
-
             </div>
 
-            <!-- 3. Monitor Chart.js Flujo Continuo / Distribución en Tiempo Real -->
             <div class="scada-panel-header" style="margin-top: 4px; margin-bottom: 8px;">
               <span class="scada-panel-title">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2640,9 +2429,7 @@
             <div class="scada-chart-wrap">
               <canvas id="grafica"></canvas>
             </div>
-
           </div>
-
         </div>
       </div>
     </section>
@@ -2650,7 +2437,6 @@
     <footer>Universitaria Agustiniana • Facultad de Ingeniería • Introducción a la Ingeniería</footer>
   </div>
 
-  <!-- VISOR MODAL LIGHTBOX (ESTILO WHATSAPP / IOS LIQUID GLASS) -->
   <div id="evidenceModal" class="evidence-modal" role="dialog" aria-modal="true" aria-hidden="true" onclick="handleModalBackdropClick(event)">
     <button class="modal-close-btn" onclick="cerrarModal()" aria-label="Cerrar visor">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2659,9 +2445,7 @@
       </svg>
     </button>
     <div class="modal-dialog" onclick="event.stopPropagation()">
-      <div id="modalContent" class="modal-content-wrap">
-        <!-- Contenido dinámico (imagen o vista técnica ampliada) -->
-      </div>
+      <div id="modalContent" class="modal-content-wrap"></div>
       <div class="modal-footer-caption">
         <span id="modalId" class="modal-tag">EVIDENCIA 01</span>
         <span id="modalDate" class="modal-date">FECHA: XX/XX/2026</span>
@@ -2670,42 +2454,26 @@
   </div>
 
   <script>
-    /* ========================================================
-       1. SMART HIDE / SHOW ON SCROLL (BARRA DE NAVEGACIÓN)
-       ======================================================== */
     let lastScroll = 0;
-    const mainHeader = document.getElementById('mainHeader') || document.querySelector('header');
+    const mainHeader = document.getElementById('mainHeader');
 
     window.addEventListener('scroll', () => {
       const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-
-      // Al inicio de la página, mantener siempre visible
       if (currentScroll <= 15) {
         if (mainHeader) mainHeader.classList.remove('nav-hidden');
-        lastScroll = currentScroll;
-        return;
-      }
-
-      // Comparación de dirección de scroll
-      if (currentScroll > lastScroll && currentScroll > 60) {
-        // Scroll hacia abajo -> Ocultar barra hacia arriba
+      } else if (currentScroll > lastScroll && currentScroll > 60) {
         if (mainHeader) mainHeader.classList.add('nav-hidden');
       } else if (currentScroll < lastScroll) {
-        // Scroll hacia arriba -> Mostrar barra
         if (mainHeader) mainHeader.classList.remove('nav-hidden');
       }
-
       lastScroll = currentScroll;
     }, { passive: true });
 
-    /* ========================================================
-       2. SISTEMA DE NAVEGACIÓN ENTRE VISTAS
-       ======================================================== */
     function navegar(vistaId, btnElement) {
       if (vistaId === 'view-bitacora') vistaId = 'view-evidencias';
       if (vistaId === 'view-concientizacion') vistaId = 'view-impacto';
-      
-      document.querySelectorAll('.view-pane, .view-section').forEach(v => v.classList.remove('active'));
+
+      document.querySelectorAll('.view-pane').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
 
       const targetPane = document.getElementById(vistaId);
@@ -2723,15 +2491,12 @@
       if (mainHeader) mainHeader.classList.remove('nav-hidden');
     }
 
-    /* ========================================================
-       3. VISOR MODAL LIGHTBOX
-       ======================================================== */
-    function abrirModal(cardElement) {
-      const modal = document.getElementById('evidenceModal');
-      const content = document.getElementById('modalContent');
-      const modalId = document.getElementById('modalId');
-      const modalDate = document.getElementById('modalDate');
+    const modal = document.getElementById('evidenceModal');
+    const modalContent = document.getElementById('modalContent');
+    const modalId = document.getElementById('modalId');
+    const modalDate = document.getElementById('modalDate');
 
+    function abrirModal(cardElement) {
       const idText = cardElement.querySelector('.frame-id')?.innerText.trim() || '01';
       const statusText = cardElement.querySelector('.frame-status')?.innerText.trim() || 'Sin registro fotográfico';
       const dateText = cardElement.querySelector('.frame-caption span:last-child')?.innerText.trim() || 'XX/XX/2026';
@@ -2740,11 +2505,11 @@
       if (modalId) modalId.innerText = `EVIDENCIA ${idText} // REGISTRO TÉCNICO`;
       if (modalDate) modalDate.innerText = `FECHA: ${dateText}`;
 
-      if (content) {
+      if (modalContent) {
         if (img && img.src) {
-          content.innerHTML = `<img src="${img.src}" alt="Evidencia ${idText}">`;
+          modalContent.innerHTML = `<img src="${img.src}" alt="Evidencia ${idText}">`;
         } else {
-          content.innerHTML = `
+          modalContent.innerHTML = `
             <div class="modal-placeholder">
               <div class="modal-placeholder-icon">
                 <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -2768,7 +2533,6 @@
     }
 
     function cerrarModal() {
-      const modal = document.getElementById('evidenceModal');
       if (modal) {
         modal.classList.remove('active');
         modal.setAttribute('aria-hidden', 'true');
@@ -2777,21 +2541,14 @@
     }
 
     function handleModalBackdropClick(e) {
-      if (e.target.id === 'evidenceModal') {
-        cerrarModal();
-      }
+      if (e.target.id === 'evidenceModal') cerrarModal();
     }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        cerrarModal();
-      }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') cerrarModal();
     });
 
-    /* ========================================================
-       4. MOTOR DE TELEMETRÍA Y SIMULACIÓN SCADA
-       ======================================================== */
-    let data = { metal: 0, plastic: 0, paper: 0 };
+    const data = { metal: 0, plastic: 0, paper: 0 };
     const CAP_MAX = 10;
     const TOTAL_LOTE = 20;
     let sim = false;
@@ -2832,17 +2589,17 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: { 
-            ticks: { color: '#a1a1a6', font: { family: 'JetBrains Mono', size: 10 } }, 
-            grid: { display: false } 
+          x: {
+            ticks: { color: '#a1a1a6', font: { family: 'JetBrains Mono', size: 10 } },
+            grid: { display: false }
           },
-          y: { 
-            beginAtZero: true, 
-            ticks: { stepSize: 1, color: '#a1a1a6', font: { family: 'JetBrains Mono', size: 10 } }, 
-            grid: { color: 'rgba(255, 255, 255, 0.05)' } 
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, color: '#a1a1a6', font: { family: 'JetBrains Mono', size: 10 } },
+            grid: { color: 'rgba(255, 255, 255, 0.05)' }
           }
         },
-        plugins: { 
+        plugins: {
           legend: { display: false },
           tooltip: {
             backgroundColor: 'rgba(18, 22, 30, 0.92)',
@@ -2859,26 +2616,23 @@
       }
     });
 
-    function getTot() { 
-      return data.metal + data.plastic + data.paper; 
-    }
+    const getTot = () => data.metal + data.plastic + data.paper;
 
     function registrar(tipo) {
-      if (getTot() >= TOTAL_LOTE) { 
-        addLog("Capacidad máxima del lote (20 unidades) alcanzada.", "WARN"); 
-        if (sim) toggleSim(); 
-        return; 
+      if (getTot() >= TOTAL_LOTE) {
+        addLog('Capacidad máxima del lote (20 unidades) alcanzada.', 'WARN');
+        if (sim) toggleSim();
+        return;
       }
       data[tipo]++;
       actualizar();
-      
-      if (tipo === 'metal') {
-        addLog("Objeto metálico clasificado -> Silo 01", "METAL");
-      } else if (tipo === 'plastic') {
-        addLog("Objeto plástico clasificado -> Silo 02", "PLASTIC");
-      } else if (tipo === 'paper') {
-        addLog("Objeto de papel clasificado -> Silo 03", "PAPER");
-      }
+
+      const logMessages = {
+        metal: 'Objeto metálico clasificado -> Silo 01',
+        plastic: 'Objeto plástico clasificado -> Silo 02',
+        paper: 'Objeto de papel clasificado -> Silo 03'
+      };
+      addLog(logMessages[tipo], tipo.toUpperCase());
     }
 
     function actualizar() {
@@ -2892,7 +2646,7 @@
       if (cPla) cPla.innerText = data.plastic;
       const cPap = document.getElementById('cPap');
       if (cPap) cPap.innerText = data.paper;
-      
+
       const pct = Math.round((tot / TOTAL_LOTE) * 100);
       const kpiAprov = document.getElementById('kpiAprov');
       if (kpiAprov) kpiAprov.innerText = `${pct}%`;
@@ -2933,27 +2687,28 @@
       const pctEl = document.getElementById(pctId);
       if (pctEl) pctEl.innerText = `${pct}%`;
       const alertEl = document.getElementById(alertId);
-      if (alertEl) alertEl.style.display = (val >= 8) ? "inline-flex" : "none";
+      if (alertEl) alertEl.style.display = val >= 8 ? 'inline-flex' : 'none';
     }
 
     function addLog(txt, tag = 'SYS') {
       const b = document.getElementById('logBox');
       if (!b) return;
       const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      const s = String(now.getSeconds()).padStart(2, '0');
-      const ms = String(now.getMilliseconds()).padStart(3, '0');
-      const timeStr = `${h}:${m}:${s}.${ms}`;
+      const timeStr = [now.getHours(), now.getMinutes(), now.getSeconds()]
+        .map(v => String(v).padStart(2, '0'))
+        .join(':') + '.' + String(now.getMilliseconds()).padStart(3, '0');
 
       const row = document.createElement('div');
       row.className = 'log-line';
 
-      let tagClass = 'tag-sys';
-      if (tag === 'METAL') tagClass = 'tag-metal';
-      else if (tag === 'PLASTIC') tagClass = 'tag-plastic';
-      else if (tag === 'PAPER') tagClass = 'tag-paper';
-      else if (tag === 'WARN' || tag === 'ALERTA') tagClass = 'tag-warn';
+      const tagMap = {
+        METAL: 'tag-metal',
+        PLASTIC: 'tag-plastic',
+        PAPER: 'tag-paper',
+        WARN: 'tag-warn',
+        ALERTA: 'tag-warn'
+      };
+      const tagClass = tagMap[tag] || 'tag-sys';
 
       row.innerHTML = `<span class="log-time">[${timeStr}]</span><span class="log-tag ${tagClass}">[${tag}]</span><span>${txt}</span>`;
       b.prepend(row);
@@ -2978,13 +2733,13 @@
           `;
         }
 
-        addLog("Simulación automática iniciada (corrida de 20 objetos).", "SYS");
+        addLog('Simulación automática iniciada (corrida de 20 objetos).', 'SYS');
 
         simLoop = setInterval(() => {
-          if (getTot() >= TOTAL_LOTE) { 
-            toggleSim(); 
-            addLog("Fin de la corrida. Balance completado: 20 objetos clasificados.", "SYS");
-            return; 
+          if (getTot() >= TOTAL_LOTE) {
+            toggleSim();
+            addLog('Fin de la corrida. Balance completado: 20 objetos clasificados.', 'SYS');
+            return;
           }
           const keys = ['metal', 'plastic', 'paper'];
           registrar(keys[Math.floor(Math.random() * keys.length)]);
@@ -2999,14 +2754,16 @@
           `;
         }
         clearInterval(simLoop);
-        addLog("Simulación pausada por el operador.", "WARN");
+        addLog('Simulación pausada por el operador.', 'WARN');
       }
       actualizar();
     }
 
     function reiniciar() {
       if (sim) toggleSim();
-      data = { metal: 0, plastic: 0, paper: 0 };
+      data.metal = 0;
+      data.plastic = 0;
+      data.paper = 0;
 
       const logBox = document.getElementById('logBox');
       if (logBox) {
@@ -3019,7 +2776,7 @@
         `;
       }
       actualizar();
-      addLog("Sistema listo para registrar un nuevo lote.", "SYS");
+      addLog('Sistema listo para registrar un nuevo lote.', 'SYS');
     }
   </script>
 </body>
