@@ -541,6 +541,12 @@
       align-items: center;
       justify-content: center;
       border-bottom: 1px solid var(--line-subtle);
+      cursor: zoom-in;
+    }
+
+    .plano-img-wrap:focus-visible {
+      outline: 2px solid var(--color-paper);
+      outline-offset: -2px;
     }
 
     .plano-img-wrap img {
@@ -780,6 +786,95 @@
       visibility: visible;
     }
 
+    .plano-viewer {
+      padding: 0;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .viewer-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .viewer-stage.dragging {
+      cursor: grabbing;
+    }
+
+    .viewer-stage img {
+      max-width: 92vw;
+      max-height: 78vh;
+      object-fit: contain;
+      transform-origin: center;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .viewer-toolbar {
+      position: absolute;
+      left: 50%;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      max-width: calc(100vw - 24px);
+      padding: 6px;
+      border-radius: 9999px;
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: var(--shadow-border), var(--shadow-rim), var(--shadow-pill);
+    }
+
+    .viewer-btn {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 9999px;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .viewer-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .viewer-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+      background: transparent;
+    }
+
+    .viewer-level {
+      min-width: 52px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
     .modal-close-btn {
       position: fixed;
       top: 24px;
@@ -972,6 +1067,7 @@
     .scada-layout {
       display: grid;
       grid-template-columns: 1fr;
+      grid-template-areas: "control" "silos" "console";
       gap: 20px;
       margin-top: 14px;
     }
@@ -979,15 +1075,18 @@
     @media (min-width: 960px) {
       .scada-layout {
         grid-template-columns: 1fr 1.25fr;
+        grid-template-areas:
+          "control silos"
+          "console silos";
+        grid-template-rows: auto 1fr;
         gap: 22px;
+        align-items: start;
       }
     }
 
-    .scada-col {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
+    .scada-area-control { grid-area: control; }
+    .scada-area-silos { grid-area: silos; }
+    .scada-area-console { grid-area: console; }
 
     .scada-panel {
       background: rgba(14, 18, 26, 0.82);
@@ -1156,7 +1255,7 @@
     }
 
     .scada-terminal-body {
-      height: 140px;
+      height: 220px;
       overflow-y: auto;
       font-family: var(--font-mono);
       font-size: 0.67rem;
@@ -1702,16 +1801,10 @@
         overflow: hidden;
       }
 
-      .scada-col {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-      }
-
       .scada-panel {
         width: 100%;
         max-width: 100%;
+        min-width: 0;
         box-sizing: border-box;
         overflow: hidden;
         padding: 16px 14px;
@@ -1849,6 +1942,8 @@
       .silo-header {
         width: 100%;
         display: flex;
+        flex-wrap: wrap;
+        gap: 2px 4px;
         justify-content: space-between;
         align-items: baseline;
         margin-bottom: 6px;
@@ -1905,6 +2000,21 @@
         max-width: 100%;
         box-sizing: border-box;
         word-break: break-word;
+      }
+
+      .viewer-toolbar {
+        gap: 2px;
+        padding: 5px;
+      }
+
+      .viewer-btn {
+        padding: 0 10px;
+        font-size: 0.72rem;
+      }
+
+      .viewer-level {
+        min-width: 44px;
+        font-size: 0.7rem;
       }
     }
   </style>
@@ -2272,163 +2382,153 @@
       </div>
 
       <div class="scada-layout">
-        <div class="scada-col scada-left">
-          <div class="scada-panel">
-            <div class="scada-panel-header">
-              <span class="scada-panel-title">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </svg>
-                Panel de Ingesta & Control
-              </span>
-              <span class="scada-panel-tag">LOTE: <strong id="kpiTot" style="color:#ffffff;">0 / 20</strong></span>
-            </div>
-            
-            <div class="ingest-grid">
-              <button class="ingest-btn ingest-btn-metal" onclick="registrar('metal')">
-                <span class="ingest-btn-code">MAG-01</span>
-                <span class="ingest-btn-label">+ METAL</span>
-              </button>
-              <button class="ingest-btn ingest-btn-plastic" onclick="registrar('plastic')">
-                <span class="ingest-btn-code">GRAV-02</span>
-                <span class="ingest-btn-label">+ PLÁSTICO</span>
-              </button>
-              <button class="ingest-btn ingest-btn-paper" onclick="registrar('paper')">
-                <span class="ingest-btn-code">AIR-03</span>
-                <span class="ingest-btn-label">+ PAPEL</span>
-              </button>
-            </div>
-
-            <div class="scada-ctrl-actions">
-              <button id="bRun" class="scada-run-btn" onclick="toggleSim()">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                INICIAR SIMULACIÓN
-              </button>
-              <button class="scada-reset-btn" onclick="reiniciar()">REINICIAR</button>
-            </div>
+        <div class="scada-panel scada-area-control">
+          <div class="scada-panel-header">
+            <span class="scada-panel-title">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Panel de Ingesta & Control
+            </span>
+            <span class="scada-panel-tag">LOTE: <strong id="kpiTot" style="color:#ffffff;">0 / 20</strong></span>
           </div>
 
-          <div class="scada-panel" style="flex: 1; display: flex; flex-direction: column;">
-            <div class="scada-panel-header">
-              <span class="scada-panel-title">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="4 17 10 11 4 5"></polyline>
-                  <line x1="12" y1="19" x2="20" y2="19"></line>
-                </svg>
-                Registro de Eventos
-              </span>
-              <span class="scada-panel-tag">ACTIVIDAD EN VIVO</span>
-            </div>
-            <div class="scada-terminal-wrap" style="flex: 1; display: flex; flex-direction: column;">
-              <div id="logBox" class="scada-terminal-body" style="height: 220px; flex: 1;">
-                <div class="log-line">
-                  <span class="log-time">[00:00:00.000]</span>
-                  <span class="log-tag tag-sys">[SYS]</span>
-                  <span>Sistema inicializado. Listo para registrar lote de prueba.</span>
-                </div>
-              </div>
-            </div>
+          <div class="ingest-grid">
+            <button class="ingest-btn ingest-btn-metal" onclick="registrar('metal')">
+              <span class="ingest-btn-code">MAG-01</span>
+              <span class="ingest-btn-label">+ METAL</span>
+            </button>
+            <button class="ingest-btn ingest-btn-plastic" onclick="registrar('plastic')">
+              <span class="ingest-btn-code">GRAV-02</span>
+              <span class="ingest-btn-label">+ PLÁSTICO</span>
+            </button>
+            <button class="ingest-btn ingest-btn-paper" onclick="registrar('paper')">
+              <span class="ingest-btn-code">AIR-03</span>
+              <span class="ingest-btn-label">+ PAPEL</span>
+            </button>
+          </div>
+
+          <div class="scada-ctrl-actions">
+            <button id="bRun" class="scada-run-btn" onclick="toggleSim()">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              INICIAR SIMULACIÓN
+            </button>
+            <button class="scada-reset-btn" onclick="reiniciar()">REINICIAR</button>
           </div>
         </div>
 
-        <div class="scada-col scada-right">
-          <div class="scada-panel">
-            <div class="scada-kpi-banner">
-              <div class="scada-kpi-left">
-                <span class="scada-kpi-sub">Aprovechamiento & Pureza Global</span>
-                <div class="scada-kpi-num-wrap">
-                  <span id="kpiAprov" class="scada-kpi-num">0%</span>
-                  <div id="kpiEq" class="scada-kpi-eq">E(0) = 0M + 0P + 0C</div>
+        <div class="scada-panel scada-area-silos">
+          <div class="scada-kpi-banner">
+            <div class="scada-kpi-left">
+              <span class="scada-kpi-sub">Aprovechamiento & Pureza Global</span>
+              <div class="scada-kpi-num-wrap">
+                <span id="kpiAprov" class="scada-kpi-num">0%</span>
+                <div id="kpiEq" class="scada-kpi-eq">E(0) = 0M + 0P + 0C</div>
+              </div>
+            </div>
+            <div class="scada-kpi-progress-col">
+              <span class="scada-kpi-sub" style="text-align: right;">Rendimiento del Lote</span>
+              <div class="scada-bar-track">
+                <div id="scadaProgressBar" class="scada-bar-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="scada-silos-grid">
+            <div class="silo-card silo-metal">
+              <div class="silo-header">
+                <span class="silo-title">SILO 01 // METAL</span>
+                <span id="pMet" class="silo-pct">0%</span>
+              </div>
+              <div class="silo-tube">
+                <div id="bMet" class="silo-fill"></div>
+                <div class="silo-graduation">
+                  <span class="silo-tick">100% -</span>
+                  <span class="silo-tick">75% -</span>
+                  <span class="silo-tick">50% -</span>
+                  <span class="silo-tick">25% -</span>
+                  <span class="silo-tick">0% -</span>
                 </div>
               </div>
-              <div class="scada-kpi-progress-col">
-                <span class="scada-kpi-sub" style="text-align: right;">Rendimiento del Lote</span>
-                <div class="scada-bar-track">
-                  <div id="scadaProgressBar" class="scada-bar-fill"></div>
-                </div>
+              <div class="silo-count-val"><span id="cMet">0</span><small> / 10 u</small></div>
+              <div id="aMet" class="silo-alert">
+                <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
               </div>
             </div>
 
-            <div class="scada-silos-grid">
-              <div class="silo-card silo-metal">
-                <div class="silo-header">
-                  <span class="silo-title">SILO 01 // METAL</span>
-                  <span id="pMet" class="silo-pct">0%</span>
-                </div>
-                <div class="silo-tube">
-                  <div id="bMet" class="silo-fill"></div>
-                  <div class="silo-graduation">
-                    <span class="silo-tick">100% -</span>
-                    <span class="silo-tick">75% -</span>
-                    <span class="silo-tick">50% -</span>
-                    <span class="silo-tick">25% -</span>
-                    <span class="silo-tick">0% -</span>
-                  </div>
-                </div>
-                <div class="silo-count-val"><span id="cMet">0</span><small> / 10 u</small></div>
-                <div id="aMet" class="silo-alert">
-                  <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
+            <div class="silo-card silo-plastic">
+              <div class="silo-header">
+                <span class="silo-title">SILO 02 // PLÁSTICO</span>
+                <span id="pPla" class="silo-pct">0%</span>
+              </div>
+              <div class="silo-tube">
+                <div id="bPla" class="silo-fill"></div>
+                <div class="silo-graduation">
+                  <span class="silo-tick">100% -</span>
+                  <span class="silo-tick">75% -</span>
+                  <span class="silo-tick">50% -</span>
+                  <span class="silo-tick">25% -</span>
+                  <span class="silo-tick">0% -</span>
                 </div>
               </div>
-
-              <div class="silo-card silo-plastic">
-                <div class="silo-header">
-                  <span class="silo-title">SILO 02 // PLÁSTICO</span>
-                  <span id="pPla" class="silo-pct">0%</span>
-                </div>
-                <div class="silo-tube">
-                  <div id="bPla" class="silo-fill"></div>
-                  <div class="silo-graduation">
-                    <span class="silo-tick">100% -</span>
-                    <span class="silo-tick">75% -</span>
-                    <span class="silo-tick">50% -</span>
-                    <span class="silo-tick">25% -</span>
-                    <span class="silo-tick">0% -</span>
-                  </div>
-                </div>
-                <div class="silo-count-val"><span id="cPla">0</span><small> / 10 u</small></div>
-                <div id="aPla" class="silo-alert">
-                  <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
-                </div>
-              </div>
-
-              <div class="silo-card silo-paper">
-                <div class="silo-header">
-                  <span class="silo-title">SILO 03 // PAPEL</span>
-                  <span id="pPap" class="silo-pct">0%</span>
-                </div>
-                <div class="silo-tube">
-                  <div id="bPap" class="silo-fill"></div>
-                  <div class="silo-graduation">
-                    <span class="silo-tick">100% -</span>
-                    <span class="silo-tick">75% -</span>
-                    <span class="silo-tick">50% -</span>
-                    <span class="silo-tick">25% -</span>
-                    <span class="silo-tick">0% -</span>
-                  </div>
-                </div>
-                <div class="silo-count-val"><span id="cPap">0</span><small> / 10 u</small></div>
-                <div id="aPap" class="silo-alert">
-                  <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
-                </div>
+              <div class="silo-count-val"><span id="cPla">0</span><small> / 10 u</small></div>
+              <div id="aPla" class="silo-alert">
+                <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
               </div>
             </div>
 
-            <div class="scada-panel-header" style="margin-top: 4px; margin-bottom: 8px;">
-              <span class="scada-panel-title">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 20V10M12 20V4M6 20v-6"/>
-                </svg>
-                Monitor de Flujo en Tiempo Real
-              </span>
-              <span class="scada-panel-tag">DISTRIBUCIÓN POR ACTUADOR</span>
+            <div class="silo-card silo-paper">
+              <div class="silo-header">
+                <span class="silo-title">SILO 03 // PAPEL</span>
+                <span id="pPap" class="silo-pct">0%</span>
+              </div>
+              <div class="silo-tube">
+                <div id="bPap" class="silo-fill"></div>
+                <div class="silo-graduation">
+                  <span class="silo-tick">100% -</span>
+                  <span class="silo-tick">75% -</span>
+                  <span class="silo-tick">50% -</span>
+                  <span class="silo-tick">25% -</span>
+                  <span class="silo-tick">0% -</span>
+                </div>
+              </div>
+              <div class="silo-count-val"><span id="cPap">0</span><small> / 10 u</small></div>
+              <div id="aPap" class="silo-alert">
+                <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
+              </div>
             </div>
-            <div class="scada-chart-wrap">
-              <canvas id="grafica"></canvas>
-            </div>
+          </div>
+
+          <div class="scada-panel-header" style="margin-top: 4px; margin-bottom: 8px;">
+            <span class="scada-panel-title">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 20V10M12 20V4M6 20v-6"/>
+              </svg>
+              Monitor de Flujo en Tiempo Real
+            </span>
+            <span class="scada-panel-tag">DISTRIBUCIÓN POR ACTUADOR</span>
+          </div>
+          <div class="scada-chart-wrap">
+            <canvas id="grafica"></canvas>
+          </div>
+        </div>
+
+        <div class="scada-panel scada-area-console">
+          <div class="scada-panel-header">
+            <span class="scada-panel-title">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 17 10 11 4 5"></polyline>
+                <line x1="12" y1="19" x2="20" y2="19"></line>
+              </svg>
+              Consola de Telemetría
+            </span>
+            <span class="scada-panel-tag">EN VIVO</span>
+          </div>
+          <div class="scada-terminal-wrap">
+            <div id="logBox" class="scada-terminal-body" role="log" aria-label="Consola de telemetría" aria-live="off"></div>
           </div>
         </div>
       </div>
@@ -2450,6 +2550,32 @@
         <span id="modalId" class="modal-tag">EVIDENCIA 01</span>
         <span id="modalDate" class="modal-date">FECHA: XX/XX/2026</span>
       </div>
+    </div>
+  </div>
+
+  <div id="planoViewer" class="evidence-modal plano-viewer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Visor de plano">
+    <button class="modal-close-btn" data-viewer="close" aria-label="Cerrar visor">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="viewer-stage" id="viewerStage">
+      <img id="viewerImg" alt="" draggable="false">
+    </div>
+    <div class="viewer-toolbar">
+      <button class="viewer-btn" data-viewer="out" aria-label="Reducir zoom">−</button>
+      <span class="viewer-level" id="viewerLevel">100%</span>
+      <button class="viewer-btn" data-viewer="in" aria-label="Aumentar zoom">+</button>
+      <button class="viewer-btn" data-viewer="reset" aria-label="Restablecer vista">RESET</button>
+      <a class="viewer-btn" id="viewerLink" target="_blank" rel="noopener noreferrer" aria-label="Abrir imagen original">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+        ORIGINAL
+      </a>
     </div>
   </div>
 
@@ -2548,6 +2674,143 @@
       if (e.key === 'Escape') cerrarModal();
     });
 
+    function initPlanoViewer() {
+      const viewer = document.getElementById('planoViewer');
+      const stage = document.getElementById('viewerStage');
+      const img = document.getElementById('viewerImg');
+      const level = document.getElementById('viewerLevel');
+      const link = document.getElementById('viewerLink');
+      const closeBtn = viewer.querySelector('[data-viewer="close"]');
+      const zoomInBtn = viewer.querySelector('[data-viewer="in"]');
+      const zoomOutBtn = viewer.querySelector('[data-viewer="out"]');
+
+      const MIN_SCALE = 1;
+      const MAX_SCALE = 5;
+      const STEP = 0.5;
+      const pointers = new Map();
+      let view = { scale: 1, x: 0, y: 0 };
+      let pinch = { distance: 0, scale: 1 };
+      let opener = null;
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const isOpen = () => viewer.classList.contains('active');
+
+      function pinchDistance() {
+        const [a, b] = [...pointers.values()];
+        return Math.hypot(a.x - b.x, a.y - b.y) || 1;
+      }
+
+      function render() {
+        const maxX = Math.max(0, (img.offsetWidth * view.scale - stage.clientWidth) / 2);
+        const maxY = Math.max(0, (img.offsetHeight * view.scale - stage.clientHeight) / 2);
+        view.x = clamp(view.x, -maxX, maxX);
+        view.y = clamp(view.y, -maxY, maxY);
+        img.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.scale})`;
+        level.textContent = `${Math.round(view.scale * 100)}%`;
+        zoomOutBtn.disabled = view.scale <= MIN_SCALE;
+        zoomInBtn.disabled = view.scale >= MAX_SCALE;
+      }
+
+      function zoomTo(scale) {
+        view.scale = clamp(scale, MIN_SCALE, MAX_SCALE);
+        render();
+      }
+
+      function reset() {
+        view = { scale: 1, x: 0, y: 0 };
+        render();
+      }
+
+      function open(src, alt, trigger) {
+        opener = trigger;
+        img.src = src;
+        img.alt = alt;
+        link.href = src;
+        reset();
+        viewer.classList.add('active');
+        viewer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      }
+
+      function close() {
+        if (!isOpen()) return;
+        viewer.classList.remove('active');
+        viewer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (opener) opener.focus();
+      }
+
+      const actions = {
+        close,
+        reset,
+        in: () => zoomTo(view.scale + STEP),
+        out: () => zoomTo(view.scale - STEP)
+      };
+
+      viewer.addEventListener('click', e => {
+        const action = e.target.closest('[data-viewer]')?.dataset.viewer;
+        if (action) actions[action]();
+      });
+
+      stage.addEventListener('pointerdown', e => {
+        stage.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        stage.classList.add('dragging');
+        if (pointers.size === 2) pinch = { distance: pinchDistance(), scale: view.scale };
+      });
+
+      stage.addEventListener('pointermove', e => {
+        const last = pointers.get(e.pointerId);
+        if (!last) return;
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pointers.size === 2) {
+          zoomTo(pinch.scale * pinchDistance() / pinch.distance);
+          return;
+        }
+        view.x += e.clientX - last.x;
+        view.y += e.clientY - last.y;
+        render();
+      });
+
+      const endPointer = e => {
+        pointers.delete(e.pointerId);
+        if (!pointers.size) stage.classList.remove('dragging');
+      };
+      stage.addEventListener('pointerup', endPointer);
+      stage.addEventListener('pointercancel', endPointer);
+
+      stage.addEventListener('wheel', e => {
+        e.preventDefault();
+        zoomTo(view.scale * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
+      }, { passive: false });
+
+      document.addEventListener('keydown', e => {
+        if (!isOpen()) return;
+        if (e.key === 'Escape') close();
+        else if (e.key === '+' || e.key === '=') actions.in();
+        else if (e.key === '-') actions.out();
+        else if (e.key === '0') reset();
+      });
+
+      document.querySelectorAll('.plano-img-wrap').forEach(wrap => {
+        const thumb = wrap.querySelector('img');
+        const openFromThumb = () => open(thumb.currentSrc || thumb.src, thumb.alt, wrap);
+        wrap.tabIndex = 0;
+        wrap.setAttribute('role', 'button');
+        wrap.setAttribute('aria-label', `Ampliar ${thumb.alt}`);
+        wrap.addEventListener('click', openFromThumb);
+        wrap.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openFromThumb();
+          }
+        });
+      });
+    }
+
+    initPlanoViewer();
+
     const data = { metal: 0, plastic: 0, paper: 0 };
     const CAP_MAX = 10;
     const TOTAL_LOTE = 20;
@@ -2618,6 +2881,13 @@
 
     const getTot = () => data.metal + data.plastic + data.paper;
 
+    const MAX_LOG_LINES = 100;
+    const SENSORES = {
+      metal: { sensor: 'MAG-01', objeto: 'metálico', silo: '01' },
+      plastic: { sensor: 'GRAV-02', objeto: 'plástico', silo: '02' },
+      paper: { sensor: 'AIR-03', objeto: 'de papel', silo: '03' }
+    };
+
     function registrar(tipo) {
       if (getTot() >= TOTAL_LOTE) {
         addLog('Capacidad máxima del lote (20 unidades) alcanzada.', 'WARN');
@@ -2627,12 +2897,10 @@
       data[tipo]++;
       actualizar();
 
-      const logMessages = {
-        metal: 'Objeto metálico clasificado -> Silo 01',
-        plastic: 'Objeto plástico clasificado -> Silo 02',
-        paper: 'Objeto de papel clasificado -> Silo 03'
-      };
-      addLog(logMessages[tipo], tipo.toUpperCase());
+      const { sensor, objeto, silo } = SENSORES[tipo];
+      const tag = tipo.toUpperCase();
+      addLog(`Sensor ${sensor}: objeto ${objeto} detectado`, tag);
+      addLog(`Descarte -> Silo ${silo} confirmado`, tag);
     }
 
     function actualizar() {
@@ -2711,11 +2979,10 @@
       const tagClass = tagMap[tag] || 'tag-sys';
 
       row.innerHTML = `<span class="log-time">[${timeStr}]</span><span class="log-tag ${tagClass}">[${tag}]</span><span>${txt}</span>`;
-      b.prepend(row);
+      b.append(row);
 
-      if (b.children.length > 60) {
-        b.removeChild(b.lastChild);
-      }
+      while (b.children.length > MAX_LOG_LINES) b.firstElementChild.remove();
+      b.scrollTop = b.scrollHeight;
     }
 
     function toggleSim() {
@@ -2759,25 +3026,23 @@
       actualizar();
     }
 
+    function limpiarConsola() {
+      const logBox = document.getElementById('logBox');
+      if (logBox) {
+        logBox.innerHTML = '<div class="log-line"><span class="log-tag tag-sys">[SISTEMA LISTO // ESPERANDO CICLO]</span></div>';
+      }
+    }
+
     function reiniciar() {
       if (sim) toggleSim();
       data.metal = 0;
       data.plastic = 0;
       data.paper = 0;
-
-      const logBox = document.getElementById('logBox');
-      if (logBox) {
-        logBox.innerHTML = `
-          <div class="log-line">
-            <span class="log-time">[00:00:00.000]</span>
-            <span class="log-tag tag-sys">[SYS]</span>
-            <span>Sistema reiniciado. Contadores en cero y tolva vacía.</span>
-          </div>
-        `;
-      }
+      limpiarConsola();
       actualizar();
-      addLog('Sistema listo para registrar un nuevo lote.', 'SYS');
     }
+
+    limpiarConsola();
   </script>
 </body>
 </html>
