@@ -435,6 +435,64 @@
       transform: translate(2px, -2px);
     }
 
+    .impact-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .impact-kpi-card {
+      background: var(--glass-surface);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--border-tech);
+      border-top: 2px solid var(--border-tech-strong);
+      box-shadow: var(--double-line), var(--shadow-card);
+      clip-path: var(--chamfer-md);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .impact-kpi-card.kpi-warn { border-top-color: var(--color-metal); }
+    .impact-kpi-card.kpi-crit { border-top-color: #ef4444; }
+    .impact-kpi-card.kpi-norm { border-top-color: var(--color-plastic); }
+
+    .impact-kpi-tag {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+    }
+
+    .impact-kpi-val {
+      font-family: var(--font-mono);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .impact-kpi-card.kpi-warn .impact-kpi-val { color: var(--color-metal); }
+    .impact-kpi-card.kpi-crit .impact-kpi-val { color: #f87171; }
+    .impact-kpi-card.kpi-norm .impact-kpi-val { color: var(--color-plastic); }
+
+    .impact-kpi-desc {
+      font-family: var(--font-main);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .impact-kpi-desc strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
     .concientizacion-card {
       background: var(--glass-surface);
       backdrop-filter: blur(24px) saturate(180%);
@@ -453,12 +511,62 @@
       line-height: 1.75;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
 
     .concientizacion-body strong {
       color: var(--text);
       font-weight: 600;
+    }
+
+    .norma-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 6px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .norma-pill {
+      background: rgba(0, 0, 0, 0.38);
+      border: 1px solid var(--border-tech);
+      clip-path: var(--chamfer-sm);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .norma-pill-head {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+    }
+
+    .norma-swatch {
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      flex-shrink: 0;
+    }
+
+    .swatch-white { background: #f8fafc; }
+    .swatch-green { background: #10b981; }
+    .swatch-black { background: #1e293b; }
+
+    .norma-pill-sub {
+      font-family: var(--font-main);
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.45;
     }
 
     .planos-grid {
@@ -551,7 +659,7 @@
 
     .galeria-frames {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 18px;
       margin-top: 6px;
     }
@@ -576,6 +684,11 @@
       transition: transform var(--duration-hover) var(--ease-out), border-color var(--duration-hover) var(--ease-out);
     }
 
+    .frame-item.frame-video-card {
+      cursor: default;
+      border-top-color: var(--color-paper);
+    }
+
     .frame-item:hover {
       transform: translateY(-4px);
       border-color: rgba(255, 255, 255, 0.22);
@@ -583,6 +696,10 @@
 
     .frame-item:active {
       transform: scale(0.98);
+    }
+
+    .frame-item.frame-video-card:active {
+      transform: translateY(-4px);
     }
 
     .frame-canvas {
@@ -594,7 +711,7 @@
       align-items: center;
       border: 1px solid rgba(255, 255, 255, 0.14);
       clip-path: var(--chamfer-sm);
-      background: rgba(0, 0, 0, 0.35);
+      background: #050608;
       padding: 0;
       text-align: center;
       position: relative;
@@ -604,10 +721,11 @@
 
     .frame-item:hover .frame-canvas {
       border-color: rgba(255, 255, 255, 0.28);
-      background: rgba(0, 0, 0, 0.48);
+      background: #080a0f;
     }
 
-    .frame-canvas img {
+    .frame-canvas img,
+    .frame-canvas video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -615,59 +733,32 @@
       transition: transform var(--duration-hover) var(--ease-out);
     }
 
-    .frame-item:hover .frame-canvas img {
+    .frame-item:not(.frame-video-card):hover .frame-canvas img {
       transform: scale(1.025);
     }
 
-    .frame-icon {
-      width: 40px;
-      height: 40px;
-      clip-path: var(--chamfer-sm);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .frame-meta {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255, 255, 255, 0.38);
-      margin-bottom: 6px;
-      transition: color var(--duration-hover) ease, background-color var(--duration-hover) ease, transform var(--duration-hover) var(--ease-spring);
+      flex-direction: column;
+      gap: 4px;
+      padding: 2px 2px 0 2px;
     }
 
-    .frame-icon svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .frame-item:hover .frame-icon {
-      color: rgba(255, 255, 255, 0.78);
-      background: rgba(255, 255, 255, 0.08);
-      transform: scale(1.05);
-    }
-
-    .frame-id {
+    .frame-phase-title {
       font-family: var(--font-mono);
-      font-size: 1.55rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.28);
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 4px;
-      transition: color var(--duration-hover) ease, transform var(--duration-hover) var(--ease-spring);
-    }
-
-    .frame-item:hover .frame-id {
-      color: rgba(255, 255, 255, 0.65);
-      transform: translateY(-1px);
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      text-transform: uppercase;
     }
 
     .frame-status {
-      font-size: 0.65rem;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      line-height: 1.35;
-      font-family: var(--font-mono);
-      font-weight: 500;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      font-family: var(--font-main);
+      font-weight: 400;
     }
 
     .frame-caption {
@@ -675,11 +766,17 @@
       justify-content: space-between;
       align-items: center;
       font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       letter-spacing: 0.04em;
-      color: var(--text-muted);
+      color: var(--text-sub);
       border-top: 1px solid var(--line-subtle);
       padding-top: 8px;
+      margin-top: auto;
+    }
+
+    .frame-caption span:first-child {
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
     .evidence-modal {
@@ -1054,79 +1151,159 @@
       color: #ffffff;
     }
 
-    .ingest-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .ingest-btn {
-      background: rgba(0, 0, 0, 0.45);
+    .scada-band-stage {
+      background: #05070b;
       border: 1px solid var(--border-tech);
       border-top: 2px solid rgba(255, 255, 255, 0.16);
       clip-path: var(--chamfer-sm);
-      padding: 12px 8px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
+      padding: 12px;
+      margin-bottom: 14px;
       position: relative;
       overflow: hidden;
     }
 
-    .ingest-btn-metal {
-      color: var(--color-metal);
-      border-top-color: rgba(245, 158, 11, 0.5);
-    }
-
-    .ingest-btn-metal:hover {
-      background: rgba(245, 158, 11, 0.12);
-      border-color: var(--color-metal);
-      box-shadow: inset 0 0 12px var(--color-metal-glow);
-    }
-
-    .ingest-btn-plastic {
-      color: var(--color-plastic);
-      border-top-color: rgba(16, 185, 129, 0.5);
-    }
-
-    .ingest-btn-plastic:hover {
-      background: rgba(16, 185, 129, 0.12);
-      border-color: var(--color-plastic);
-      box-shadow: inset 0 0 12px var(--color-plastic-glow);
-    }
-
-    .ingest-btn-paper {
-      color: var(--color-paper);
-      border-top-color: rgba(56, 189, 248, 0.5);
-    }
-
-    .ingest-btn-paper:hover {
-      background: rgba(56, 189, 248, 0.12);
-      border-color: var(--color-paper);
-      box-shadow: inset 0 0 12px var(--color-paper-glow);
-    }
-
-    .ingest-btn-code {
-      font-size: 0.6rem;
+    .scada-band-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--text-sub);
       letter-spacing: 0.04em;
-      opacity: 0.75;
+      margin-bottom: 8px;
     }
 
-    .ingest-btn-label {
-      font-size: 0.74rem;
+    .scada-band-track {
+      height: 88px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        rgba(8, 11, 18, 0.9);
+      background-size: 18px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .scada-lane {
+      border-right: 1px dashed rgba(255, 255, 255, 0.07);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 4px;
+    }
+
+    .scada-lane:last-child {
+      border-right: none;
+    }
+
+    .scada-lane-sensor {
       font-family: var(--font-mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.04em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+
+    .scada-lane-target {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .lane-metal .scada-lane-target { color: var(--color-metal); }
+    .lane-plastic .scada-lane-target { color: var(--color-plastic); }
+    .lane-paper .scada-lane-target { color: var(--color-paper); }
+
+    .scada-token {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      background: rgba(12, 16, 24, 0.96);
+      border: 1px solid currentColor;
+      clip-path: var(--chamfer-sm);
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
       font-weight: 700;
       letter-spacing: 0.04em;
+      white-space: nowrap;
+      z-index: 5;
+      pointer-events: none;
+      animation: tokenDrop 760ms var(--ease-out) forwards;
+    }
+
+    .scada-token.token-metal {
+      color: var(--color-metal);
+      box-shadow: 0 0 12px var(--color-metal-glow);
+    }
+
+    .scada-token.token-plastic {
+      color: var(--color-plastic);
+      box-shadow: 0 0 12px var(--color-plastic-glow);
+    }
+
+    .scada-token.token-paper {
+      color: var(--color-paper);
+      box-shadow: 0 0 12px var(--color-paper-glow);
+    }
+
+    .token-geo {
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .geo-metal {
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .geo-plastic {
+      border-radius: 50%;
+    }
+
+    .geo-paper {
+      clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    }
+
+    @keyframes tokenDrop {
+      0% {
+        top: 6px;
+        opacity: 0;
+        transform: translateX(-50%) scale(0.85);
+      }
+      20% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+      80% {
+        opacity: 1;
+        top: 52px;
+        transform: translateX(-50%) scale(1);
+      }
+      100% {
+        top: 64px;
+        opacity: 0;
+        transform: translateX(-50%) scale(0.9);
+      }
     }
 
     .scada-ctrl-actions {
       display: grid;
       grid-template-columns: 1.7fr 1fr;
       gap: 10px;
+      margin-bottom: 12px;
     }
 
     .scada-run-btn {
@@ -1173,6 +1350,90 @@
       background: rgba(255, 255, 255, 0.08);
       color: #ffffff;
       border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .unit-test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+
+    .ingest-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .ingest-btn {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-tech);
+      border-top: 2px solid rgba(255, 255, 255, 0.16);
+      clip-path: var(--chamfer-sm);
+      padding: 10px 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ingest-btn-metal {
+      color: var(--color-metal);
+      border-top-color: rgba(245, 158, 11, 0.5);
+    }
+
+    .ingest-btn-metal:hover {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: var(--color-metal);
+      box-shadow: inset 0 0 12px var(--color-metal-glow);
+    }
+
+    .ingest-btn-plastic {
+      color: var(--color-plastic);
+      border-top-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .ingest-btn-plastic:hover {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: var(--color-plastic);
+      box-shadow: inset 0 0 12px var(--color-plastic-glow);
+    }
+
+    .ingest-btn-paper {
+      color: var(--color-paper);
+      border-top-color: rgba(56, 189, 248, 0.5);
+    }
+
+    .ingest-btn-paper:hover {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: var(--color-paper);
+      box-shadow: inset 0 0 12px var(--color-paper-glow);
+    }
+
+    .ingest-btn-code {
+      font-size: 0.62rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      opacity: 0.9;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .ingest-btn-label {
+      font-size: 0.74rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
 
     .scada-terminal-wrap {
@@ -1576,7 +1837,9 @@
         white-space: normal;
       }
 
-      .team-grid {
+      .team-grid,
+      .impact-kpi-grid,
+      .norma-strip {
         grid-template-columns: 1fr;
         gap: 14px;
         width: 100%;
@@ -1662,7 +1925,7 @@
       }
 
       .galeria-frames {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: 1fr;
         gap: 14px;
         margin-top: 8px;
         width: 100%;
@@ -1676,16 +1939,12 @@
         max-width: 100%;
       }
 
-      .frame-id {
-        font-size: clamp(1.4rem, 4vw, 1.5rem);
-      }
-
       .frame-status {
-        font-size: 0.68rem;
+        font-size: 0.78rem;
       }
 
       .frame-caption {
-        font-size: 0.72rem;
+        font-size: 0.7rem;
       }
 
       .scada-layout {
@@ -1737,7 +1996,6 @@
       .ingest-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 8px;
-        margin-bottom: 12px;
         width: 100%;
         max-width: 100%;
       }
@@ -1751,7 +2009,7 @@
       }
 
       .ingest-btn-label {
-        font-size: 0.76rem;
+        font-size: 0.74rem;
       }
 
       .scada-ctrl-actions {
@@ -2007,14 +2265,49 @@
     <section id="view-impacto" class="view-pane view-section">
       <div class="section-header">
         <h2>Concientización e Impacto Social</h2>
-        <span>IMPACTO SOCIAL Y AMBIENTAL</span>
+        <span>CONTEXTO BOGOTÁ D.C. &amp; COLOMBIA</span>
+      </div>
+
+      <div class="impact-kpi-grid">
+        <div class="impact-kpi-card kpi-warn">
+          <span class="impact-kpi-tag">RELLENO SANITARIO DOÑA JUANA // BOGOTÁ</span>
+          <div class="impact-kpi-val">~6.300 t/día</div>
+          <p class="impact-kpi-desc">Disposición diaria en Bogotá (UAESP). Más de <strong>2,3 millones de toneladas anuales</strong> presionan la capacidad de las celdas y afectan a comunidades de Usme y Ciudad Bolívar.</p>
+        </div>
+
+        <div class="impact-kpi-card kpi-crit">
+          <span class="impact-kpi-tag">CONTAMINACIÓN CRUZADA // TASA NACIONAL</span>
+          <div class="impact-kpi-val">&lt; 17%</div>
+          <p class="impact-kpi-desc">Aprovechamiento efectivo en Colombia (DANE). Más del <strong>80% del material reciclable</strong> pierde valor industrial al mezclarse con flujos orgánicos y humedad en la fuente.</p>
+        </div>
+
+        <div class="impact-kpi-card kpi-norm">
+          <span class="impact-kpi-tag">MARCO NORMATIVO // MINAMBIENTE</span>
+          <div class="impact-kpi-val">RES. 2184</div>
+          <p class="impact-kpi-desc">Cumplimiento de la <strong>Resolución 2184 de 2019</strong> (código unificado de colores), automatizando el triaje secundario de la fracción blanca aprovechable.</p>
+        </div>
       </div>
 
       <div class="concientizacion-card">
         <div class="concientizacion-body">
-          <p>La ayuda que puede generar el proyecto, aparte de los impactos positivos en sostenibilidad, se refleja directamente en la <strong>eficiencia operativa y la seguridad de los trabajadores</strong> durante las labores de separación en planta, disminuyendo los riesgos asociados al contacto manual directo con residuos.</p>
-          <p>Asimismo, optimiza el procesamiento en las áreas críticas donde converge la mayor heterogeneidad de residuos, facilitando su recuperación sistemática y promoviendo <strong>nuevas oportunidades de reutilización y aprovechamiento industrial</strong>.</p>
-          <p>A nivel educativo y comunitario, este trabajo acerca a la sociedad a la gestión responsable de residuos: al evidenciar que su clasificación técnica es factible tras la recolección, se fomenta una cultura participativa y la <strong>iniciativa ciudadana de separación en la fuente</strong> directamente desde los hogares.</p>
+          <p><strong>Problemática en el Relleno Sanitario Doña Juana:</strong> Bogotá genera diariamente cerca de <strong>6.300 a 6.500 toneladas de residuos sólidos urbanos (RSU)</strong>, de las cuales una proporción crítica corresponde a metales ferrosos, polímeros PET y fibras celulósicas que terminan enterrados por falta de pre-clasificación eficiente. Disminuir el volumen dispuesto mediante separación mecánica alivia la saturación operativa del relleno, reduce la generación de lixiviados y mitiga gases de efecto invernadero.</p>
+          <p><strong>Mitigación de la Contaminación Cruzada y Seguridad Laboral:</strong> En Colombia, la baja separación en la fuente provoca contaminación cruzada que obliga a más de <strong>25.000 recicladores de oficio en Bogotá</strong> y operarios de Estaciones de Clasificación y Aprovechamiento (ECA) a realizar triaje manual directo, exponiéndose a riesgos biológicos, químicos y cortopunzantes. Nuestro prototipo emplea principios físicos pasivos y activos (atracción electromagnética, gravedad controlada y empuje neumático) para segregar materiales sin intervención manual.</p>
+          <p><strong>Articulación con la Resolución 2184 de 2019:</strong> El sistema opera directamente sobre el flujo de residuos secos de la <strong>bolsa blanca</strong> establecida por el Ministerio de Ambiente y Desarrollo Sostenible, subdividiendo automáticamente los materiales recuperables en tres silos de alta pureza listos para reincorporación en cadenas de economía circular.</p>
+
+          <div class="norma-strip">
+            <div class="norma-pill">
+              <span class="norma-pill-head"><span class="norma-swatch swatch-white"></span>FRACCIÓN BLANCA // OBJETIVO</span>
+              <span class="norma-pill-sub">Plástico PET, metales ferrosos, papel y cartón limpio procesados por el clasificador en 3 flujos puros.</span>
+            </div>
+            <div class="norma-pill">
+              <span class="norma-pill-head"><span class="norma-swatch swatch-green"></span>FRACCIÓN VERDE // ORGÁNICOS</span>
+              <span class="norma-pill-sub">Restos de comida y desechos agrícolas separados previamente para evitar humedad y contaminación cruzada.</span>
+            </div>
+            <div class="norma-pill">
+              <span class="norma-pill-head"><span class="norma-swatch swatch-black"></span>FRACCIÓN NEGRA // NO APROVECHABLE</span>
+              <span class="norma-pill-sub">Residuos sanitarios y materiales contaminados que se excluyen del circuito de recuperación.</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2081,34 +2374,63 @@
       <div class="galeria-frames">
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/View recent photos.png" alt="Evidencia 01">
+            <img src="img/View recent photos 3.png" alt="Fase 01 - Estructura base y corte inicial">
             <div class="frame-id" style="display: none;">01</div>
           </div>
+          <div class="frame-meta">
+            <div class="frame-phase-title">FASE 01 // CORTE Y ESTRUCTURA BASE</div>
+            <div class="frame-status">Dimensionamiento de paneles, trazado geométrico y armado inicial del chasis de soporte.</div>
+          </div>
           <div class="frame-caption">
-            <span>01</span>
-            <span>EVIDENCIA 01</span>
+            <span>FASE 01</span>
+            <span>24 SEP 2026</span>
           </div>
         </div>
 
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/View recent photos 2.png" alt="Evidencia 02">
+            <img src="img/View recent photos 2.png" alt="Fase 02 - Ensamble mecánico de tolva y rampas">
             <div class="frame-id" style="display: none;">02</div>
           </div>
+          <div class="frame-meta">
+            <div class="frame-phase-title">FASE 02 // ENSAMBLE DE TOLVA Y DUCTOS</div>
+            <div class="frame-status">Integración de la tolva en X, canalizaciones de caída por gravedad y soportes internos.</div>
+          </div>
           <div class="frame-caption">
-            <span>02</span>
-            <span>EVIDENCIA 02</span>
+            <span>FASE 02</span>
+            <span>18 OCT 2026</span>
           </div>
         </div>
 
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/View recent photos 3.png" alt="Evidencia 03">
+            <img src="img/View recent photos.png" alt="Fase 03 - Integración y pruebas finales del prototipo">
             <div class="frame-id" style="display: none;">03</div>
           </div>
+          <div class="frame-meta">
+            <div class="frame-phase-title">FASE 03 // INTEGRACIÓN Y PRUEBAS FINALES</div>
+            <div class="frame-status">Acabado final del clasificador con etapas magnética, neumática y silos de recepción calibrados.</div>
+          </div>
           <div class="frame-caption">
-            <span>03</span>
-            <span>EVIDENCIA 03</span>
+            <span>FASE 03</span>
+            <span>14 NOV 2026</span>
+          </div>
+        </div>
+
+        <div class="frame-item frame-video-card">
+          <div class="frame-canvas">
+            <video src="img/demo.mp4" autoplay loop muted playsinline controls>
+              <source src="img/demo.mp4" type="video/mp4">
+            </video>
+            <div class="frame-id" style="display: none;">04</div>
+          </div>
+          <div class="frame-meta">
+            <div class="frame-phase-title">FASE 04 // PROTOTIPO EN MOVIMIENTO</div>
+            <div class="frame-status">Demostración funcional en video del flujo de alimentación y separación física en tiempo real.</div>
+          </div>
+          <div class="frame-caption">
+            <span>DEMO EN VIVO</span>
+            <span>14 NOV 2026</span>
           </div>
         </div>
       </div>
@@ -2133,19 +2455,25 @@
             <span class="scada-panel-tag">LOTE: <strong id="kpiTot">0 / 20</strong></span>
           </div>
 
-          <div class="ingest-grid">
-            <button class="ingest-btn ingest-btn-metal" onclick="registrar('metal')">
-              <span class="ingest-btn-code">MAG-01</span>
-              <span class="ingest-btn-label">+ METAL</span>
-            </button>
-            <button class="ingest-btn ingest-btn-plastic" onclick="registrar('plastic')">
-              <span class="ingest-btn-code">GRAV-02</span>
-              <span class="ingest-btn-label">+ PLÁSTICO</span>
-            </button>
-            <button class="ingest-btn ingest-btn-paper" onclick="registrar('paper')">
-              <span class="ingest-btn-code">AIR-03</span>
-              <span class="ingest-btn-label">+ PAPEL</span>
-            </button>
+          <div class="scada-band-stage">
+            <div class="scada-band-header">
+              <span>CÁMARA DE CAÍDA // FICHAS SCADA</span>
+              <span id="lastTokenTag">ESPERANDO INYECCIÓN</span>
+            </div>
+            <div class="scada-band-track">
+              <div id="lane-metal" class="scada-lane lane-metal">
+                <span class="scada-lane-sensor">MAG-01 // IMÁN</span>
+                <span class="scada-lane-target">[MTL-FE]</span>
+              </div>
+              <div id="lane-plastic" class="scada-lane lane-plastic">
+                <span class="scada-lane-sensor">GRAV-02 // DUCTO</span>
+                <span class="scada-lane-target">[POL-PET]</span>
+              </div>
+              <div id="lane-paper" class="scada-lane lane-paper">
+                <span class="scada-lane-sensor">AIR-03 // SOPLADOR</span>
+                <span class="scada-lane-target">[CEL-PAP]</span>
+              </div>
+            </div>
           </div>
 
           <div class="scada-ctrl-actions">
@@ -2156,6 +2484,25 @@
               INICIAR SIMULACIÓN
             </button>
             <button class="scada-reset-btn" onclick="reiniciar()">REINICIAR</button>
+          </div>
+
+          <div class="unit-test-header">
+            <span>PRUEBA UNITARIA MANUAL // INYECCIÓN A BANDA</span>
+            <span>MODO JURADO</span>
+          </div>
+          <div class="ingest-grid">
+            <button class="ingest-btn ingest-btn-metal" onclick="registrar('metal')">
+              <span class="ingest-btn-code"><span class="token-geo geo-metal"></span>[MTL-FE]</span>
+              <span class="ingest-btn-label">+ METAL</span>
+            </button>
+            <button class="ingest-btn ingest-btn-plastic" onclick="registrar('plastic')">
+              <span class="ingest-btn-code"><span class="token-geo geo-plastic"></span>[POL-PET]</span>
+              <span class="ingest-btn-label">+ PLÁSTICO</span>
+            </button>
+            <button class="ingest-btn ingest-btn-paper" onclick="registrar('paper')">
+              <span class="ingest-btn-code"><span class="token-geo geo-paper"></span>[CEL-PAP]</span>
+              <span class="ingest-btn-label">+ PAPEL</span>
+            </button>
           </div>
         </div>
 
@@ -2179,7 +2526,7 @@
           <div class="scada-silos-grid">
             <div class="silo-card silo-metal">
               <div class="silo-header">
-                <span class="silo-title">SILO 01 // METAL</span>
+                <span class="silo-title">SILO 01 // [MTL-FE]</span>
                 <span id="pMet" class="silo-pct">0%</span>
               </div>
               <div class="silo-tube">
@@ -2200,7 +2547,7 @@
 
             <div class="silo-card silo-plastic">
               <div class="silo-header">
-                <span class="silo-title">SILO 02 // PLÁSTICO</span>
+                <span class="silo-title">SILO 02 // [POL-PET]</span>
                 <span id="pPla" class="silo-pct">0%</span>
               </div>
               <div class="silo-tube">
@@ -2221,7 +2568,7 @@
 
             <div class="silo-card silo-paper">
               <div class="silo-header">
-                <span class="silo-title">SILO 03 // PAPEL</span>
+                <span class="silo-title">SILO 03 // [CEL-PAP]</span>
                 <span id="pPap" class="silo-pct">0%</span>
               </div>
               <div class="silo-tube">
@@ -2287,7 +2634,7 @@
       <div id="modalContent" class="modal-content-wrap"></div>
       <div class="modal-footer-caption">
         <span id="modalId" class="modal-tag">EVIDENCIA 01</span>
-        <span id="modalDate" class="modal-date">FECHA: XX/XX/2026</span>
+        <span id="modalDate" class="modal-date">FECHA: 24 SEP 2026</span>
       </div>
     </div>
   </div>
@@ -2363,11 +2710,12 @@
 
     function abrirModal(cardElement) {
       const idText = cardElement.querySelector('.frame-id')?.innerText.trim() || '01';
+      const phaseTitle = cardElement.querySelector('.frame-phase-title')?.innerText.trim() || `EVIDENCIA ${idText} // REGISTRO TÉCNICO`;
       const statusText = cardElement.querySelector('.frame-status')?.innerText.trim() || 'Sin registro fotográfico';
-      const dateText = cardElement.querySelector('.frame-caption span:last-child')?.innerText.trim() || 'XX/XX/2026';
+      const dateText = cardElement.querySelector('.frame-caption span:last-child')?.innerText.trim() || '24 SEP 2026';
       const img = cardElement.querySelector('.frame-canvas img');
 
-      if (modalId) modalId.innerText = `EVIDENCIA ${idText} // REGISTRO TÉCNICO`;
+      if (modalId) modalId.innerText = phaseTitle;
       if (modalDate) modalDate.innerText = `FECHA: ${dateText}`;
 
       if (modalContent) {
@@ -2560,7 +2908,7 @@
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Metales', 'Plástico', 'Papel'],
+        labels: ['Metales [MTL-FE]', 'Plástico [POL-PET]', 'Papel [CEL-PAP]'],
         datasets: [{
           data: [0, 0, 0],
           backgroundColor: [
@@ -2622,10 +2970,25 @@
 
     const MAX_LOG_LINES = 100;
     const SENSORES = {
-      metal: { sensor: 'MAG-01', objeto: 'metálico', silo: '01' },
-      plastic: { sensor: 'GRAV-02', objeto: 'plástico', silo: '02' },
-      paper: { sensor: 'AIR-03', objeto: 'de papel', silo: '03' }
+      metal: { sensor: 'MAG-01', codigo: '[MTL-FE]', geo: 'geo-metal', objeto: 'metálico', silo: '01' },
+      plastic: { sensor: 'GRAV-02', codigo: '[POL-PET]', geo: 'geo-plastic', objeto: 'plástico', silo: '02' },
+      paper: { sensor: 'AIR-03', codigo: '[CEL-PAP]', geo: 'geo-paper', objeto: 'de papel', silo: '03' }
     };
+
+    function spawnToken(tipo) {
+      const info = SENSORES[tipo];
+      if (!info) return;
+      const lane = document.getElementById(`lane-${tipo}`);
+      const lastTag = document.getElementById('lastTokenTag');
+      if (lastTag) lastTag.textContent = `FICHA ACTIVA: ${info.codigo} -> SILO ${info.silo}`;
+      if (!lane) return;
+
+      const token = document.createElement('div');
+      token.className = `scada-token token-${tipo}`;
+      token.innerHTML = `<span class="token-geo ${info.geo}"></span><span>${info.codigo}</span>`;
+      lane.appendChild(token);
+      setTimeout(() => token.remove(), 780);
+    }
 
     function registrar(tipo) {
       if (getTot() >= TOTAL_LOTE) {
@@ -2634,12 +2997,13 @@
         return;
       }
       data[tipo]++;
+      spawnToken(tipo);
       actualizar();
 
-      const { sensor, objeto, silo } = SENSORES[tipo];
+      const { sensor, codigo, objeto, silo } = SENSORES[tipo];
       const tag = tipo.toUpperCase();
-      addLog(`Sensor ${sensor}: objeto ${objeto} detectado`, tag);
-      addLog(`Descarte -> Silo ${silo} confirmado`, tag);
+      addLog(`Sensor ${sensor}: ficha ${codigo} (${objeto}) detectada`, tag);
+      addLog(`Descarte ${codigo} -> Silo ${silo} confirmado`, tag);
     }
 
     function actualizar() {
@@ -2770,6 +3134,8 @@
       if (logBox) {
         logBox.innerHTML = '<div class="log-line"><span class="log-tag tag-sys">[SISTEMA LISTO // ESPERANDO CICLO]</span></div>';
       }
+      const lastTag = document.getElementById('lastTokenTag');
+      if (lastTag) lastTag.textContent = 'ESPERANDO INYECCIÓN';
     }
 
     function reiniciar() {
