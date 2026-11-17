@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#0d1117">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Uniagustiniana | Clasificador de Residuos</title>
-  <meta property="og:title" content="Clasificador Mecánico de Residuos (RSU)">
+  <title>Uniagustiniana | Clasificador de Residuos (SAR)</title>
+  <meta property="og:title" content="Clasificador Mecánico de Residuos (SAR - RSU)">
   <meta property="og:description" content="Prototipo automatizado de separación de residuos sólidos mediante gravedad, atracción electromagnética y empuje neumático.">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/><polyline points='3.29 7 12 12 20.71 7'/><line x1='12' y1='22' x2='12' y2='12'/></svg>">
@@ -30,12 +30,12 @@
       --text: #f5f5f7;
       --text-muted: #a1a1a6;
       --text-sub: #787880;
-      --color-metal: #f59e0b;
-      --color-metal-glow: rgba(245, 158, 11, 0.28);
-      --color-plastic: #10b981;
-      --color-plastic-glow: rgba(16, 185, 129, 0.28);
-      --color-paper: #38bdf8;
-      --color-paper-glow: rgba(56, 189, 248, 0.28);
+      --color-metal: #f97316;
+      --color-metal-glow: rgba(249, 115, 22, 0.3);
+      --color-paper: #f472b6;
+      --color-paper-glow: rgba(244, 114, 182, 0.3);
+      --color-plastic: #3b82f6;
+      --color-plastic-glow: rgba(59, 130, 246, 0.3);
       --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       --chamfer-sm: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
@@ -457,7 +457,7 @@
 
     .impact-kpi-card.kpi-warn { border-top-color: var(--color-metal); }
     .impact-kpi-card.kpi-crit { border-top-color: #ef4444; }
-    .impact-kpi-card.kpi-norm { border-top-color: var(--color-plastic); }
+    .impact-kpi-card.kpi-norm { border-top-color: #10b981; }
 
     .impact-kpi-tag {
       font-family: var(--font-mono);
@@ -479,7 +479,7 @@
 
     .impact-kpi-card.kpi-warn .impact-kpi-val { color: var(--color-metal); }
     .impact-kpi-card.kpi-crit .impact-kpi-val { color: #f87171; }
-    .impact-kpi-card.kpi-norm .impact-kpi-val { color: var(--color-plastic); }
+    .impact-kpi-card.kpi-norm .impact-kpi-val { color: #10b981; }
 
     .impact-kpi-desc {
       font-family: var(--font-main);
@@ -609,7 +609,7 @@
     }
 
     .plano-img-wrap:focus-visible {
-      outline: 2px solid var(--color-paper);
+      outline: 2px solid var(--color-plastic);
       outline-offset: -2px;
     }
 
@@ -684,9 +684,13 @@
       transition: transform var(--duration-hover) var(--ease-out), border-color var(--duration-hover) var(--ease-out);
     }
 
+    .frame-item.frame-span-2 {
+      grid-column: 1 / -1;
+    }
+
     .frame-item.frame-video-card {
       cursor: default;
-      border-top-color: var(--color-paper);
+      border-top-color: var(--color-plastic);
     }
 
     .frame-item:hover {
@@ -719,6 +723,51 @@
       transition: border-color var(--duration-hover) ease, background-color var(--duration-hover) ease;
     }
 
+    .frame-canvas-dual {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .frame-canvas-dual .frame-subcanvas {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      clip-path: var(--chamfer-sm);
+      background: #050608;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .frame-canvas-dual .frame-subcanvas img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform var(--duration-hover) var(--ease-out);
+    }
+
+    .frame-canvas-dual .frame-subcanvas:hover img {
+      transform: scale(1.03);
+    }
+
+    .subcanvas-tag {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(8, 9, 13, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      clip-path: var(--chamfer-sm);
+      padding: 3px 8px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.04em;
+    }
+
     .frame-item:hover .frame-canvas {
       border-color: rgba(255, 255, 255, 0.28);
       background: #080a0f;
@@ -731,6 +780,16 @@
       object-fit: cover;
       display: block;
       transition: transform var(--duration-hover) var(--ease-out);
+    }
+
+    .frame-item.frame-video-card .frame-canvas {
+      aspect-ratio: 16 / 9;
+      max-height: 460px;
+    }
+
+    .frame-item.frame-video-card .frame-canvas video {
+      object-fit: contain;
+      background: #030406;
     }
 
     .frame-item:not(.frame-video-card):hover .frame-canvas img {
@@ -1078,7 +1137,7 @@
 
     .led-green { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
     .led-cyan { background: #38bdf8; box-shadow: 0 0 8px #38bdf8; }
-    .led-amber { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+    .led-amber { background: #f97316; box-shadow: 0 0 8px #f97316; }
 
     .led-pulse {
       animation: scadaPulse 1.6s infinite ease-in-out;
@@ -1212,13 +1271,13 @@
     .scada-lane-target {
       font-family: var(--font-mono);
       font-size: 0.58rem;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.04em;
     }
 
     .lane-metal .scada-lane-target { color: var(--color-metal); }
-    .lane-plastic .scada-lane-target { color: var(--color-plastic); }
     .lane-paper .scada-lane-target { color: var(--color-paper); }
+    .lane-plastic .scada-lane-target { color: var(--color-plastic); }
 
     .scada-token {
       position: absolute;
@@ -1247,14 +1306,14 @@
       box-shadow: 0 0 12px var(--color-metal-glow);
     }
 
-    .scada-token.token-plastic {
-      color: var(--color-plastic);
-      box-shadow: 0 0 12px var(--color-plastic-glow);
-    }
-
     .scada-token.token-paper {
       color: var(--color-paper);
       box-shadow: 0 0 12px var(--color-paper-glow);
+    }
+
+    .scada-token.token-plastic {
+      color: var(--color-plastic);
+      box-shadow: 0 0 12px var(--color-plastic-glow);
     }
 
     .token-geo {
@@ -1269,12 +1328,12 @@
       clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     }
 
-    .geo-plastic {
-      border-radius: 50%;
-    }
-
     .geo-paper {
       clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    }
+
+    .geo-plastic {
+      border-radius: 50%;
     }
 
     @keyframes tokenDrop {
@@ -1387,35 +1446,35 @@
 
     .ingest-btn-metal {
       color: var(--color-metal);
-      border-top-color: rgba(245, 158, 11, 0.5);
+      border-top-color: rgba(249, 115, 22, 0.65);
     }
 
     .ingest-btn-metal:hover {
-      background: rgba(245, 158, 11, 0.12);
+      background: rgba(249, 115, 22, 0.14);
       border-color: var(--color-metal);
       box-shadow: inset 0 0 12px var(--color-metal-glow);
     }
 
-    .ingest-btn-plastic {
-      color: var(--color-plastic);
-      border-top-color: rgba(16, 185, 129, 0.5);
-    }
-
-    .ingest-btn-plastic:hover {
-      background: rgba(16, 185, 129, 0.12);
-      border-color: var(--color-plastic);
-      box-shadow: inset 0 0 12px var(--color-plastic-glow);
-    }
-
     .ingest-btn-paper {
       color: var(--color-paper);
-      border-top-color: rgba(56, 189, 248, 0.5);
+      border-top-color: rgba(244, 114, 182, 0.65);
     }
 
     .ingest-btn-paper:hover {
-      background: rgba(56, 189, 248, 0.12);
+      background: rgba(244, 114, 182, 0.14);
       border-color: var(--color-paper);
       box-shadow: inset 0 0 12px var(--color-paper-glow);
+    }
+
+    .ingest-btn-plastic {
+      color: var(--color-plastic);
+      border-top-color: rgba(59, 130, 246, 0.65);
+    }
+
+    .ingest-btn-plastic:hover {
+      background: rgba(59, 130, 246, 0.14);
+      border-color: var(--color-plastic);
+      box-shadow: inset 0 0 12px var(--color-plastic-glow);
     }
 
     .ingest-btn-code {
@@ -1490,8 +1549,8 @@
 
     .log-tag.tag-sys { color: #94a3b8; }
     .log-tag.tag-metal { color: var(--color-metal); }
-    .log-tag.tag-plastic { color: var(--color-plastic); }
     .log-tag.tag-paper { color: var(--color-paper); }
+    .log-tag.tag-plastic { color: var(--color-plastic); }
     .log-tag.tag-warn { color: #f87171; }
 
     .scada-kpi-banner {
@@ -1566,9 +1625,9 @@
     .scada-bar-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--color-metal), var(--color-plastic), var(--color-paper));
+      background: linear-gradient(90deg, var(--color-metal), var(--color-paper), var(--color-plastic));
       transition: width 0.4s var(--ease-spring);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
     }
 
     .scada-silos-grid {
@@ -1593,8 +1652,8 @@
     }
 
     .silo-metal { border-top-color: var(--color-metal); }
-    .silo-plastic { border-top-color: var(--color-plastic); }
     .silo-paper { border-top-color: var(--color-paper); }
+    .silo-plastic { border-top-color: var(--color-plastic); }
 
     .silo-header {
       width: 100%;
@@ -1607,10 +1666,10 @@
 
     .silo-title {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       color: #ffffff;
     }
 
@@ -1622,8 +1681,8 @@
     }
 
     .silo-metal .silo-pct { color: var(--color-metal); }
-    .silo-plastic .silo-pct { color: var(--color-plastic); }
     .silo-paper .silo-pct { color: var(--color-paper); }
+    .silo-plastic .silo-pct { color: var(--color-plastic); }
 
     .silo-tube {
       width: 100%;
@@ -1680,18 +1739,18 @@
     }
 
     .silo-metal .silo-fill {
-      background: linear-gradient(180deg, var(--color-metal) 0%, rgba(245, 158, 11, 0.35) 100%);
+      background: linear-gradient(180deg, var(--color-metal) 0%, rgba(249, 115, 22, 0.35) 100%);
       box-shadow: 0 0 16px var(--color-metal-glow);
     }
 
-    .silo-plastic .silo-fill {
-      background: linear-gradient(180deg, var(--color-plastic) 0%, rgba(16, 185, 129, 0.35) 100%);
-      box-shadow: 0 0 16px var(--color-plastic-glow);
+    .silo-paper .silo-fill {
+      background: linear-gradient(180deg, var(--color-paper) 0%, rgba(244, 114, 182, 0.35) 100%);
+      box-shadow: 0 0 16px var(--color-paper-glow);
     }
 
-    .silo-paper .silo-fill {
-      background: linear-gradient(180deg, var(--color-paper) 0%, rgba(56, 189, 248, 0.35) 100%);
-      box-shadow: 0 0 16px var(--color-paper-glow);
+    .silo-plastic .silo-fill {
+      background: linear-gradient(180deg, var(--color-plastic) 0%, rgba(59, 130, 246, 0.35) 100%);
+      box-shadow: 0 0 16px var(--color-plastic-glow);
     }
 
     .silo-count-val {
@@ -1723,7 +1782,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      color: #f59e0b;
+      color: var(--color-metal);
     }
 
     .scada-chart-wrap {
@@ -1924,15 +1983,17 @@
         line-height: 1.5;
       }
 
-      .galeria-frames {
+      .galeria-frames,
+      .frame-canvas-dual {
         grid-template-columns: 1fr;
         gap: 14px;
-        margin-top: 8px;
         width: 100%;
         max-width: 100%;
       }
 
-      .frame-item {
+      .frame-item,
+      .frame-item.frame-span-2 {
+        grid-column: auto;
         padding: 12px;
         gap: 8px;
         width: 100%;
@@ -2078,7 +2139,7 @@
       }
 
       .silo-title {
-        font-size: clamp(0.6rem, 1.8vw, 0.66rem);
+        font-size: clamp(0.58rem, 1.7vw, 0.64rem);
         white-space: nowrap;
       }
 
@@ -2291,13 +2352,13 @@
       <div class="concientizacion-card">
         <div class="concientizacion-body">
           <p><strong>Problemática en el Relleno Sanitario Doña Juana:</strong> Bogotá genera diariamente cerca de <strong>6.300 a 6.500 toneladas de residuos sólidos urbanos (RSU)</strong>, de las cuales una proporción crítica corresponde a metales ferrosos, polímeros PET y fibras celulósicas que terminan enterrados por falta de pre-clasificación eficiente. Disminuir el volumen dispuesto mediante separación mecánica alivia la saturación operativa del relleno, reduce la generación de lixiviados y mitiga gases de efecto invernadero.</p>
-          <p><strong>Mitigación de la Contaminación Cruzada y Seguridad Laboral:</strong> En Colombia, la baja separación en la fuente provoca contaminación cruzada que obliga a más de <strong>25.000 recicladores de oficio en Bogotá</strong> y operarios de Estaciones de Clasificación y Aprovechamiento (ECA) a realizar triaje manual directo, exponiéndose a riesgos biológicos, químicos y cortopunzantes. Nuestro prototipo emplea principios físicos pasivos y activos (atracción electromagnética, gravedad controlada y empuje neumático) para segregar materiales sin intervención manual.</p>
-          <p><strong>Articulación con la Resolución 2184 de 2019:</strong> El sistema opera directamente sobre el flujo de residuos secos de la <strong>bolsa blanca</strong> establecida por el Ministerio de Ambiente y Desarrollo Sostenible, subdividiendo automáticamente los materiales recuperables en tres silos de alta pureza listos para reincorporación en cadenas de economía circular.</p>
+          <p><strong>Mitigación de la Contaminación Cruzada y Seguridad Laboral:</strong> En Colombia, la baja separación en la fuente provoca contaminación cruzada que obliga a más de <strong>25.000 recicladores de oficio en Bogotá</strong> y operarios de Estaciones de Clasificación y Aprovechamiento (ECA) a realizar triaje manual directo, exponiéndose a riesgos biológicos, químicos y cortopunzantes. Nuestro prototipo SAR emplea principios físicos pasivos y activos (atracción electromagnética, gravedad controlada y empuje neumático) para segregar materiales sin intervención manual.</p>
+          <p><strong>Articulación con la Resolución 2184 de 2019:</strong> El sistema opera directamente sobre el flujo de residuos secos de la <strong>bolsa blanca</strong> establecida por el Ministerio de Ambiente y Desarrollo Sostenible, subdividiendo automáticamente los materiales recuperables en tres silos codificados por color en la maqueta (<strong>Naranja:</strong> Metales <code>[MTL-FE]</code>, <strong>Rosado:</strong> Papel <code>[PAP-CEL]</code> y <strong>Azul:</strong> Plástico <code>[PLS-PET]</code>) listos para reincorporación en cadenas de economía circular.</p>
 
           <div class="norma-strip">
             <div class="norma-pill">
               <span class="norma-pill-head"><span class="norma-swatch swatch-white"></span>FRACCIÓN BLANCA // OBJETIVO</span>
-              <span class="norma-pill-sub">Plástico PET, metales ferrosos, papel y cartón limpio procesados por el clasificador en 3 flujos puros.</span>
+              <span class="norma-pill-sub">Plástico PET, metales ferrosos, papel y cartón limpio procesados por el clasificador SAR en 3 flujos puros.</span>
             </div>
             <div class="norma-pill">
               <span class="norma-pill-head"><span class="norma-swatch swatch-green"></span>FRACCIÓN VERDE // ORGÁNICOS</span>
@@ -2367,70 +2428,106 @@
 
     <section id="view-evidencias" class="view-pane view-section">
       <div class="section-header">
-        <h2>EVIDENCIAS DEL PROCESO</h2>
-        <span>GALERÍA DE REGISTRO</span>
+        <h2>EVIDENCIAS DEL PROCESO (LÍNEA DE TIEMPO SAR)</h2>
+        <span>SEP 2026 — NOV 2026</span>
       </div>
 
       <div class="galeria-frames">
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/View recent photos 3.png" alt="Fase 01 - Estructura base y corte inicial">
+            <img src="img/materiales1.jpg" alt="Fase 01 - Adquisición de Insumos y Estructura">
             <div class="frame-id" style="display: none;">01</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 01 // CORTE Y ESTRUCTURA BASE</div>
-            <div class="frame-status">Dimensionamiento de paneles, trazado geométrico y armado inicial del chasis de soporte.</div>
+            <div class="frame-phase-title">FASE 01 // ADQUISICIÓN DE INSUMOS Y ESTRUCTURA</div>
+            <div class="frame-status">Selección de pinturas acrílicas para codificación de silos, lámina estructural MDF, imán ferromagnético y kit eléctrico.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 01</span>
-            <span>24 SEP 2026</span>
+            <span>15 SEP 2026</span>
           </div>
         </div>
 
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/View recent photos 2.png" alt="Fase 02 - Ensamble mecánico de tolva y rampas">
+            <img src="img/materiales2.jpg" alt="Fase 02 - Componentes Electromecánicos">
             <div class="frame-id" style="display: none;">02</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 02 // ENSAMBLE DE TOLVA Y DUCTOS</div>
-            <div class="frame-status">Integración de la tolva en X, canalizaciones de caída por gravedad y soportes internos.</div>
+            <div class="frame-phase-title">FASE 02 // COMPONENTES ELECTROMECÁNICOS</div>
+            <div class="frame-status">Alistamiento del ventilador extractor DC para soplado neumático y motores reductores para tracción de las bandas.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 02</span>
-            <span>18 OCT 2026</span>
+            <span>28 SEP 2026</span>
           </div>
         </div>
 
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/View recent photos.png" alt="Fase 03 - Integración y pruebas finales del prototipo">
+            <img src="img/View recent photos 3.png" alt="Fase 03 - Dimensionamiento y Corte Inicial">
             <div class="frame-id" style="display: none;">03</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 03 // INTEGRACIÓN Y PRUEBAS FINALES</div>
-            <div class="frame-status">Acabado final del clasificador con etapas magnética, neumática y silos de recepción calibrados.</div>
+            <div class="frame-phase-title">FASE 03 // DIMENSIONAMIENTO Y CORTE INICIAL</div>
+            <div class="frame-status">Trazado geométrico a escala sobre lámina base y corte de paneles para la tolva y bastidor principal.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 03</span>
-            <span>14 NOV 2026</span>
+            <span>14 OCT 2026</span>
           </div>
         </div>
 
-        <div class="frame-item frame-video-card">
+        <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <video src="img/demo.mp4" autoplay loop muted playsinline controls>
-              <source src="img/demo.mp4" type="video/mp4">
-            </video>
+            <img src="img/montaje_bandas.jpg" alt="Fase 04 - Ensamble de Tolva y Bandas">
             <div class="frame-id" style="display: none;">04</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 04 // PROTOTIPO EN MOVIMIENTO</div>
-            <div class="frame-status">Demostración funcional en video del flujo de alimentación y separación física en tiempo real.</div>
+            <div class="frame-phase-title">FASE 04 // ENSAMBLE DE TOLVA Y BANDAS</div>
+            <div class="frame-status">Montaje de la estructura vertical con tolva superior, banda amarilla, banda fucsia y los 3 cajones colectores en crudo.</div>
           </div>
           <div class="frame-caption">
-            <span>DEMO EN VIVO</span>
-            <span>14 NOV 2026</span>
+            <span>FASE 04</span>
+            <span>29 OCT 2026</span>
+          </div>
+        </div>
+
+        <div class="frame-item frame-span-2">
+          <div class="frame-canvas-dual">
+            <div class="frame-subcanvas" onclick="abrirModalImg('img/silos_pintados.jpg', 'FASE 05 // CODIFICACIÓN DE SILOS Y PRUEBAS DE MATERIAL', '08 NOV 2026')">
+              <img src="img/silos_pintados.jpg" alt="Fase 05 - Tres compartimentos pintados (Azul, Rosado y Naranja)">
+              <span class="subcanvas-tag">5A // SILOS CODIFICADOS (AZUL / ROSADO / NARANJA)</span>
+            </div>
+            <div class="frame-subcanvas" onclick="abrirModalImg('img/View recent photos.png', 'FASE 05 // DISPOSICIÓN DE CAJONES Y COMPARTIMENTOS', '08 NOV 2026')">
+              <img src="img/View recent photos.png" alt="Fase 05 - Estructura de compartimentos y pruebas iniciales">
+              <span class="subcanvas-tag">5B // ESTRUCTURA DE COMPARTIMENTOS Y DUCTOS</span>
+            </div>
+          </div>
+          <div class="frame-meta">
+            <div class="frame-phase-title">FASE 05 // CODIFICACIÓN DE SILOS Y PRUEBAS DE MATERIAL</div>
+            <div class="frame-status">Validación de los tres compartimentos pintados (Azul: plástico/tapas <code>[PLS-PET]</code>, Rosado: papel liviano <code>[PAP-CEL]</code>, Naranja: metales ferromagnéticos/puntillas <code>[MTL-FE]</code>) junto al ensamble de tolva y cajones.</div>
+          </div>
+          <div class="frame-caption">
+            <span>FASE 05</span>
+            <span>08 NOV 2026</span>
+          </div>
+        </div>
+
+        <div class="frame-item frame-span-2 frame-video-card">
+          <div class="frame-canvas">
+            <video src="img/demo_sar.mp4" autoplay loop muted playsinline controls>
+              <source src="img/demo_sar.mp4" type="video/mp4">
+            </video>
+            <div class="frame-id" style="display: none;">06</div>
+          </div>
+          <div class="frame-meta">
+            <div class="frame-phase-title">FASE 06 // PLANTA SAR FINALIZADA (VIDEO EN VIVO)</div>
+            <div class="frame-status">Recorrido operativo completo de la maqueta SAR terminada: separación magnética de metales hacia silo naranja, soplador lateral para papel hacia silo rosado y depósito de plástico en silo azul.</div>
+          </div>
+          <div class="frame-caption">
+            <span>FASE 06 // VIDEO SAR EN VIVO</span>
+            <span>16 NOV 2026</span>
           </div>
         </div>
       </div>
@@ -2438,7 +2535,7 @@
 
     <section id="view-dashboard" class="view-pane view-section">
       <div class="section-header">
-        <h2>DASHBOARD DE SIMULACIÓN</h2>
+        <h2>DASHBOARD DE SIMULACIÓN (PLANTA SAR)</h2>
         <span id="stBadge" class="scada-badge"><span class="scada-led led-cyan"></span>SISTEMA EN ESPERA</span>
       </div>
 
@@ -2450,28 +2547,28 @@
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
               </svg>
-              Panel de Ingesta &amp; Control
+              Panel de Control &amp; Tren de Bandas SAR
             </span>
             <span class="scada-panel-tag">LOTE: <strong id="kpiTot">0 / 20</strong></span>
           </div>
 
           <div class="scada-band-stage">
             <div class="scada-band-header">
-              <span>CÁMARA DE CAÍDA // FICHAS SCADA</span>
+              <span>FLUJO DE BANDA // INDICADORES SCADA</span>
               <span id="lastTokenTag">ESPERANDO INYECCIÓN</span>
             </div>
             <div class="scada-band-track">
               <div id="lane-metal" class="scada-lane lane-metal">
-                <span class="scada-lane-sensor">MAG-01 // IMÁN</span>
+                <span class="scada-lane-sensor">MAG-01 // IMÁN (NARANJA)</span>
                 <span class="scada-lane-target">[MTL-FE]</span>
               </div>
-              <div id="lane-plastic" class="scada-lane lane-plastic">
-                <span class="scada-lane-sensor">GRAV-02 // DUCTO</span>
-                <span class="scada-lane-target">[POL-PET]</span>
-              </div>
               <div id="lane-paper" class="scada-lane lane-paper">
-                <span class="scada-lane-sensor">AIR-03 // SOPLADOR</span>
-                <span class="scada-lane-target">[CEL-PAP]</span>
+                <span class="scada-lane-sensor">AIR-02 // SOPLADOR (ROSADO)</span>
+                <span class="scada-lane-target">[PAP-CEL]</span>
+              </div>
+              <div id="lane-plastic" class="scada-lane lane-plastic">
+                <span class="scada-lane-sensor">GRAV-03 // DEPÓSITO (AZUL)</span>
+                <span class="scada-lane-target">[PLS-PET]</span>
               </div>
             </div>
           </div>
@@ -2487,21 +2584,21 @@
           </div>
 
           <div class="unit-test-header">
-            <span>PRUEBA UNITARIA MANUAL // INYECCIÓN A BANDA</span>
-            <span>MODO JURADO</span>
+            <span>INYECCIÓN MANUAL EN VIVO // PRUEBA UNITARIA</span>
+            <span>SILOS SAR</span>
           </div>
           <div class="ingest-grid">
-            <button class="ingest-btn ingest-btn-metal" onclick="registrar('metal')">
+            <button class="ingest-btn ingest-btn-metal" onclick="registrar('metal', true)">
               <span class="ingest-btn-code"><span class="token-geo geo-metal"></span>[MTL-FE]</span>
               <span class="ingest-btn-label">+ METAL</span>
             </button>
-            <button class="ingest-btn ingest-btn-plastic" onclick="registrar('plastic')">
-              <span class="ingest-btn-code"><span class="token-geo geo-plastic"></span>[POL-PET]</span>
-              <span class="ingest-btn-label">+ PLÁSTICO</span>
-            </button>
-            <button class="ingest-btn ingest-btn-paper" onclick="registrar('paper')">
-              <span class="ingest-btn-code"><span class="token-geo geo-paper"></span>[CEL-PAP]</span>
+            <button class="ingest-btn ingest-btn-paper" onclick="registrar('paper', true)">
+              <span class="ingest-btn-code"><span class="token-geo geo-paper"></span>[PAP-CEL]</span>
               <span class="ingest-btn-label">+ PAPEL</span>
+            </button>
+            <button class="ingest-btn ingest-btn-plastic" onclick="registrar('plastic', true)">
+              <span class="ingest-btn-code"><span class="token-geo geo-plastic"></span>[PLS-PET]</span>
+              <span class="ingest-btn-label">+ PLÁSTICO</span>
             </button>
           </div>
         </div>
@@ -2512,7 +2609,7 @@
               <span class="scada-kpi-sub">Aprovechamiento &amp; Pureza Global</span>
               <div class="scada-kpi-num-wrap">
                 <span id="kpiAprov" class="scada-kpi-num">0%</span>
-                <div id="kpiEq" class="scada-kpi-eq">E(0) = 0M + 0P + 0C</div>
+                <div id="kpiEq" class="scada-kpi-eq">E(0) = 0M + 0C + 0P</div>
               </div>
             </div>
             <div class="scada-kpi-progress-col">
@@ -2526,7 +2623,7 @@
           <div class="scada-silos-grid">
             <div class="silo-card silo-metal">
               <div class="silo-header">
-                <span class="silo-title">SILO 01 // [MTL-FE]</span>
+                <span class="silo-title">SILO NARANJA // [MTL-FE]</span>
                 <span id="pMet" class="silo-pct">0%</span>
               </div>
               <div class="silo-tube">
@@ -2545,30 +2642,9 @@
               </div>
             </div>
 
-            <div class="silo-card silo-plastic">
-              <div class="silo-header">
-                <span class="silo-title">SILO 02 // [POL-PET]</span>
-                <span id="pPla" class="silo-pct">0%</span>
-              </div>
-              <div class="silo-tube">
-                <div id="bPla" class="silo-fill"></div>
-                <div class="silo-graduation">
-                  <span class="silo-tick">100% -</span>
-                  <span class="silo-tick">75% -</span>
-                  <span class="silo-tick">50% -</span>
-                  <span class="silo-tick">25% -</span>
-                  <span class="silo-tick">0% -</span>
-                </div>
-              </div>
-              <div class="silo-count-val"><span id="cPla">0</span><small> / 10 u</small></div>
-              <div id="aPla" class="silo-alert">
-                <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
-              </div>
-            </div>
-
             <div class="silo-card silo-paper">
               <div class="silo-header">
-                <span class="silo-title">SILO 03 // [CEL-PAP]</span>
+                <span class="silo-title">SILO ROSADO // [PAP-CEL]</span>
                 <span id="pPap" class="silo-pct">0%</span>
               </div>
               <div class="silo-tube">
@@ -2586,6 +2662,27 @@
                 <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
               </div>
             </div>
+
+            <div class="silo-card silo-plastic">
+              <div class="silo-header">
+                <span class="silo-title">SILO AZUL // [PLS-PET]</span>
+                <span id="pPla" class="silo-pct">0%</span>
+              </div>
+              <div class="silo-tube">
+                <div id="bPla" class="silo-fill"></div>
+                <div class="silo-graduation">
+                  <span class="silo-tick">100% -</span>
+                  <span class="silo-tick">75% -</span>
+                  <span class="silo-tick">50% -</span>
+                  <span class="silo-tick">25% -</span>
+                  <span class="silo-tick">0% -</span>
+                </div>
+              </div>
+              <div class="silo-count-val"><span id="cPla">0</span><small> / 10 u</small></div>
+              <div id="aPla" class="silo-alert">
+                <span class="scada-led led-amber led-pulse"></span> ALERTA &ge; 80%
+              </div>
+            </div>
           </div>
 
           <div class="scada-panel-header" style="margin-top: 4px; margin-bottom: 8px;">
@@ -2595,7 +2692,7 @@
               </svg>
               Monitor de Flujo en Tiempo Real
             </span>
-            <span class="scada-panel-tag">DISTRIBUCIÓN POR ACTUADOR</span>
+            <span class="scada-panel-tag">DISTRIBUCIÓN POR SILO SAR</span>
           </div>
           <div class="scada-chart-wrap">
             <canvas id="grafica"></canvas>
@@ -2633,8 +2730,8 @@
     <div class="modal-dialog" onclick="event.stopPropagation()">
       <div id="modalContent" class="modal-content-wrap"></div>
       <div class="modal-footer-caption">
-        <span id="modalId" class="modal-tag">EVIDENCIA 01</span>
-        <span id="modalDate" class="modal-date">FECHA: 24 SEP 2026</span>
+        <span id="modalId" class="modal-tag">FASE 01</span>
+        <span id="modalDate" class="modal-date">FECHA: 15 SEP 2026</span>
       </div>
     </div>
   </div>
@@ -2708,41 +2805,27 @@
     const modalId = document.getElementById('modalId');
     const modalDate = document.getElementById('modalDate');
 
-    function abrirModal(cardElement) {
-      const idText = cardElement.querySelector('.frame-id')?.innerText.trim() || '01';
-      const phaseTitle = cardElement.querySelector('.frame-phase-title')?.innerText.trim() || `EVIDENCIA ${idText} // REGISTRO TÉCNICO`;
-      const statusText = cardElement.querySelector('.frame-status')?.innerText.trim() || 'Sin registro fotográfico';
-      const dateText = cardElement.querySelector('.frame-caption span:last-child')?.innerText.trim() || '24 SEP 2026';
-      const img = cardElement.querySelector('.frame-canvas img');
-
-      if (modalId) modalId.innerText = phaseTitle;
+    function abrirModalImg(src, titleText, dateText) {
+      if (modalId) modalId.innerText = titleText;
       if (modalDate) modalDate.innerText = `FECHA: ${dateText}`;
-
       if (modalContent) {
-        if (img && img.src) {
-          modalContent.innerHTML = `<img src="${img.src}" alt="Evidencia ${idText}">`;
-        } else {
-          modalContent.innerHTML = `
-            <div class="modal-placeholder">
-              <div class="modal-placeholder-icon">
-                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-              </div>
-              <div class="modal-placeholder-num">${idText}</div>
-              <div class="modal-placeholder-text">${statusText}</div>
-              <p class="modal-placeholder-note">Ranura reservada para el registro fotográfico del proceso de ensamble, calibración y pruebas del clasificador RSU.</p>
-            </div>
-          `;
-        }
+        modalContent.innerHTML = `<img src="${src}" alt="${titleText}">`;
       }
-
       if (modal) {
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
       }
       document.body.style.overflow = 'hidden';
+    }
+
+    function abrirModal(cardElement) {
+      const idText = cardElement.querySelector('.frame-id')?.innerText.trim() || '01';
+      const phaseTitle = cardElement.querySelector('.frame-phase-title')?.innerText.trim() || `EVIDENCIA ${idText} // REGISTRO TÉCNICO`;
+      const dateText = cardElement.querySelector('.frame-caption span:last-child')?.innerText.trim() || '15 SEP 2026';
+      const img = cardElement.querySelector('.frame-canvas img');
+      if (img && img.src) {
+        abrirModalImg(img.src, phaseTitle, dateText);
+      }
     }
 
     function cerrarModal() {
@@ -2898,7 +2981,7 @@
 
     initPlanoViewer();
 
-    const data = { metal: 0, plastic: 0, paper: 0 };
+    const data = { metal: 0, paper: 0, plastic: 0 };
     const CAP_MAX = 10;
     const TOTAL_LOTE = 20;
     let sim = false;
@@ -2908,30 +2991,30 @@
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Metales [MTL-FE]', 'Plástico [POL-PET]', 'Papel [CEL-PAP]'],
+        labels: ['Metal [MTL-FE]', 'Papel [PAP-CEL]', 'Plástico [PLS-PET]'],
         datasets: [{
           data: [0, 0, 0],
           backgroundColor: [
-            'rgba(245, 158, 11, 0.28)',
-            'rgba(16, 185, 129, 0.28)',
-            'rgba(56, 189, 248, 0.28)'
+            'rgba(249, 115, 22, 0.3)',
+            'rgba(244, 114, 182, 0.3)',
+            'rgba(59, 130, 246, 0.3)'
           ],
           borderColor: [
-            '#f59e0b',
-            '#10b981',
-            '#38bdf8'
+            '#f97316',
+            '#f472b6',
+            '#3b82f6'
           ],
           borderWidth: 1.5,
           borderRadius: 2,
           hoverBackgroundColor: [
-            'rgba(245, 158, 11, 0.45)',
-            'rgba(16, 185, 129, 0.45)',
-            'rgba(56, 189, 248, 0.45)'
+            'rgba(249, 115, 22, 0.48)',
+            'rgba(244, 114, 182, 0.48)',
+            'rgba(59, 130, 246, 0.48)'
           ],
           hoverBorderColor: [
-            '#fbbf24',
-            '#34d399',
-            '#7dd3fc'
+            '#fb923c',
+            '#f9a8d4',
+            '#60a5fa'
           ]
         }]
       },
@@ -2966,13 +3049,13 @@
       }
     });
 
-    const getTot = () => data.metal + data.plastic + data.paper;
+    const getTot = () => data.metal + data.paper + data.plastic;
 
     const MAX_LOG_LINES = 100;
     const SENSORES = {
-      metal: { sensor: 'MAG-01', codigo: '[MTL-FE]', geo: 'geo-metal', objeto: 'metálico', silo: '01' },
-      plastic: { sensor: 'GRAV-02', codigo: '[POL-PET]', geo: 'geo-plastic', objeto: 'plástico', silo: '02' },
-      paper: { sensor: 'AIR-03', codigo: '[CEL-PAP]', geo: 'geo-paper', objeto: 'de papel', silo: '03' }
+      metal: { sensor: 'MAG-01', codigo: '[MTL-FE]', geo: 'geo-metal', objeto: 'ferromagnético', silo: 'NARANJA (01)' },
+      paper: { sensor: 'AIR-02', codigo: '[PAP-CEL]', geo: 'geo-paper', objeto: 'celulósico liviano', silo: 'ROSADO (02)' },
+      plastic: { sensor: 'GRAV-03', codigo: '[PLS-PET]', geo: 'geo-plastic', objeto: 'polímero PET', silo: 'AZUL (03)' }
     };
 
     function spawnToken(tipo) {
@@ -2980,7 +3063,7 @@
       if (!info) return;
       const lane = document.getElementById(`lane-${tipo}`);
       const lastTag = document.getElementById('lastTokenTag');
-      if (lastTag) lastTag.textContent = `FICHA ACTIVA: ${info.codigo} -> SILO ${info.silo}`;
+      if (lastTag) lastTag.textContent = `${info.codigo} -> SILO ${info.silo}`;
       if (!lane) return;
 
       const token = document.createElement('div');
@@ -2990,9 +3073,9 @@
       setTimeout(() => token.remove(), 780);
     }
 
-    function registrar(tipo) {
-      if (getTot() >= TOTAL_LOTE) {
-        addLog('Capacidad máxima del lote (20 unidades) alcanzada.', 'WARN');
+    function registrar(tipo, manual = false) {
+      if (!manual && getTot() >= TOTAL_LOTE) {
+        addLog('Capacidad máxima del lote automático (20 unidades) alcanzada.', 'WARN');
         if (sim) toggleSim();
         return;
       }
@@ -3002,7 +3085,8 @@
 
       const { sensor, codigo, objeto, silo } = SENSORES[tipo];
       const tag = tipo.toUpperCase();
-      addLog(`Sensor ${sensor}: ficha ${codigo} (${objeto}) detectada`, tag);
+      const modo = manual ? ' [INYECCIÓN MANUAL]' : '';
+      addLog(`Sensor ${sensor}: ficha ${codigo} (${objeto}) detectada${modo}`, tag);
       addLog(`Descarte ${codigo} -> Silo ${silo} confirmado`, tag);
     }
 
@@ -3013,12 +3097,12 @@
 
       const cMet = document.getElementById('cMet');
       if (cMet) cMet.innerText = data.metal;
-      const cPla = document.getElementById('cPla');
-      if (cPla) cPla.innerText = data.plastic;
       const cPap = document.getElementById('cPap');
       if (cPap) cPap.innerText = data.paper;
+      const cPla = document.getElementById('cPla');
+      if (cPla) cPla.innerText = data.plastic;
 
-      const pct = Math.round((tot / TOTAL_LOTE) * 100);
+      const pct = Math.min(100, Math.round((tot / TOTAL_LOTE) * 100));
       const kpiAprov = document.getElementById('kpiAprov');
       if (kpiAprov) kpiAprov.innerText = `${pct}%`;
 
@@ -3027,19 +3111,19 @@
 
       const kpiEq = document.getElementById('kpiEq');
       if (kpiEq) {
-        kpiEq.innerHTML = `E(${tot}) = <span style="color:var(--color-metal);font-weight:600;">${data.metal}M</span> + <span style="color:var(--color-plastic);font-weight:600;">${data.plastic}P</span> + <span style="color:var(--color-paper);font-weight:600;">${data.paper}C</span>`;
+        kpiEq.innerHTML = `E(${tot}) = <span style="color:var(--color-metal);font-weight:600;">${data.metal}M</span> + <span style="color:var(--color-paper);font-weight:600;">${data.paper}C</span> + <span style="color:var(--color-plastic);font-weight:600;">${data.plastic}P</span>`;
       }
 
       evaluar('bMet', 'aMet', 'pMet', data.metal);
-      evaluar('bPla', 'aPla', 'pPla', data.plastic);
       evaluar('bPap', 'aPap', 'pPap', data.paper);
+      evaluar('bPla', 'aPla', 'pPla', data.plastic);
 
-      chart.data.datasets[0].data = [data.metal, data.plastic, data.paper];
+      chart.data.datasets[0].data = [data.metal, data.paper, data.plastic];
       chart.update();
 
       const st = document.getElementById('stBadge');
       if (st) {
-        if (tot >= TOTAL_LOTE) {
+        if (tot >= TOTAL_LOTE && !sim) {
           st.innerHTML = '<span class="scada-led led-green"></span>LOTE FINALIZADO // 100%';
         } else if (sim) {
           st.innerHTML = '<span class="scada-led led-green led-pulse"></span>SIMULACIÓN EN EJECUCIÓN';
@@ -3074,8 +3158,8 @@
 
       const tagMap = {
         METAL: 'tag-metal',
-        PLASTIC: 'tag-plastic',
         PAPER: 'tag-paper',
+        PLASTIC: 'tag-plastic',
         WARN: 'tag-warn',
         ALERTA: 'tag-warn'
       };
@@ -3103,7 +3187,7 @@
           `;
         }
 
-        addLog('Simulación automática iniciada (corrida de 20 objetos).', 'SYS');
+        addLog('Simulación automática SAR iniciada (corrida de 20 objetos).', 'SYS');
 
         simLoop = setInterval(() => {
           if (getTot() >= TOTAL_LOTE) {
@@ -3111,7 +3195,7 @@
             addLog('Fin de la corrida. Balance completado: 20 objetos clasificados.', 'SYS');
             return;
           }
-          const keys = ['metal', 'plastic', 'paper'];
+          const keys = ['metal', 'paper', 'plastic'];
           registrar(keys[Math.floor(Math.random() * keys.length)]);
         }, 1100);
       } else {
@@ -3132,7 +3216,7 @@
     function limpiarConsola() {
       const logBox = document.getElementById('logBox');
       if (logBox) {
-        logBox.innerHTML = '<div class="log-line"><span class="log-tag tag-sys">[SISTEMA LISTO // ESPERANDO CICLO]</span></div>';
+        logBox.innerHTML = '<div class="log-line"><span class="log-tag tag-sys">[SISTEMA SAR LISTO // ESPERANDO CICLO]</span></div>';
       }
       const lastTag = document.getElementById('lastTokenTag');
       if (lastTag) lastTag.textContent = 'ESPERANDO INYECCIÓN';
@@ -3141,8 +3225,8 @@
     function reiniciar() {
       if (sim) toggleSim();
       data.metal = 0;
-      data.plastic = 0;
       data.paper = 0;
+      data.plastic = 0;
       limpiarConsola();
       actualizar();
     }
