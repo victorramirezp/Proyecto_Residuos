@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#0d1117">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Uniagustiniana | Clasificador de Residuos (SAR)</title>
-  <meta property="og:title" content="Clasificador Mecánico de Residuos (SAR - RSU)">
+  <title>Uniagustiniana | Clasificador de Residuos</title>
+  <meta property="og:title" content="Clasificador Mecánico de Residuos (RSU)">
   <meta property="og:description" content="Prototipo automatizado de separación de residuos sólidos mediante gravedad, atracción electromagnética y empuje neumático.">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'/><polyline points='3.29 7 12 12 20.71 7'/><line x1='12' y1='22' x2='12' y2='12'/></svg>">
@@ -435,64 +435,6 @@
       transform: translate(2px, -2px);
     }
 
-    .impact-kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .impact-kpi-card {
-      background: var(--glass-surface);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border: 1px solid var(--border-tech);
-      border-top: 2px solid var(--border-tech-strong);
-      box-shadow: var(--double-line), var(--shadow-card);
-      clip-path: var(--chamfer-md);
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .impact-kpi-card.kpi-warn { border-top-color: var(--color-metal); }
-    .impact-kpi-card.kpi-crit { border-top-color: #ef4444; }
-    .impact-kpi-card.kpi-norm { border-top-color: #10b981; }
-
-    .impact-kpi-tag {
-      font-family: var(--font-mono);
-      font-size: 0.64rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-    }
-
-    .impact-kpi-val {
-      font-family: var(--font-mono);
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-
-    .impact-kpi-card.kpi-warn .impact-kpi-val { color: var(--color-metal); }
-    .impact-kpi-card.kpi-crit .impact-kpi-val { color: #f87171; }
-    .impact-kpi-card.kpi-norm .impact-kpi-val { color: #10b981; }
-
-    .impact-kpi-desc {
-      font-family: var(--font-main);
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    .impact-kpi-desc strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
     .concientizacion-card {
       background: var(--glass-surface);
       backdrop-filter: blur(24px) saturate(180%);
@@ -511,62 +453,12 @@
       line-height: 1.75;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .concientizacion-body strong {
       color: var(--text);
       font-weight: 600;
-    }
-
-    .norma-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 6px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-    }
-
-    .norma-pill {
-      background: rgba(0, 0, 0, 0.38);
-      border: 1px solid var(--border-tech);
-      clip-path: var(--chamfer-sm);
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .norma-pill-head {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #ffffff;
-    }
-
-    .norma-swatch {
-      width: 10px;
-      height: 10px;
-      display: inline-block;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      flex-shrink: 0;
-    }
-
-    .swatch-white { background: #f8fafc; }
-    .swatch-green { background: #10b981; }
-    .swatch-black { background: #1e293b; }
-
-    .norma-pill-sub {
-      font-family: var(--font-main);
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      line-height: 1.45;
     }
 
     .planos-grid {
@@ -1896,9 +1788,7 @@
         white-space: normal;
       }
 
-      .team-grid,
-      .impact-kpi-grid,
-      .norma-strip {
+      .team-grid {
         grid-template-columns: 1fr;
         gap: 14px;
         width: 100%;
@@ -2326,49 +2216,14 @@
     <section id="view-impacto" class="view-pane view-section">
       <div class="section-header">
         <h2>Concientización e Impacto Social</h2>
-        <span>CONTEXTO BOGOTÁ D.C. &amp; COLOMBIA</span>
-      </div>
-
-      <div class="impact-kpi-grid">
-        <div class="impact-kpi-card kpi-warn">
-          <span class="impact-kpi-tag">RELLENO SANITARIO DOÑA JUANA // BOGOTÁ</span>
-          <div class="impact-kpi-val">~6.300 t/día</div>
-          <p class="impact-kpi-desc">Disposición diaria en Bogotá (UAESP). Más de <strong>2,3 millones de toneladas anuales</strong> presionan la capacidad de las celdas y afectan a comunidades de Usme y Ciudad Bolívar.</p>
-        </div>
-
-        <div class="impact-kpi-card kpi-crit">
-          <span class="impact-kpi-tag">CONTAMINACIÓN CRUZADA // TASA NACIONAL</span>
-          <div class="impact-kpi-val">&lt; 17%</div>
-          <p class="impact-kpi-desc">Aprovechamiento efectivo en Colombia (DANE). Más del <strong>80% del material reciclable</strong> pierde valor industrial al mezclarse con flujos orgánicos y humedad en la fuente.</p>
-        </div>
-
-        <div class="impact-kpi-card kpi-norm">
-          <span class="impact-kpi-tag">MARCO NORMATIVO // MINAMBIENTE</span>
-          <div class="impact-kpi-val">RES. 2184</div>
-          <p class="impact-kpi-desc">Cumplimiento de la <strong>Resolución 2184 de 2019</strong> (código unificado de colores), automatizando el triaje secundario de la fracción blanca aprovechable.</p>
-        </div>
+        <span>IMPACTO SOCIAL Y AMBIENTAL</span>
       </div>
 
       <div class="concientizacion-card">
         <div class="concientizacion-body">
-          <p><strong>Problemática en el Relleno Sanitario Doña Juana:</strong> Bogotá genera diariamente cerca de <strong>6.300 a 6.500 toneladas de residuos sólidos urbanos (RSU)</strong>, de las cuales una proporción crítica corresponde a metales ferrosos, polímeros PET y fibras celulósicas que terminan enterrados por falta de pre-clasificación eficiente. Disminuir el volumen dispuesto mediante separación mecánica alivia la saturación operativa del relleno, reduce la generación de lixiviados y mitiga gases de efecto invernadero.</p>
-          <p><strong>Mitigación de la Contaminación Cruzada y Seguridad Laboral:</strong> En Colombia, la baja separación en la fuente provoca contaminación cruzada que obliga a más de <strong>25.000 recicladores de oficio en Bogotá</strong> y operarios de Estaciones de Clasificación y Aprovechamiento (ECA) a realizar triaje manual directo, exponiéndose a riesgos biológicos, químicos y cortopunzantes. Nuestro prototipo SAR emplea principios físicos pasivos y activos (atracción electromagnética, gravedad controlada y empuje neumático) para segregar materiales sin intervención manual.</p>
-          <p><strong>Articulación con la Resolución 2184 de 2019:</strong> El sistema opera directamente sobre el flujo de residuos secos de la <strong>bolsa blanca</strong> establecida por el Ministerio de Ambiente y Desarrollo Sostenible, subdividiendo automáticamente los materiales recuperables en tres silos codificados por color en la maqueta (<strong>Naranja:</strong> Metales <code>[MTL-FE]</code>, <strong>Rosado:</strong> Papel <code>[PAP-CEL]</code> y <strong>Azul:</strong> Plástico <code>[PLS-PET]</code>) listos para reincorporación en cadenas de economía circular.</p>
-
-          <div class="norma-strip">
-            <div class="norma-pill">
-              <span class="norma-pill-head"><span class="norma-swatch swatch-white"></span>FRACCIÓN BLANCA // OBJETIVO</span>
-              <span class="norma-pill-sub">Plástico PET, metales ferrosos, papel y cartón limpio procesados por el clasificador SAR en 3 flujos puros.</span>
-            </div>
-            <div class="norma-pill">
-              <span class="norma-pill-head"><span class="norma-swatch swatch-green"></span>FRACCIÓN VERDE // ORGÁNICOS</span>
-              <span class="norma-pill-sub">Restos de comida y desechos agrícolas separados previamente para evitar humedad y contaminación cruzada.</span>
-            </div>
-            <div class="norma-pill">
-              <span class="norma-pill-head"><span class="norma-swatch swatch-black"></span>FRACCIÓN NEGRA // NO APROVECHABLE</span>
-              <span class="norma-pill-sub">Residuos sanitarios y materiales contaminados que se excluyen del circuito de recuperación.</span>
-            </div>
-          </div>
+          <p>La ayuda que puede generar el proyecto, aparte de los impactos positivos en sostenibilidad, se refleja directamente en la <strong>eficiencia operativa y la seguridad de los trabajadores</strong> durante las labores de separación en planta, disminuyendo los riesgos asociados al contacto manual directo con residuos.</p>
+          <p>Asimismo, optimiza el procesamiento en las áreas críticas donde converge la mayor heterogeneidad de residuos, facilitando su recuperación sistemática y promoviendo <strong>nuevas oportunidades de reutilización y aprovechamiento industrial</strong>.</p>
+          <p>A nivel educativo y comunitario, este trabajo acerca a la sociedad a la gestión responsable de residuos: al evidenciar que su clasificación técnica es factible tras la recolección, se fomenta una cultura participativa y la <strong>iniciativa ciudadana de separación en la fuente</strong> directamente desde los hogares.</p>
         </div>
       </div>
     </section>
@@ -2428,19 +2283,19 @@
 
     <section id="view-evidencias" class="view-pane view-section">
       <div class="section-header">
-        <h2>EVIDENCIAS DEL PROCESO (LÍNEA DE TIEMPO SAR)</h2>
-        <span>SEP 2026 — NOV 2026</span>
+        <h2>EVIDENCIAS DEL PROCESO</h2>
+        <span>GALERÍA DE REGISTRO</span>
       </div>
 
       <div class="galeria-frames">
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/materiales1.jpg" alt="Fase 01 - Adquisición de Insumos y Estructura">
+            <img src="img/materiales1.jpg" alt="Fase 01 - Adquisición de Materiales e Insumos">
             <div class="frame-id" style="display: none;">01</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 01 // ADQUISICIÓN DE INSUMOS Y ESTRUCTURA</div>
-            <div class="frame-status">Selección de pinturas acrílicas para codificación de silos, lámina estructural MDF, imán ferromagnético y kit eléctrico.</div>
+            <div class="frame-phase-title">FASE 01 // ADQUISICIÓN DE MATERIALES E INSUMOS</div>
+            <div class="frame-status">Tarros de pintura acrílica para codificación de silos, tabla MDF, imán ferromagnético y kit eléctrico.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 01</span>
@@ -2455,7 +2310,7 @@
           </div>
           <div class="frame-meta">
             <div class="frame-phase-title">FASE 02 // COMPONENTES ELECTROMECÁNICOS</div>
-            <div class="frame-status">Alistamiento del ventilador extractor DC para soplado neumático y motores reductores para tracción de las bandas.</div>
+            <div class="frame-status">Ventilador extractor DC para soplado neumático y motores reductores para la tracción de las bandas.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 02</span>
@@ -2465,12 +2320,12 @@
 
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/View recent photos 3.png" alt="Fase 03 - Dimensionamiento y Corte Inicial">
+            <img src="img/View recent photos 3.png" alt="Fase 03 - Dimensionamiento y Estructura Inicial">
             <div class="frame-id" style="display: none;">03</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 03 // DIMENSIONAMIENTO Y CORTE INICIAL</div>
-            <div class="frame-status">Trazado geométrico a escala sobre lámina base y corte de paneles para la tolva y bastidor principal.</div>
+            <div class="frame-phase-title">FASE 03 // DIMENSIONAMIENTO Y ESTRUCTURA INICIAL</div>
+            <div class="frame-status">Trazado geométrico sobre lámina base y corte inicial de piezas para la estructura del clasificador.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 03</span>
@@ -2480,12 +2335,12 @@
 
         <div class="frame-item" onclick="abrirModal(this)">
           <div class="frame-canvas">
-            <img src="img/montaje_bandas.jpg" alt="Fase 04 - Ensamble de Tolva y Bandas">
+            <img src="img/silos_pintados.jpg" alt="Fase 04 - Codificación de Silos y Pruebas de Separación">
             <div class="frame-id" style="display: none;">04</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 04 // ENSAMBLE DE TOLVA Y BANDAS</div>
-            <div class="frame-status">Montaje de la estructura vertical con tolva superior, banda amarilla, banda fucsia y los 3 cajones colectores en crudo.</div>
+            <div class="frame-phase-title">FASE 04 // CODIFICACIÓN DE SILOS Y PRUEBAS DE SEPARACIÓN</div>
+            <div class="frame-status">Tres compartimentos pintados: Azul con tapas plásticas, Rosado con papel liviano y Naranja con puntillas y metales.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 04</span>
@@ -2495,22 +2350,22 @@
 
         <div class="frame-item frame-span-2">
           <div class="frame-canvas-dual">
-            <div class="frame-subcanvas" onclick="abrirModalImg('img/silos_pintados.jpg', 'FASE 05 // CODIFICACIÓN DE SILOS Y PRUEBAS DE MATERIAL', '08 NOV 2026')">
-              <img src="img/silos_pintados.jpg" alt="Fase 05 - Tres compartimentos pintados (Azul, Rosado y Naranja)">
-              <span class="subcanvas-tag">5A // SILOS CODIFICADOS (AZUL / ROSADO / NARANJA)</span>
+            <div class="frame-subcanvas" onclick="abrirModalImg('img/montaje_bandas.jpg', 'FASE 05 // MONTAJE FINAL DE TOLVA Y BANDAS', '10 NOV 2026')">
+              <img src="img/montaje_bandas.jpg" alt="Fase 05 - Maqueta con tolva superior, banda amarilla, banda fucsia y cajones inferiores">
+              <span class="subcanvas-tag">5A // TOLVA SUPERIOR, BANDA AMARILLA Y BANDA FUCSIA</span>
             </div>
-            <div class="frame-subcanvas" onclick="abrirModalImg('img/View recent photos.png', 'FASE 05 // DISPOSICIÓN DE CAJONES Y COMPARTIMENTOS', '08 NOV 2026')">
-              <img src="img/View recent photos.png" alt="Fase 05 - Estructura de compartimentos y pruebas iniciales">
-              <span class="subcanvas-tag">5B // ESTRUCTURA DE COMPARTIMENTOS Y DUCTOS</span>
+            <div class="frame-subcanvas" onclick="abrirModalImg('img/View recent photos.png', 'FASE 05 // CAJONES COLECTORES Y ESTRUCTURA DE SOPORTE', '10 NOV 2026')">
+              <img src="img/View recent photos.png" alt="Fase 05 - Disposición de cajones inferiores y tolva">
+              <span class="subcanvas-tag">5B // DISPOSICIÓN DE CAJONES Y COMPARTIMENTOS</span>
             </div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 05 // CODIFICACIÓN DE SILOS Y PRUEBAS DE MATERIAL</div>
-            <div class="frame-status">Validación de los tres compartimentos pintados (Azul: plástico/tapas <code>[PLS-PET]</code>, Rosado: papel liviano <code>[PAP-CEL]</code>, Naranja: metales ferromagnéticos/puntillas <code>[MTL-FE]</code>) junto al ensamble de tolva y cajones.</div>
+            <div class="frame-phase-title">FASE 05 // MONTAJE FINAL DE TOLVA Y BANDAS</div>
+            <div class="frame-status">Integración completa en madera con la tolva superior, la banda amarilla, la banda fucsia y los cajones colectores inferiores.</div>
           </div>
           <div class="frame-caption">
             <span>FASE 05</span>
-            <span>08 NOV 2026</span>
+            <span>10 NOV 2026</span>
           </div>
         </div>
 
@@ -2522,11 +2377,11 @@
             <div class="frame-id" style="display: none;">06</div>
           </div>
           <div class="frame-meta">
-            <div class="frame-phase-title">FASE 06 // PLANTA SAR FINALIZADA (VIDEO EN VIVO)</div>
-            <div class="frame-status">Recorrido operativo completo de la maqueta SAR terminada: separación magnética de metales hacia silo naranja, soplador lateral para papel hacia silo rosado y depósito de plástico en silo azul.</div>
+            <div class="frame-phase-title">FASE 06 // PROTOTIPO SAR EN FUNCIONAMIENTO (VIDEO)</div>
+            <div class="frame-status">Demostración en vivo del recorrido completo de la maqueta SAR terminada con separación por imán, soplador lateral para papel y depósito de plástico.</div>
           </div>
           <div class="frame-caption">
-            <span>FASE 06 // VIDEO SAR EN VIVO</span>
+            <span>FASE 06</span>
             <span>16 NOV 2026</span>
           </div>
         </div>
@@ -2535,7 +2390,7 @@
 
     <section id="view-dashboard" class="view-pane view-section">
       <div class="section-header">
-        <h2>DASHBOARD DE SIMULACIÓN (PLANTA SAR)</h2>
+        <h2>DASHBOARD DE SIMULACIÓN</h2>
         <span id="stBadge" class="scada-badge"><span class="scada-led led-cyan"></span>SISTEMA EN ESPERA</span>
       </div>
 
@@ -2547,14 +2402,14 @@
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
               </svg>
-              Panel de Control &amp; Tren de Bandas SAR
+              Panel de Ingesta &amp; Control
             </span>
             <span class="scada-panel-tag">LOTE: <strong id="kpiTot">0 / 20</strong></span>
           </div>
 
           <div class="scada-band-stage">
             <div class="scada-band-header">
-              <span>FLUJO DE BANDA // INDICADORES SCADA</span>
+              <span>FLUJO DE BANDA // BLOQUES SCADA</span>
               <span id="lastTokenTag">ESPERANDO INYECCIÓN</span>
             </div>
             <div class="scada-band-track">
@@ -2584,8 +2439,8 @@
           </div>
 
           <div class="unit-test-header">
-            <span>INYECCIÓN MANUAL EN VIVO // PRUEBA UNITARIA</span>
-            <span>SILOS SAR</span>
+            <span>INYECCIÓN MANUAL EN VIVO // PRUEBAS INDIVIDUALES</span>
+            <span>MAQUETA SAR</span>
           </div>
           <div class="ingest-grid">
             <button class="ingest-btn ingest-btn-metal" onclick="registrar('metal', true)">
@@ -2692,7 +2547,7 @@
               </svg>
               Monitor de Flujo en Tiempo Real
             </span>
-            <span class="scada-panel-tag">DISTRIBUCIÓN POR SILO SAR</span>
+            <span class="scada-panel-tag">DISTRIBUCIÓN POR ACTUADOR</span>
           </div>
           <div class="scada-chart-wrap">
             <canvas id="grafica"></canvas>
@@ -3187,7 +3042,7 @@
           `;
         }
 
-        addLog('Simulación automática SAR iniciada (corrida de 20 objetos).', 'SYS');
+        addLog('Simulación automática iniciada (corrida de 20 objetos).', 'SYS');
 
         simLoop = setInterval(() => {
           if (getTot() >= TOTAL_LOTE) {
@@ -3216,7 +3071,7 @@
     function limpiarConsola() {
       const logBox = document.getElementById('logBox');
       if (logBox) {
-        logBox.innerHTML = '<div class="log-line"><span class="log-tag tag-sys">[SISTEMA SAR LISTO // ESPERANDO CICLO]</span></div>';
+        logBox.innerHTML = '<div class="log-line"><span class="log-tag tag-sys">[SISTEMA LISTO // ESPERANDO CICLO]</span></div>';
       }
       const lastTag = document.getElementById('lastTokenTag');
       if (lastTag) lastTag.textContent = 'ESPERANDO INYECCIÓN';
