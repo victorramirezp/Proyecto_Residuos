@@ -36,6 +36,8 @@
       --color-paper-glow: rgba(244, 114, 182, 0.3);
       --color-plastic: #3b82f6;
       --color-plastic-glow: rgba(59, 130, 246, 0.3);
+      --color-reject: #ef4444;
+      --color-reject-glow: rgba(239, 68, 68, 0.32);
       --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       --chamfer-sm: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
@@ -224,6 +226,29 @@
       border-color: rgba(255, 255, 255, 0.18);
       border-top-color: #ffffff;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .menu-qr-btn {
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.38);
+      border-top: 2px solid #38bdf8;
+      color: #f8fafc;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 14px;
+      clip-path: var(--chamfer-sm);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .menu-qr-btn:hover {
+      background: rgba(59, 130, 246, 0.24);
+      border-color: #38bdf8;
+      color: #ffffff;
     }
 
     .team-grid {
@@ -630,7 +655,7 @@
       background: #050608;
       position: relative;
       overflow: hidden;
-      cursor: pointer;
+      cursor: zoom-in;
     }
 
     .frame-canvas-dual .frame-subcanvas img {
@@ -737,7 +762,7 @@
       width: 100vw;
       height: 100vh;
       z-index: 9999;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       display: flex;
@@ -758,8 +783,8 @@
 
     .plano-viewer {
       padding: 0;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .viewer-stage {
@@ -786,6 +811,38 @@
       transform-origin: center;
       will-change: transform;
       pointer-events: none;
+    }
+
+    .viewer-caption-bar {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      max-width: calc(100vw - 96px);
+      background: rgba(14, 18, 26, 0.88);
+      border: 1px solid var(--border-tech);
+      border-left: 2px solid #38bdf8;
+      clip-path: var(--chamfer-sm);
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      pointer-events: none;
+    }
+
+    .viewer-caption-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .viewer-caption-sub {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
     }
 
     .viewer-toolbar {
@@ -886,7 +943,7 @@
       border-top: 2px solid var(--border-tech-strong);
       box-shadow: var(--double-line), 0 24px 60px -12px rgba(0, 0, 0, 0.75);
       clip-path: var(--chamfer-lg);
-      width: min(920px, 94vw);
+      width: min(980px, 94vw);
       max-height: 90vh;
       overflow: hidden;
       display: flex;
@@ -902,105 +959,60 @@
       opacity: 1;
     }
 
-    .modal-content-wrap {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      min-height: 280px;
-      max-height: calc(90vh - 70px);
-      display: flex;
+    .qr-dialog {
+      width: min(420px, 92vw);
+      padding: 24px 22px;
       align-items: center;
-      justify-content: center;
-      background: #050608;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .modal-content-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      animation: modalImgIn 300ms var(--ease-spring);
-    }
-
-    @keyframes modalImgIn {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .modal-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 36px 24px;
       text-align: center;
-      gap: 12px;
-      width: 100%;
-      height: 100%;
+      gap: 14px;
+      border-top-color: #38bdf8;
     }
 
-    .modal-placeholder-icon {
-      width: 56px;
-      height: 56px;
-      clip-path: var(--chamfer-sm);
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      display: flex;
+    .qr-title {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .qr-sub {
+      font-family: var(--font-main);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .qr-frame {
+      background: #ffffff;
+      padding: 14px;
+      clip-path: var(--chamfer-md);
+      border: 2px solid rgba(56, 189, 248, 0.45);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: rgba(255, 255, 255, 0.45);
-      margin-bottom: 2px;
+      width: 248px;
+      height: 248px;
     }
 
-    .modal-placeholder-num {
+    .qr-frame img {
+      width: 220px;
+      height: 220px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .qr-url-box {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-tech);
+      clip-path: var(--chamfer-sm);
+      padding: 8px 10px;
       font-family: var(--font-mono);
-      font-size: 2.6rem;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.28);
-      letter-spacing: -0.03em;
-      line-height: 1;
-    }
-
-    .modal-placeholder-text {
-      font-size: 0.82rem;
-      font-family: var(--font-mono);
-      color: var(--text-sub);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .modal-placeholder-note {
-      font-family: var(--font-main);
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      max-width: 420px;
-      line-height: 1.55;
-    }
-
-    .modal-footer-caption {
-      padding: 14px 20px;
-      background: rgba(14, 18, 26, 0.95);
-      border-top: 1px solid var(--border-tech);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-    }
-
-    .modal-tag {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      color: #ffffff;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .modal-date {
-      font-family: var(--font-mono);
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
+      font-size: 0.66rem;
+      color: #38bdf8;
+      word-break: break-all;
     }
 
     .scada-badge {
@@ -1076,6 +1088,7 @@
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border-tech);
       margin-bottom: 14px;
+      gap: 10px;
     }
 
     .scada-panel-title {
@@ -1099,6 +1112,27 @@
 
     .scada-panel-tag strong {
       font-family: var(--font-mono);
+      color: #ffffff;
+    }
+
+    .scada-csv-btn {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.38);
+      border-top: 2px solid #10b981;
+      color: #34d399;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 6px 10px;
+      clip-path: var(--chamfer-sm);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .scada-csv-btn:hover {
+      background: rgba(16, 185, 129, 0.24);
+      border-color: #10b981;
       color: #ffffff;
     }
 
@@ -1208,6 +1242,11 @@
       box-shadow: 0 0 12px var(--color-plastic-glow);
     }
 
+    .scada-token.token-reject {
+      color: var(--color-reject);
+      box-shadow: 0 0 14px var(--color-reject-glow);
+    }
+
     .token-geo {
       width: 8px;
       height: 8px;
@@ -1226,6 +1265,10 @@
 
     .geo-plastic {
       border-radius: 50%;
+    }
+
+    .geo-reject {
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
     }
 
     @keyframes tokenDrop {
@@ -1319,6 +1362,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
+      margin-bottom: 10px;
     }
 
     .ingest-btn {
@@ -1385,6 +1429,33 @@
       font-family: var(--font-mono);
       font-weight: 700;
       letter-spacing: 0.04em;
+    }
+
+    .scada-reject-btn {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.38);
+      border-top: 2px solid #f97316;
+      clip-path: var(--chamfer-sm);
+      color: #fca5a5;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .scada-reject-btn:hover {
+      background: rgba(239, 68, 68, 0.22);
+      border-color: #ef4444;
+      color: #ffffff;
+      box-shadow: inset 0 0 14px var(--color-reject-glow);
     }
 
     .scada-terminal-wrap {
@@ -1724,7 +1795,8 @@
         display: none;
       }
 
-      .menu-link {
+      .menu-link,
+      .menu-qr-btn {
         flex-shrink: 0;
         white-space: nowrap;
         scroll-snap-align: start;
@@ -1734,7 +1806,7 @@
         min-height: 44px;
         height: 44px;
         padding: 10px clamp(14px, 3vw, 18px);
-        font-size: clamp(0.82rem, 2.4vw, 0.84rem);
+        font-size: clamp(0.8rem, 2.4vw, 0.84rem);
         font-weight: 600;
         letter-spacing: 0.03em;
       }
@@ -1972,14 +2044,15 @@
       }
 
       .scada-run-btn,
-      .scada-reset-btn {
+      .scada-reset-btn,
+      .scada-reject-btn {
         width: 100%;
         max-width: 100%;
         min-width: 0;
         min-height: 48px;
         height: 48px;
         padding: 12px 16px;
-        font-size: 0.82rem;
+        font-size: 0.8rem;
       }
 
       .scada-terminal-wrap,
@@ -2070,6 +2143,12 @@
         word-break: break-word;
       }
 
+      .viewer-caption-bar {
+        top: 14px;
+        left: 14px;
+        padding: 6px 10px;
+      }
+
       .viewer-toolbar {
         gap: 2px;
         padding: 5px;
@@ -2095,6 +2174,7 @@
       <button class="menu-link" onclick="navegar('view-planos', this)">PLANOS</button>
       <button class="menu-link" onclick="navegar('view-evidencias', this)">EVIDENCIA DEL PROTOTIPO</button>
       <button class="menu-link" onclick="navegar('view-dashboard', this)">DASHBOARD DE SIMULACIÓN</button>
+      <button class="menu-qr-btn" onclick="abrirQRModal()">[ QR EN VIVO ]</button>
     </nav>
   </header>
 
@@ -2418,11 +2498,11 @@
                 <span class="scada-lane-target">[MTL-FE]</span>
               </div>
               <div id="lane-paper" class="scada-lane lane-paper">
-                <span class="scada-lane-sensor">AIR-02 // SOPLADOR (ROSADO)</span>
+                <span class="scada-lane-sensor">AIR-03 // SOPLADOR (ROSADO)</span>
                 <span class="scada-lane-target">[PAP-CEL]</span>
               </div>
               <div id="lane-plastic" class="scada-lane lane-plastic">
-                <span class="scada-lane-sensor">GRAV-03 // DEPÓSITO (AZUL)</span>
+                <span class="scada-lane-sensor">GRAV-02 // DEPÓSITO (AZUL)</span>
                 <span class="scada-lane-target">[PLS-PET]</span>
               </div>
             </div>
@@ -2456,6 +2536,10 @@
               <span class="ingest-btn-label">+ PLÁSTICO</span>
             </button>
           </div>
+
+          <button class="scada-reject-btn" onclick="inyectarRechazo()">
+            [ ! INYECTAR RECHAZO ]
+          </button>
         </div>
 
         <div class="scada-panel scada-area-silos">
@@ -2561,9 +2645,9 @@
                 <polyline points="4 17 10 11 4 5"></polyline>
                 <line x1="12" y1="19" x2="20" y2="19"></line>
               </svg>
-              Consola de Telemetría
+              Consola de Telemetría en Vivo
             </span>
-            <span class="scada-panel-tag">EN VIVO</span>
+            <button class="scada-csv-btn" onclick="exportarCSV()">[ EXPORTAR LOG .CSV ]</button>
           </div>
           <div class="scada-terminal-wrap">
             <div id="logBox" class="scada-terminal-body" role="log" aria-label="Consola de telemetría" aria-live="off"></div>
@@ -2575,23 +2659,7 @@
     <footer>Universitaria Agustiniana • Facultad de Ingeniería • Introducción a la Ingeniería</footer>
   </div>
 
-  <div id="evidenceModal" class="evidence-modal" role="dialog" aria-modal="true" aria-hidden="true" onclick="handleModalBackdropClick(event)">
-    <button class="modal-close-btn" onclick="cerrarModal()" aria-label="Cerrar visor">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    </button>
-    <div class="modal-dialog" onclick="event.stopPropagation()">
-      <div id="modalContent" class="modal-content-wrap"></div>
-      <div class="modal-footer-caption">
-        <span id="modalId" class="modal-tag">FASE 01</span>
-        <span id="modalDate" class="modal-date">FECHA: 15 SEP 2026</span>
-      </div>
-    </div>
-  </div>
-
-  <div id="planoViewer" class="evidence-modal plano-viewer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Visor de plano">
+  <div id="planoViewer" class="evidence-modal plano-viewer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Visor a pantalla completa">
     <button class="modal-close-btn" data-viewer="close" aria-label="Cerrar visor">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -2600,6 +2668,10 @@
     </button>
     <div class="viewer-stage" id="viewerStage">
       <img id="viewerImg" alt="" draggable="false">
+    </div>
+    <div class="viewer-caption-bar">
+      <span id="viewerTitle" class="viewer-caption-title">VISOR TÉCNICO</span>
+      <span id="viewerMeta" class="viewer-caption-sub">PROYECTOR // ZOOM INTERACTIVO</span>
     </div>
     <div class="viewer-toolbar">
       <button class="viewer-btn" data-viewer="out" aria-label="Reducir zoom">−</button>
@@ -2614,6 +2686,23 @@
         </svg>
         ORIGINAL
       </a>
+    </div>
+  </div>
+
+  <div id="qrModal" class="evidence-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Código QR en vivo" onclick="if(event.target.id==='qrModal') cerrarQRModal()">
+    <button class="modal-close-btn" onclick="cerrarQRModal()" aria-label="Cerrar código QR">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="modal-dialog qr-dialog" onclick="event.stopPropagation()">
+      <span class="qr-title">ACCESO MÓVIL // QR EN VIVO</span>
+      <p class="qr-sub">Escanea desde el proyector para abrir el sistema interactivo SAR en tu dispositivo móvil.</p>
+      <div class="qr-frame">
+        <img id="qrImage" alt="Código QR de la página actual">
+      </div>
+      <div id="qrUrlText" class="qr-url-box"></div>
     </div>
   </div>
 
@@ -2655,22 +2744,12 @@
       if (mainHeader) mainHeader.classList.remove('nav-hidden');
     }
 
-    const modal = document.getElementById('evidenceModal');
-    const modalContent = document.getElementById('modalContent');
-    const modalId = document.getElementById('modalId');
-    const modalDate = document.getElementById('modalDate');
+    let openLightboxFn = null;
 
-    function abrirModalImg(src, titleText, dateText) {
-      if (modalId) modalId.innerText = titleText;
-      if (modalDate) modalDate.innerText = `FECHA: ${dateText}`;
-      if (modalContent) {
-        modalContent.innerHTML = `<img src="${src}" alt="${titleText}">`;
+    function abrirModalImg(src, titleText, dateText, trigger = null) {
+      if (openLightboxFn) {
+        openLightboxFn(src, titleText, `FECHA: ${dateText}`, trigger);
       }
-      if (modal) {
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-      }
-      document.body.style.overflow = 'hidden';
     }
 
     function abrirModal(cardElement) {
@@ -2679,25 +2758,34 @@
       const dateText = cardElement.querySelector('.frame-caption span:last-child')?.innerText.trim() || '15 SEP 2026';
       const img = cardElement.querySelector('.frame-canvas img');
       if (img && img.src) {
-        abrirModalImg(img.src, phaseTitle, dateText);
+        abrirModalImg(img.currentSrc || img.src, phaseTitle, dateText, cardElement);
       }
     }
 
-    function cerrarModal() {
-      if (modal) {
-        modal.classList.remove('active');
-        modal.setAttribute('aria-hidden', 'true');
+    function abrirQRModal() {
+      const qrModal = document.getElementById('qrModal');
+      const qrImage = document.getElementById('qrImage');
+      const qrUrlText = document.getElementById('qrUrlText');
+      const currentUrl = window.location.href;
+      if (qrUrlText) qrUrlText.textContent = currentUrl;
+      if (qrImage) {
+        qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(currentUrl)}`;
+      }
+      if (qrModal) {
+        qrModal.classList.add('active');
+        qrModal.setAttribute('aria-hidden', 'false');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarQRModal() {
+      const qrModal = document.getElementById('qrModal');
+      if (qrModal) {
+        qrModal.classList.remove('active');
+        qrModal.setAttribute('aria-hidden', 'true');
       }
       document.body.style.overflow = '';
     }
-
-    function handleModalBackdropClick(e) {
-      if (e.target.id === 'evidenceModal') cerrarModal();
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') cerrarModal();
-    });
 
     function initPlanoViewer() {
       const viewer = document.getElementById('planoViewer');
@@ -2705,6 +2793,8 @@
       const img = document.getElementById('viewerImg');
       const level = document.getElementById('viewerLevel');
       const link = document.getElementById('viewerLink');
+      const titleEl = document.getElementById('viewerTitle');
+      const metaEl = document.getElementById('viewerMeta');
       const closeBtn = viewer.querySelector('[data-viewer="close"]');
       const zoomInBtn = viewer.querySelector('[data-viewer="in"]');
       const zoomOutBtn = viewer.querySelector('[data-viewer="out"]');
@@ -2746,17 +2836,21 @@
         render();
       }
 
-      function open(src, alt, trigger) {
+      function open(src, alt, subText = 'MODELADO TÉCNICO // VISTA AMPLIADA', trigger = null) {
         opener = trigger;
         img.src = src;
         img.alt = alt;
         link.href = src;
+        if (titleEl) titleEl.textContent = alt || 'VISOR TÉCNICO';
+        if (metaEl) metaEl.textContent = subText;
         reset();
         viewer.classList.add('active');
         viewer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
         closeBtn.focus();
       }
+
+      openLightboxFn = open;
 
       function close() {
         if (!isOpen()) return;
@@ -2776,6 +2870,7 @@
       viewer.addEventListener('click', e => {
         const action = e.target.closest('[data-viewer]')?.dataset.viewer;
         if (action) actions[action]();
+        else if (e.target === stage) close();
       });
 
       stage.addEventListener('pointerdown', e => {
@@ -2811,19 +2906,24 @@
       }, { passive: false });
 
       document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          close();
+          cerrarQRModal();
+          return;
+        }
         if (!isOpen()) return;
-        if (e.key === 'Escape') close();
-        else if (e.key === '+' || e.key === '=') actions.in();
+        if (e.key === '+' || e.key === '=') actions.in();
         else if (e.key === '-') actions.out();
         else if (e.key === '0') reset();
       });
 
       document.querySelectorAll('.plano-img-wrap').forEach(wrap => {
         const thumb = wrap.querySelector('img');
-        const openFromThumb = () => open(thumb.currentSrc || thumb.src, thumb.alt, wrap);
+        const tag = wrap.closest('.plano-card')?.querySelector('.plano-tag')?.innerText.trim() || thumb.alt;
+        const openFromThumb = () => open(thumb.currentSrc || thumb.src, tag, 'PLANO TÉCNICO // ZOOM INTERACTIVO', wrap);
         wrap.tabIndex = 0;
         wrap.setAttribute('role', 'button');
-        wrap.setAttribute('aria-label', `Ampliar ${thumb.alt}`);
+        wrap.setAttribute('aria-label', `Ampliar ${tag}`);
         wrap.addEventListener('click', openFromThumb);
         wrap.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -2836,11 +2936,13 @@
 
     initPlanoViewer();
 
-    const data = { metal: 0, paper: 0, plastic: 0 };
+    const data = { metal: 0, paper: 0, plastic: 0, reject: 0 };
     const CAP_MAX = 10;
     const TOTAL_LOTE = 20;
     let sim = false;
     let simLoop = null;
+    let pieceCounter = 0;
+    const telemetryRecords = [];
 
     const ctx = document.getElementById('grafica').getContext('2d');
     const chart = new Chart(ctx, {
@@ -2904,21 +3006,50 @@
       }
     });
 
-    const getTot = () => data.metal + data.paper + data.plastic;
+    const getValidTot = () => data.metal + data.paper + data.plastic;
+    const getTot = () => data.metal + data.paper + data.plastic + data.reject;
+
+    function getPurityPct() {
+      const valid = getValidTot();
+      if (valid === 0 && data.reject === 0) return 0;
+      if (valid === 0 && data.reject > 0) return Math.max(0, 100 - data.reject * 5);
+      const basePct = Math.min(100, Math.round((valid / TOTAL_LOTE) * 100));
+      return Math.max(0, basePct - data.reject * 5);
+    }
 
     const MAX_LOG_LINES = 100;
     const SENSORES = {
-      metal: { sensor: 'MAG-01', codigo: '[MTL-FE]', geo: 'geo-metal', objeto: 'ferromagnético', silo: 'NARANJA (01)' },
-      paper: { sensor: 'AIR-02', codigo: '[PAP-CEL]', geo: 'geo-paper', objeto: 'celulósico liviano', silo: 'ROSADO (02)' },
-      plastic: { sensor: 'GRAV-03', codigo: '[PLS-PET]', geo: 'geo-plastic', objeto: 'polímero PET', silo: 'AZUL (03)' }
+      metal: { sensor: 'MAG-01', codigo: '[MTL-FE]', geo: 'geo-metal', objeto: 'ferromagnético', silo: 'SILO NARANJA (01)' },
+      paper: { sensor: 'AIR-03', codigo: '[PAP-CEL]', geo: 'geo-paper', objeto: 'celulósico liviano', silo: 'SILO ROSADO (02)' },
+      plastic: { sensor: 'GRAV-02', codigo: '[PLS-PET]', geo: 'geo-plastic', objeto: 'polímero PET', silo: 'SILO AZUL (03)' }
     };
 
+    function getTimestampStr() {
+      const now = new Date();
+      return [now.getHours(), now.getMinutes(), now.getSeconds()]
+        .map(v => String(v).padStart(2, '0'))
+        .join(':') + '.' + String(now.getMilliseconds()).padStart(3, '0');
+    }
+
     function spawnToken(tipo) {
+      if (tipo === 'reject') {
+        const lane = document.getElementById('lane-plastic');
+        const lastTag = document.getElementById('lastTokenTag');
+        if (lastTag) lastTag.textContent = '[REJ-IMP] -> RECHAZO / IMPUREZA';
+        if (!lane) return;
+        const token = document.createElement('div');
+        token.className = 'scada-token token-reject';
+        token.innerHTML = '<span class="token-geo geo-reject"></span><span>[REJ-IMP]</span>';
+        lane.appendChild(token);
+        setTimeout(() => token.remove(), 780);
+        return;
+      }
+
       const info = SENSORES[tipo];
       if (!info) return;
       const lane = document.getElementById(`lane-${tipo}`);
       const lastTag = document.getElementById('lastTokenTag');
-      if (lastTag) lastTag.textContent = `${info.codigo} -> SILO ${info.silo}`;
+      if (lastTag) lastTag.textContent = `${info.codigo} -> ${info.silo}`;
       if (!lane) return;
 
       const token = document.createElement('div');
@@ -2929,26 +3060,111 @@
     }
 
     function registrar(tipo, manual = false) {
-      if (!manual && getTot() >= TOTAL_LOTE) {
+      if (!manual && getValidTot() >= TOTAL_LOTE) {
         addLog('Capacidad máxima del lote automático (20 unidades) alcanzada.', 'WARN');
         if (sim) toggleSim();
         return;
       }
       data[tipo]++;
+      pieceCounter++;
+      const pieceId = `SAR-${String(pieceCounter).padStart(3, '0')}`;
       spawnToken(tipo);
       actualizar();
 
       const { sensor, codigo, objeto, silo } = SENSORES[tipo];
+      const fillPct = Math.min(100, Math.round((data[tipo] / CAP_MAX) * 100));
       const tag = tipo.toUpperCase();
-      const modo = manual ? ' [INYECCIÓN MANUAL]' : '';
-      addLog(`Sensor ${sensor}: ficha ${codigo} (${objeto}) detectada${modo}`, tag);
-      addLog(`Descarte ${codigo} -> Silo ${silo} confirmado`, tag);
+      const timeStr = addLog(`Sensor ${sensor}: pieza ${pieceId} ${codigo} (${objeto}) -> ${silo} (${fillPct}%)`, tag);
+
+      telemetryRecords.push({
+        timestamp: timeStr,
+        id: pieceId,
+        codigo,
+        actuador: sensor,
+        silo,
+        llenado: `${fillPct}%`,
+        pureza: `${getPurityPct()}%`,
+        estado: 'CLASIFICADO'
+      });
+    }
+
+    function inyectarRechazo() {
+      data.reject++;
+      pieceCounter++;
+      const pieceId = `REJ-${String(pieceCounter).padStart(3, '0')}`;
+      spawnToken('reject');
+      actualizar();
+
+      const timeStr = addLog('Pieza enviada a Rechazo - Pureza afectada', 'WARN');
+      telemetryRecords.push({
+        timestamp: timeStr,
+        id: pieceId,
+        codigo: '[REJ-IMP]',
+        actuador: 'GRAV-02 / BYPASS',
+        silo: 'CAJÓN DE RECHAZO',
+        llenado: 'N/A',
+        pureza: `${getPurityPct()}%`,
+        estado: 'RECHAZO / IMPUREZA'
+      });
+    }
+
+    function exportarCSV() {
+      const headers = [
+        'Timestamp',
+        'ID_Pieza',
+        'Codigo_Material',
+        'Actuador',
+        'Silo_Destino',
+        'Porcentaje_Llenado',
+        'Pureza_Global_Lote',
+        'Estado_Proceso'
+      ];
+
+      const rows = telemetryRecords.length > 0
+        ? telemetryRecords.map(r => [
+            r.timestamp,
+            r.id,
+            r.codigo,
+            r.actuador,
+            r.silo,
+            r.llenado,
+            r.pureza,
+            r.estado
+          ])
+        : [[
+            getTimestampStr(),
+            'SAR-000',
+            'N/A',
+            'MAG-01 / GRAV-02 / AIR-03',
+            'SIN INGESTA',
+            '0%',
+            `${getPurityPct()}%`,
+            'SISTEMA EN ESPERA'
+          ]];
+
+      const csvContent = '\uFEFF' + [
+        headers.join(','),
+        ...rows.map(row => row.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','))
+      ].join('\r\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reporte_lote_SAR.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      addLog('Reporte de telemetría descargado: reporte_lote_SAR.csv', 'SYS');
     }
 
     function actualizar() {
+      const validTot = getValidTot();
       const tot = getTot();
       const kpiTot = document.getElementById('kpiTot');
-      if (kpiTot) kpiTot.innerText = `${tot} / ${TOTAL_LOTE}`;
+      if (kpiTot) kpiTot.innerText = `${validTot} / ${TOTAL_LOTE}`;
 
       const cMet = document.getElementById('cMet');
       if (cMet) cMet.innerText = data.metal;
@@ -2957,16 +3173,23 @@
       const cPla = document.getElementById('cPla');
       if (cPla) cPla.innerText = data.plastic;
 
-      const pct = Math.min(100, Math.round((tot / TOTAL_LOTE) * 100));
+      const purityPct = getPurityPct();
       const kpiAprov = document.getElementById('kpiAprov');
-      if (kpiAprov) kpiAprov.innerText = `${pct}%`;
+      if (kpiAprov) {
+        kpiAprov.innerText = `${purityPct}%`;
+        kpiAprov.style.color = data.reject > 0 ? '#f87171' : '#ffffff';
+      }
 
+      const progressPct = Math.min(100, Math.round((validTot / TOTAL_LOTE) * 100));
       const progressBar = document.getElementById('scadaProgressBar');
-      if (progressBar) progressBar.style.width = `${pct}%`;
+      if (progressBar) progressBar.style.width = `${progressPct}%`;
 
       const kpiEq = document.getElementById('kpiEq');
       if (kpiEq) {
-        kpiEq.innerHTML = `E(${tot}) = <span style="color:var(--color-metal);font-weight:600;">${data.metal}M</span> + <span style="color:var(--color-paper);font-weight:600;">${data.paper}C</span> + <span style="color:var(--color-plastic);font-weight:600;">${data.plastic}P</span>`;
+        const rejHtml = data.reject > 0
+          ? ` - <span style="color:var(--color-reject);font-weight:700;">${data.reject}R (IMPUREZA)</span>`
+          : '';
+        kpiEq.innerHTML = `E(${tot}) = <span style="color:var(--color-metal);font-weight:600;">${data.metal}M</span> + <span style="color:var(--color-paper);font-weight:600;">${data.paper}C</span> + <span style="color:var(--color-plastic);font-weight:600;">${data.plastic}P</span>${rejHtml}`;
       }
 
       evaluar('bMet', 'aMet', 'pMet', data.metal);
@@ -2978,8 +3201,8 @@
 
       const st = document.getElementById('stBadge');
       if (st) {
-        if (tot >= TOTAL_LOTE && !sim) {
-          st.innerHTML = '<span class="scada-led led-green"></span>LOTE FINALIZADO // 100%';
+        if (validTot >= TOTAL_LOTE && !sim) {
+          st.innerHTML = `<span class="scada-led led-green"></span>LOTE FINALIZADO // PUREZA ${purityPct}%`;
         } else if (sim) {
           st.innerHTML = '<span class="scada-led led-green led-pulse"></span>SIMULACIÓN EN EJECUCIÓN';
         } else if (tot > 0) {
@@ -3002,11 +3225,8 @@
 
     function addLog(txt, tag = 'SYS') {
       const b = document.getElementById('logBox');
-      if (!b) return;
-      const now = new Date();
-      const timeStr = [now.getHours(), now.getMinutes(), now.getSeconds()]
-        .map(v => String(v).padStart(2, '0'))
-        .join(':') + '.' + String(now.getMilliseconds()).padStart(3, '0');
+      const timeStr = getTimestampStr();
+      if (!b) return timeStr;
 
       const row = document.createElement('div');
       row.className = 'log-line';
@@ -3025,6 +3245,7 @@
 
       while (b.children.length > MAX_LOG_LINES) b.firstElementChild.remove();
       b.scrollTop = b.scrollHeight;
+      return timeStr;
     }
 
     function toggleSim() {
@@ -3045,7 +3266,7 @@
         addLog('Simulación automática iniciada (corrida de 20 objetos).', 'SYS');
 
         simLoop = setInterval(() => {
-          if (getTot() >= TOTAL_LOTE) {
+          if (getValidTot() >= TOTAL_LOTE) {
             toggleSim();
             addLog('Fin de la corrida. Balance completado: 20 objetos clasificados.', 'SYS');
             return;
@@ -3082,6 +3303,9 @@
       data.metal = 0;
       data.paper = 0;
       data.plastic = 0;
+      data.reject = 0;
+      pieceCounter = 0;
+      telemetryRecords.length = 0;
       limpiarConsola();
       actualizar();
     }
