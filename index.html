@@ -504,6 +504,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      cursor: pointer;
       transition: transform var(--duration-hover) var(--ease-out), border-color var(--duration-hover) var(--ease-out);
     }
 
@@ -762,13 +763,13 @@
       width: 100vw;
       height: 100vh;
       z-index: 9999;
-      background: rgba(0, 0, 0, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(4, 6, 10, 0.9);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
+      padding: 24px;
       opacity: 0;
       pointer-events: none;
       visibility: hidden;
@@ -781,15 +782,29 @@
       visibility: visible;
     }
 
-    .plano-viewer {
-      padding: 0;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+    .lightbox-shell {
+      width: min(1240px, 96vw);
+      height: min(760px, 88vh);
+      background: rgba(12, 16, 24, 0.95);
+      border: 1px solid var(--border-tech);
+      border-top: 2px solid var(--border-tech-strong);
+      box-shadow: var(--double-line), 0 28px 70px rgba(0, 0, 0, 0.85);
+      clip-path: var(--chamfer-lg);
+      display: grid;
+      grid-template-columns: 65% 35%;
+      overflow: hidden;
+      position: relative;
     }
 
     .viewer-stage {
-      position: absolute;
-      inset: 0;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        #040508;
+      background-size: 24px 24px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -798,6 +813,7 @@
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
+      border-right: 1px solid var(--border-tech);
     }
 
     .viewer-stage.dragging {
@@ -805,56 +821,24 @@
     }
 
     .viewer-stage img {
-      max-width: 92vw;
-      max-height: 78vh;
+      max-width: 92%;
+      max-height: 82%;
       object-fit: contain;
       transform-origin: center;
       will-change: transform;
       pointer-events: none;
     }
 
-    .viewer-caption-bar {
-      position: absolute;
-      top: 24px;
-      left: 24px;
-      max-width: calc(100vw - 96px);
-      background: rgba(14, 18, 26, 0.88);
-      border: 1px solid var(--border-tech);
-      border-left: 2px solid #38bdf8;
-      clip-path: var(--chamfer-sm);
-      padding: 8px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      pointer-events: none;
-    }
-
-    .viewer-caption-title {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .viewer-caption-sub {
-      font-family: var(--font-mono);
-      font-size: 0.64rem;
-      color: var(--text-muted);
-      letter-spacing: 0.04em;
-    }
-
     .viewer-toolbar {
       position: absolute;
       left: 50%;
-      bottom: max(20px, env(safe-area-inset-bottom));
+      bottom: 16px;
       transform: translateX(-50%);
       display: flex;
       align-items: center;
       gap: 4px;
-      max-width: calc(100vw - 24px);
-      padding: 6px;
+      max-width: calc(100% - 24px);
+      padding: 5px;
       clip-path: var(--chamfer-md);
       background: var(--glass-surface);
       backdrop-filter: blur(20px) saturate(180%);
@@ -862,18 +846,19 @@
       border: 1px solid var(--border-tech);
       border-top: 2px solid var(--border-tech-strong);
       box-shadow: var(--double-line), var(--shadow-pill);
+      z-index: 4;
     }
 
     .viewer-btn {
-      min-width: 44px;
-      height: 44px;
-      padding: 0 14px;
+      min-width: 40px;
+      height: 38px;
+      padding: 0 12px;
       border: 1px solid transparent;
       clip-path: var(--chamfer-sm);
       background: rgba(255, 255, 255, 0.03);
       color: var(--text);
       font-family: var(--font-mono);
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.04em;
       text-decoration: none;
@@ -898,37 +883,182 @@
     }
 
     .viewer-level {
-      min-width: 54px;
+      min-width: 50px;
       text-align: center;
       font-family: var(--font-mono);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       letter-spacing: 0.04em;
       color: var(--text-muted);
     }
 
+    .lightbox-hud {
+      padding: 24px 22px;
+      background: rgba(14, 18, 26, 0.96);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      overflow-y: auto;
+    }
+
+    .hud-top {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .hud-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-tech);
+    }
+
+    .hud-code-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #38bdf8;
+      text-transform: uppercase;
+    }
+
+    .hud-counter {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--text-sub);
+      letter-spacing: 0.05em;
+    }
+
+    .hud-title {
+      font-family: var(--font-main);
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    .hud-desc {
+      font-family: var(--font-main);
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.62;
+    }
+
+    .hud-meta-table {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.38);
+      border: 1px solid var(--border-tech);
+      border-left: 2px solid rgba(56, 189, 248, 0.55);
+      clip-path: var(--chamfer-sm);
+      padding: 14px;
+    }
+
+    .hud-meta-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line-subtle);
+    }
+
+    .hud-meta-row:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .hud-meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+    }
+
+    .hud-meta-val {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #f1f5f9;
+      line-height: 1.45;
+    }
+
+    .hud-verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      margin-top: 2px;
+      padding: 4px 10px;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      clip-path: var(--chamfer-sm);
+      color: #34d399;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .hud-nav-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-tech);
+    }
+
+    .hud-nav-btn {
+      min-height: 44px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-top: 2px solid rgba(255, 255, 255, 0.28);
+      clip-path: var(--chamfer-sm);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hud-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
     .modal-close-btn {
       position: fixed;
-      top: 24px;
-      right: 24px;
+      top: 18px;
+      right: 18px;
       width: 44px;
       height: 44px;
       clip-path: var(--chamfer-sm);
-      background: rgba(18, 22, 30, 0.85);
+      background: rgba(18, 22, 30, 0.9);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-top: 2px solid rgba(255, 255, 255, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: 2px solid rgba(255, 255, 255, 0.38);
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 10001;
+      z-index: 10002;
     }
 
     .modal-close-btn:hover {
-      background: rgba(30, 36, 48, 0.95);
-      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(30, 36, 48, 0.98);
+      border-color: rgba(255, 255, 255, 0.35);
     }
 
     .modal-close-btn:active {
@@ -936,7 +1066,7 @@
     }
 
     .modal-dialog {
-      background: rgba(16, 20, 28, 0.92);
+      background: rgba(16, 20, 28, 0.95);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border: 1px solid var(--border-tech);
@@ -960,17 +1090,17 @@
     }
 
     .qr-dialog {
-      width: min(420px, 92vw);
-      padding: 24px 22px;
+      width: min(440px, 92vw);
+      padding: 28px 24px;
       align-items: center;
       text-align: center;
-      gap: 14px;
+      gap: 16px;
       border-top-color: #38bdf8;
     }
 
     .qr-title {
       font-family: var(--font-mono);
-      font-size: 0.84rem;
+      font-size: 0.86rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       color: #ffffff;
@@ -979,26 +1109,28 @@
 
     .qr-sub {
       font-family: var(--font-main);
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.45;
+      font-size: 0.86rem;
+      font-weight: 500;
+      color: #e2e8f0;
+      line-height: 1.5;
     }
 
     .qr-frame {
       background: #ffffff;
-      padding: 14px;
+      padding: 16px;
       clip-path: var(--chamfer-md);
-      border: 2px solid rgba(56, 189, 248, 0.45);
+      border: 3px solid #38bdf8;
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.25);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 248px;
-      height: 248px;
+      width: 268px;
+      height: 268px;
     }
 
     .qr-frame img {
-      width: 220px;
-      height: 220px;
+      width: 236px;
+      height: 236px;
       display: block;
       object-fit: contain;
     }
@@ -2143,25 +2275,50 @@
         word-break: break-word;
       }
 
-      .viewer-caption-bar {
-        top: 14px;
-        left: 14px;
-        padding: 6px 10px;
+      .evidence-modal {
+        padding: 10px;
+      }
+
+      .lightbox-shell {
+        width: 96vw;
+        height: 92vh;
+        grid-template-columns: 1fr;
+        grid-template-rows: 46% 54%;
+      }
+
+      .viewer-stage {
+        border-right: none;
+        border-bottom: 1px solid var(--border-tech);
       }
 
       .viewer-toolbar {
+        bottom: 8px;
         gap: 2px;
-        padding: 5px;
+        padding: 4px;
       }
 
       .viewer-btn {
-        padding: 0 10px;
-        font-size: 0.72rem;
+        height: 34px;
+        padding: 0 9px;
+        font-size: 0.68rem;
       }
 
       .viewer-level {
-        min-width: 44px;
-        font-size: 0.7rem;
+        min-width: 42px;
+        font-size: 0.68rem;
+      }
+
+      .lightbox-hud {
+        padding: 14px;
+        gap: 12px;
+      }
+
+      .hud-title {
+        font-size: 0.98rem;
+      }
+
+      .hud-desc {
+        font-size: 0.78rem;
       }
     }
   </style>
@@ -2174,7 +2331,7 @@
       <button class="menu-link" onclick="navegar('view-planos', this)">PLANOS</button>
       <button class="menu-link" onclick="navegar('view-evidencias', this)">EVIDENCIA DEL PROTOTIPO</button>
       <button class="menu-link" onclick="navegar('view-dashboard', this)">DASHBOARD DE SIMULACIÓN</button>
-      <button class="menu-qr-btn" onclick="abrirQRModal()">[ QR EN VIVO ]</button>
+      <button class="menu-qr-btn" onclick="abrirQRModal()">[ QR PROYECTOR ]</button>
     </nav>
   </header>
 
@@ -2319,7 +2476,7 @@
       </div>
 
       <div class="planos-grid">
-        <article class="plano-card">
+        <article class="plano-card" onclick="abrirLightboxPorIndice(0, this)">
           <div class="plano-img-wrap">
             <img src="img/plano-frontal.png" alt="Plano 01 // Vista Frontal / Modelo 3D" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
           </div>
@@ -2329,7 +2486,7 @@
           </div>
         </article>
 
-        <article class="plano-card">
+        <article class="plano-card" onclick="abrirLightboxPorIndice(1, this)">
           <div class="plano-img-wrap">
             <img src="img/plano-superior.png" alt="Plano 02 // Vista Superior (Planta)" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
           </div>
@@ -2339,7 +2496,7 @@
           </div>
         </article>
 
-        <article class="plano-card">
+        <article class="plano-card" onclick="abrirLightboxPorIndice(2, this)">
           <div class="plano-img-wrap">
             <img src="img/plano-izquierda.png" alt="Plano 03 // Vista Lateral Izquierda" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
           </div>
@@ -2349,7 +2506,7 @@
           </div>
         </article>
 
-        <article class="plano-card">
+        <article class="plano-card" onclick="abrirLightboxPorIndice(3, this)">
           <div class="plano-img-wrap">
             <img src="img/plano-derecha.png" alt="Plano 04 // Vista Lateral Derecha" onerror="if(this.src.endsWith('.png')) this.src=this.src.replace('.png','.jpeg');">
           </div>
@@ -2368,7 +2525,7 @@
       </div>
 
       <div class="galeria-frames">
-        <div class="frame-item" onclick="abrirModal(this)">
+        <div class="frame-item" onclick="abrirLightboxPorIndice(4, this)">
           <div class="frame-canvas">
             <img src="img/materiales1.jpg" alt="Fase 01 - Adquisición de Materiales e Insumos">
             <div class="frame-id" style="display: none;">01</div>
@@ -2383,7 +2540,7 @@
           </div>
         </div>
 
-        <div class="frame-item" onclick="abrirModal(this)">
+        <div class="frame-item" onclick="abrirLightboxPorIndice(5, this)">
           <div class="frame-canvas">
             <img src="img/materiales2.jpg" alt="Fase 02 - Componentes Electromecánicos">
             <div class="frame-id" style="display: none;">02</div>
@@ -2398,7 +2555,7 @@
           </div>
         </div>
 
-        <div class="frame-item" onclick="abrirModal(this)">
+        <div class="frame-item" onclick="abrirLightboxPorIndice(6, this)">
           <div class="frame-canvas">
             <img src="img/View recent photos 3.png" alt="Fase 03 - Dimensionamiento y Estructura Inicial">
             <div class="frame-id" style="display: none;">03</div>
@@ -2413,7 +2570,7 @@
           </div>
         </div>
 
-        <div class="frame-item" onclick="abrirModal(this)">
+        <div class="frame-item" onclick="abrirLightboxPorIndice(7, this)">
           <div class="frame-canvas">
             <img src="img/silos_pintados.jpg" alt="Fase 04 - Codificación de Silos y Pruebas de Separación">
             <div class="frame-id" style="display: none;">04</div>
@@ -2430,11 +2587,11 @@
 
         <div class="frame-item frame-span-2">
           <div class="frame-canvas-dual">
-            <div class="frame-subcanvas" onclick="abrirModalImg('img/montaje_bandas.jpg', 'FASE 05 // MONTAJE FINAL DE TOLVA Y BANDAS', '10 NOV 2026')">
+            <div class="frame-subcanvas" onclick="abrirLightboxPorIndice(8, this)">
               <img src="img/montaje_bandas.jpg" alt="Fase 05 - Maqueta con tolva superior, banda amarilla, banda fucsia y cajones inferiores">
               <span class="subcanvas-tag">5A // TOLVA SUPERIOR, BANDA AMARILLA Y BANDA FUCSIA</span>
             </div>
-            <div class="frame-subcanvas" onclick="abrirModalImg('img/View recent photos.png', 'FASE 05 // CAJONES COLECTORES Y ESTRUCTURA DE SOPORTE', '10 NOV 2026')">
+            <div class="frame-subcanvas" onclick="abrirLightboxPorIndice(9, this)">
               <img src="img/View recent photos.png" alt="Fase 05 - Disposición de cajones inferiores y tolva">
               <span class="subcanvas-tag">5B // DISPOSICIÓN DE CAJONES Y COMPARTIMENTOS</span>
             </div>
@@ -2659,37 +2816,61 @@
     <footer>Universitaria Agustiniana • Facultad de Ingeniería • Introducción a la Ingeniería</footer>
   </div>
 
-  <div id="planoViewer" class="evidence-modal plano-viewer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Visor a pantalla completa">
+  <div id="planoViewer" class="evidence-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Visor técnico con ficha lateral">
     <button class="modal-close-btn" data-viewer="close" aria-label="Cerrar visor">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
-    <div class="viewer-stage" id="viewerStage">
-      <img id="viewerImg" alt="" draggable="false">
-    </div>
-    <div class="viewer-caption-bar">
-      <span id="viewerTitle" class="viewer-caption-title">VISOR TÉCNICO</span>
-      <span id="viewerMeta" class="viewer-caption-sub">PROYECTOR // ZOOM INTERACTIVO</span>
-    </div>
-    <div class="viewer-toolbar">
-      <button class="viewer-btn" data-viewer="out" aria-label="Reducir zoom">−</button>
-      <span class="viewer-level" id="viewerLevel">100%</span>
-      <button class="viewer-btn" data-viewer="in" aria-label="Aumentar zoom">+</button>
-      <button class="viewer-btn" data-viewer="reset" aria-label="Restablecer vista">RESET</button>
-      <a class="viewer-btn" id="viewerLink" target="_blank" rel="noopener noreferrer" aria-label="Abrir imagen original">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-          <polyline points="15 3 21 3 21 9"></polyline>
-          <line x1="10" y1="14" x2="21" y2="3"></line>
-        </svg>
-        ORIGINAL
-      </a>
+
+    <div class="lightbox-shell" onclick="event.stopPropagation()">
+      <div class="viewer-stage" id="viewerStage">
+        <img id="viewerImg" alt="" draggable="false">
+        <div class="viewer-toolbar">
+          <button class="viewer-btn" data-viewer="out" aria-label="Reducir zoom">−</button>
+          <span class="viewer-level" id="viewerLevel">100%</span>
+          <button class="viewer-btn" data-viewer="in" aria-label="Aumentar zoom">+</button>
+          <button class="viewer-btn" data-viewer="reset" aria-label="Restablecer vista">RESET</button>
+          <a class="viewer-btn" id="viewerLink" target="_blank" rel="noopener noreferrer" aria-label="Abrir imagen original">ORIGINAL</a>
+        </div>
+      </div>
+
+      <aside class="lightbox-hud">
+        <div class="hud-top">
+          <div class="hud-header-bar">
+            <span id="hudCode" class="hud-code-tag">FASE 01 // 15 SEP 2026</span>
+            <span id="hudCounter" class="hud-counter">01 / 10</span>
+          </div>
+
+          <h3 id="hudTitle" class="hud-title">Adquisición de Materiales e Insumos</h3>
+          <p id="hudDesc" class="hud-desc">Descripción técnica del proceso de construcción y validación del prototipo SAR.</p>
+
+          <div class="hud-meta-table">
+            <div class="hud-meta-row">
+              <span class="hud-meta-label">Área Responsable</span>
+              <span id="hudArea" class="hud-meta-val">Mecatrónica &amp; Industrial</span>
+            </div>
+            <div class="hud-meta-row">
+              <span class="hud-meta-label">Insumos / Hardware Involucrado</span>
+              <span id="hudHardware" class="hud-meta-val">MDF 50x70cm, Pintura Acrílica, Imán MAG-01</span>
+            </div>
+            <div class="hud-meta-row">
+              <span class="hud-meta-label">Estado de Control</span>
+              <span class="hud-verified-badge"><span class="scada-led led-green"></span>[ VERIFICADO EN PROTOTIPO SAR ]</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-nav-controls">
+          <button class="hud-nav-btn" data-viewer="prev">[ &lt; ANTERIOR ]</button>
+          <button class="hud-nav-btn" data-viewer="next">[ SIGUIENTE &gt; ]</button>
+        </div>
+      </aside>
     </div>
   </div>
 
-  <div id="qrModal" class="evidence-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Código QR en vivo" onclick="if(event.target.id==='qrModal') cerrarQRModal()">
+  <div id="qrModal" class="evidence-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Código QR para proyector" onclick="if(event.target.id==='qrModal') cerrarQRModal()">
     <button class="modal-close-btn" onclick="cerrarQRModal()" aria-label="Cerrar código QR">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -2697,11 +2878,11 @@
       </svg>
     </button>
     <div class="modal-dialog qr-dialog" onclick="event.stopPropagation()">
-      <span class="qr-title">ACCESO MÓVIL // QR EN VIVO</span>
-      <p class="qr-sub">Escanea desde el proyector para abrir el sistema interactivo SAR en tu dispositivo móvil.</p>
+      <span class="qr-title">ACCESO DIRECTO // QR PROYECTOR</span>
       <div class="qr-frame">
-        <img id="qrImage" alt="Código QR de la página actual">
+        <img id="qrImage" alt="Código QR hacia el Simulador HMI">
       </div>
+      <p class="qr-sub">Escanea desde el auditorio para abrir el Simulador HMI en tu dispositivo móvil</p>
       <div id="qrUrlText" class="qr-url-box"></div>
     </div>
   </div>
@@ -2744,23 +2925,90 @@
       if (mainHeader) mainHeader.classList.remove('nav-hidden');
     }
 
-    let openLightboxFn = null;
-
-    function abrirModalImg(src, titleText, dateText, trigger = null) {
-      if (openLightboxFn) {
-        openLightboxFn(src, titleText, `FECHA: ${dateText}`, trigger);
+    const LIGHTBOX_ITEMS = [
+      {
+        src: 'img/plano-frontal.png',
+        code: 'PLANO VISTA FRONTAL // CAD 3D',
+        title: 'Perspectiva Frontal General y Tolva en X',
+        desc: 'Modelado estructural frontal del clasificador mecánico SAR donde se dimensiona la boca de carga superior en X, el bastidor vertical de soporte y la alineación de los tres silos inferiores.',
+        area: 'Ingeniería Mecatrónica & Sistemas',
+        hardware: 'Bastidor MDF 50x70cm, Tolva en X, Modelado Blender 3D'
+      },
+      {
+        src: 'img/plano-superior.png',
+        code: 'PLANO VISTA SUPERIOR // PLANTA',
+        title: 'Distribución en Planta de Bandas y Silos',
+        desc: 'Proyección superior en planta que detalla la trayectoria longitudinal de las bandas transportadoras, la rampa de caída controlada y la huella geométrica de los tres cajones colectores.',
+        area: 'Ingeniería Industrial & Mecatrónica',
+        hardware: 'Tren de Bandas, Rampa GRAV-02, Cajones Colectores Tripartitos'
+      },
+      {
+        src: 'img/plano-izquierda.png',
+        code: 'PLANO LATERAL IZQUIERDO // MAG-01',
+        title: 'Mecanismo de Atracción Magnética',
+        desc: 'Vista técnica lateral izquierda que especifica la altura operativa y el ángulo de incidencia del imán permanente para desviar piezas ferromagnéticas hacia el silo naranja.',
+        area: 'Ingeniería Mecatrónica',
+        hardware: 'Imán Ferromagnético MAG-01, Soporte de Desvío, Silo Naranja [MTL-FE]'
+      },
+      {
+        src: 'img/plano-derecha.png',
+        code: 'PLANO LATERAL DERECHO // AIR-03',
+        title: 'Boquilla de Soplado Neumático y Control',
+        desc: 'Vista técnica lateral derecha que muestra el acoplamiento de la tobera de aire continuo encargada de segregar fibras de papel liviano por diferencia de masa hacia el silo rosado.',
+        area: 'Mecatrónica & Ingeniería Industrial',
+        hardware: 'Extractor DC AIR-03, Tobera Neumática, Silo Rosado [PAP-CEL]'
+      },
+      {
+        src: 'img/materiales1.jpg',
+        code: 'FASE 01 // 15 SEP 2026',
+        title: 'Adquisición de Materiales e Insumos Base',
+        desc: 'Recepción y control de calidad de los insumos iniciales para la fabricación del prototipo dentro del presupuesto total de $120.000 COP establecido por el equipo.',
+        area: 'Mecatrónica & Industrial',
+        hardware: 'MDF 50x70cm, Pintura Acrílica, Imán MAG-01, Kit Eléctrico'
+      },
+      {
+        src: 'img/materiales2.jpg',
+        code: 'FASE 02 // 28 SEP 2026',
+        title: 'Componentes Electromecánicos de Tracción y Flujo',
+        desc: 'Pruebas preliminares de torque y caudal de aire con los motores reductores de tracción para las bandas y el ventilador extractor DC para la etapa neumática.',
+        area: 'Ingeniería Mecatrónica',
+        hardware: 'Motores N20 / Reductores DC + Extractor DC AIR-03'
+      },
+      {
+        src: 'img/View recent photos 3.png',
+        code: 'FASE 03 // 14 OCT 2026',
+        title: 'Dimensionamiento y Estructura Inicial',
+        desc: 'Trazado geométrico a escala real sobre las láminas de madera según los planos técnicos, definiendo los cortes para el chasis portante y las canalizaciones internas.',
+        area: 'Mecatrónica & Industrial',
+        hardware: 'Lámina MDF Estructural, Escuadras de Trazado, Chasis Base'
+      },
+      {
+        src: 'img/silos_pintados.jpg',
+        code: 'FASE 04 // 29 OCT 2026',
+        title: 'Codificación de Silos y Pruebas de Separación',
+        desc: 'Aplicación de pintura acrílica por código de material en los tres cajones colectores y pruebas físicas de depósito con tapas plásticas, papel liviano y puntillas metálicas.',
+        area: 'Ingeniería Industrial & Sistemas',
+        hardware: 'Silos codificados Azul [PLS-PET] / Rosado [PAP-CEL] / Naranja [MTL-FE]'
+      },
+      {
+        src: 'img/montaje_bandas.jpg',
+        code: 'FASE 05A // 10 NOV 2026',
+        title: 'Montaje Final de Tolva Superior y Bandas',
+        desc: 'Ensamble integral en madera de la estructura vertical con la tolva superior en X, la banda amarilla primaria, la banda fucsia secundaria y los tres cajones inferiores.',
+        area: 'Integración Multidisciplinar',
+        hardware: 'Tolva Superior en X, Banda Amarilla, Banda Fucsia, Motor DC y Cajones'
+      },
+      {
+        src: 'img/View recent photos.png',
+        code: 'FASE 05B // 10 NOV 2026',
+        title: 'Disposición de Cajones Colectores y Estructura',
+        desc: 'Verificación de encaje mecánico y alineación de los compartimentos inferiores respecto a las salidas de descarga para minimizar pérdidas y rechazos en operación.',
+        area: 'Mecatrónica & Industrial',
+        hardware: 'Cajones Colectores Modulares, Tolva de Alimentación y Bastidor'
       }
-    }
+    ];
 
-    function abrirModal(cardElement) {
-      const idText = cardElement.querySelector('.frame-id')?.innerText.trim() || '01';
-      const phaseTitle = cardElement.querySelector('.frame-phase-title')?.innerText.trim() || `EVIDENCIA ${idText} // REGISTRO TÉCNICO`;
-      const dateText = cardElement.querySelector('.frame-caption span:last-child')?.innerText.trim() || '15 SEP 2026';
-      const img = cardElement.querySelector('.frame-canvas img');
-      if (img && img.src) {
-        abrirModalImg(img.currentSrc || img.src, phaseTitle, dateText, cardElement);
-      }
-    }
+    let abrirLightboxPorIndice = () => {};
 
     function abrirQRModal() {
       const qrModal = document.getElementById('qrModal');
@@ -2793,8 +3041,12 @@
       const img = document.getElementById('viewerImg');
       const level = document.getElementById('viewerLevel');
       const link = document.getElementById('viewerLink');
-      const titleEl = document.getElementById('viewerTitle');
-      const metaEl = document.getElementById('viewerMeta');
+      const hudCode = document.getElementById('hudCode');
+      const hudCounter = document.getElementById('hudCounter');
+      const hudTitle = document.getElementById('hudTitle');
+      const hudDesc = document.getElementById('hudDesc');
+      const hudArea = document.getElementById('hudArea');
+      const hudHardware = document.getElementById('hudHardware');
       const closeBtn = viewer.querySelector('[data-viewer="close"]');
       const zoomInBtn = viewer.querySelector('[data-viewer="in"]');
       const zoomOutBtn = viewer.querySelector('[data-viewer="out"]');
@@ -2805,6 +3057,7 @@
       const pointers = new Map();
       let view = { scale: 1, x: 0, y: 0 };
       let pinch = { distance: 0, scale: 1 };
+      let currentIndex = 0;
       let opener = null;
 
       const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -2836,21 +3089,35 @@
         render();
       }
 
-      function open(src, alt, subText = 'MODELADO TÉCNICO // VISTA AMPLIADA', trigger = null) {
-        opener = trigger;
-        img.src = src;
-        img.alt = alt;
-        link.href = src;
-        if (titleEl) titleEl.textContent = alt || 'VISOR TÉCNICO';
-        if (metaEl) metaEl.textContent = subText;
+      function loadItem(index) {
+        const total = LIGHTBOX_ITEMS.length;
+        currentIndex = ((index % total) + total) % total;
+        const item = LIGHTBOX_ITEMS[currentIndex];
+        img.onerror = () => {
+          if (img.src.endsWith('.png')) img.src = img.src.replace('.png', '.jpeg');
+        };
+        img.src = item.src;
+        img.alt = item.title;
+        link.href = item.src;
+        if (hudCode) hudCode.textContent = item.code;
+        if (hudCounter) hudCounter.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+        if (hudTitle) hudTitle.textContent = item.title;
+        if (hudDesc) hudDesc.textContent = item.desc;
+        if (hudArea) hudArea.textContent = item.area;
+        if (hudHardware) hudHardware.textContent = item.hardware;
         reset();
+      }
+
+      function openByIndex(index, trigger = null) {
+        opener = trigger;
+        loadItem(index);
         viewer.classList.add('active');
         viewer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
         closeBtn.focus();
       }
 
-      openLightboxFn = open;
+      abrirLightboxPorIndice = openByIndex;
 
       function close() {
         if (!isOpen()) return;
@@ -2864,16 +3131,19 @@
         close,
         reset,
         in: () => zoomTo(view.scale + STEP),
-        out: () => zoomTo(view.scale - STEP)
+        out: () => zoomTo(view.scale - STEP),
+        prev: () => loadItem(currentIndex - 1),
+        next: () => loadItem(currentIndex + 1)
       };
 
       viewer.addEventListener('click', e => {
         const action = e.target.closest('[data-viewer]')?.dataset.viewer;
-        if (action) actions[action]();
-        else if (e.target === stage) close();
+        if (action && actions[action]) actions[action]();
+        else if (e.target === viewer) close();
       });
 
       stage.addEventListener('pointerdown', e => {
+        if (e.target.closest('.viewer-toolbar')) return;
         stage.setPointerCapture(e.pointerId);
         pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
         stage.classList.add('dragging');
@@ -2915,22 +3185,8 @@
         if (e.key === '+' || e.key === '=') actions.in();
         else if (e.key === '-') actions.out();
         else if (e.key === '0') reset();
-      });
-
-      document.querySelectorAll('.plano-img-wrap').forEach(wrap => {
-        const thumb = wrap.querySelector('img');
-        const tag = wrap.closest('.plano-card')?.querySelector('.plano-tag')?.innerText.trim() || thumb.alt;
-        const openFromThumb = () => open(thumb.currentSrc || thumb.src, tag, 'PLANO TÉCNICO // ZOOM INTERACTIVO', wrap);
-        wrap.tabIndex = 0;
-        wrap.setAttribute('role', 'button');
-        wrap.setAttribute('aria-label', `Ampliar ${tag}`);
-        wrap.addEventListener('click', openFromThumb);
-        wrap.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            openFromThumb();
-          }
-        });
+        else if (e.key === 'ArrowLeft') actions.prev();
+        else if (e.key === 'ArrowRight') actions.next();
       });
     }
 
